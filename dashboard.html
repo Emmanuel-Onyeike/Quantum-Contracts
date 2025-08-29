@@ -149,7 +149,7 @@
 
         <div class="p-6 border border-white/20 rounded-xl bg-[#1a1a1a] mb-6">
           <h3 class="text-lg font-bold mb-3">Recent Activity</h3>
-          <ul class="space-y-2 activity-log">
+          <ul id="recent-activity-log" class="space-y-2 activity-log">
             <li class="p-3 border border-white/20 rounded-lg bg-[#0d0d0d] hover:bg-[#222] transition">No activity yet.</li>
           </ul>
         </div>
@@ -227,9 +227,18 @@
         <p class="text-xl">Manage your Billing details, invoices, and receipts here.</p>
       </div>
 
-      <div id="payment" class="tab-content hidden p-6 text-center">
+      <div id="payment" class="tab-content hidden p-6 text-center bg-gray-900 border border-gray-700 rounded-xl shadow text-gray-200">
         <div class="text-4xl text-purple-400 mb-4">💰</div>
-        <p class="text-xl">View and process Payments securely from this section.</p>
+        <h2 class="text-2xl font-bold mb-4">Payments</h2>
+        <p class="text-xl mb-6">View and process payments securely from this section.</p>
+
+        <div class="bg-gray-800 border border-gray-700 rounded-xl p-6">
+            <h3 class="text-xl font-bold text-white mb-4">Simulate a Payment</h3>
+            <p class="text-gray-400 mb-6">Click the button below to simulate a payment and see the revenue activity log update on the Overview page.</p>
+            <button onclick="simulatePayment()" class="w-full md:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-semibold shadow-md hover:shadow-lg transition">
+                <i class="fas fa-dollar-sign"></i> Simulate a $500 Payment
+            </button>
+        </div>
       </div>
 
       <div id="settings" class="tab-content hidden p-6 text-center">
@@ -385,6 +394,7 @@
     // For testing, explicitly reset all data to a 'null' state
     let pendingContractsCount = 0;
     let totalContractsCount = 0;
+    let revenueCount = 0; // New variable to track total revenue
     let lastGeneratedCode = "";
     let contracts = [];
     let dustedContracts = [];
@@ -395,6 +405,7 @@
     function initializeData() {
         localStorage.setItem("pendingContractsCount", "0");
         localStorage.setItem("totalContractsCount", "0");
+        localStorage.setItem("revenueCount", "0");
         localStorage.setItem("lastGeneratedCode", "");
         localStorage.setItem("contracts", "[]");
         localStorage.setItem("dustedContracts", "[]");
@@ -408,6 +419,7 @@
     function saveState() {
       localStorage.setItem("pendingContractsCount", pendingContractsCount);
       localStorage.setItem("totalContractsCount", totalContractsCount);
+      localStorage.setItem("revenueCount", revenueCount);
       localStorage.setItem("lastGeneratedCode", lastGeneratedCode);
       localStorage.setItem("contracts", JSON.stringify(contracts));
       localStorage.setItem("dustedContracts", JSON.stringify(dustedContracts));
@@ -432,7 +444,22 @@
         recentActivity.pop();
       }
       saveState();
+      renderRecentActivity();
     }
+    
+    function logRevenueActivity(message, type) {
+        revenueActivity.unshift({
+            message: message,
+            type: type,
+            date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString(),
+        });
+        if (revenueActivity.length > 10) {
+            revenueActivity.pop();
+        }
+        saveState();
+        renderRevenueActivity();
+    }
+
 
     function renderCounts() {
       const p = getEl("pendingCount");
@@ -441,7 +468,7 @@
       const u = getEl("usersCount");
       if (p) p.textContent = String(pendingContractsCount);
       if (t) t.textContent = String(totalContractsCount);
-      if (r) r.textContent = "$0";
+      if (r) r.textContent = `$${revenueCount.toLocaleString()}`;
       if (u) u.textContent = "0";
     }
 
@@ -512,7 +539,7 @@
     }
 
     function renderRecentActivity() {
-      const activityList = document.querySelector("#overview .space-y-2");
+      const activityList = getEl("recent-activity-log");
       if (!activityList) return;
 
       activityList.innerHTML = '';
@@ -810,6 +837,14 @@
       alert("Contract has been restored to the active list.");
     }
 
+    function simulatePayment() {
+        const paymentAmount = 500;
+        revenueCount += paymentAmount;
+        saveState();
+        renderCounts();
+        logRevenueActivity(`Gained $${paymentAmount} from a new payment.`, 'gain');
+    }
+
 
     // Tab switching logic
     function openTab(tabId) {
@@ -876,6 +911,5 @@
         }, 1500); // 1.5-second delay
     });
   </script>
-  <script src="tailwind.js"></script>
 </body>
 </html>
