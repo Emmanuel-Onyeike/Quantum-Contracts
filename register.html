@@ -51,18 +51,18 @@
   <div id="message" class="mt-4 text-center text-sm text-gray-300"></div>
 </main>
 
+<!-- Scripts moved to bottom -->
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  // Initialize Supabase
   const supabaseUrl = "https://obfgfbolpsdzczydubbj.supabase.co";
   const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9iZmdmYm9scHNkemN6eWR1YmJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0NDc0NzgsImV4cCI6MjA3MjAyMzQ3OH0.xZAtHrXTeyMTwZIUZp0TvypzLOBWZ7QVYsSdb7bYstM";
-  const supabase = supabase.createClient(supabaseUrl, supabaseAnonKey);
+  const supabaseClient = supabase.createClient(supabaseUrl, supabaseAnonKey);
 
   const form = document.getElementById("registerForm");
   const message = document.getElementById("message");
 
-  // Redirect if already logged in
-  supabase.auth.getSession().then(({ data: { session } }) => {
+  // Redirect logged-in users
+  supabaseClient.auth.getSession().then(({ data: { session } }) => {
     if (session) window.location.href = "dashboard.html";
   });
 
@@ -82,21 +82,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     try {
-      const { data, error } = await supabase.auth.signUp({
+      const { data, error } = await supabaseClient.auth.signUp({
         email,
         password,
-        options: {
-          data: { full_name: name, country: country }
-        }
+        options: { data: { full_name: name, country } }
       });
       if (error) throw error;
 
-      // Insert or update users table
-      const { error: insertError } = await supabase.from('users').upsert([{
+      const { error: insertError } = await supabaseClient.from('users').upsert([{
         id: data.user.id,
         email: data.user.email,
         full_name: name,
-        country: country
+        country
       }]);
       if (insertError) throw insertError;
 
