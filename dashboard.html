@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TechNxxtSupport Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+  <div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white shadow-lg p-6">
+      <h2 class="text-xl font-bold mb-6">Dashboard</h2>
+      <nav class="flex flex-col gap-3">
+        <button class="nav-btn text-left px-4 py-2 rounded-lg hover:bg-gray-200" data-tab="overview">Overview</button>
+        <button class="nav-btn text-left px-4 py-2 rounded-lg hover:bg-gray-200" data-tab="contract">Contract</button>
+        <button class="nav-btn text-left px-4 py-2 rounded-lg hover:bg-gray-200" data-tab="dust">Dust</button>
+        <button class="nav-btn text-left px-4 py-2 rounded-lg hover:bg-gray-200" data-tab="billing">Billing</button>
+        <button class="nav-btn text-left px-4 py-2 rounded-lg hover:bg-gray-200" data-tab="payment">Payment</button>
+        <button class="nav-btn text-left px-4 py-2 rounded-lg hover:bg-gray-200" data-tab="settings">Settings</button>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-10">
+      <h1 id="page-title" class="text-2xl font-semibold mb-6 capitalize">Overview</h1>
+      <div id="content" class="bg-white p-6 rounded-xl shadow">
+        📊 This is the Overview section.
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const navButtons = document.querySelectorAll(".nav-btn");
+    const content = document.getElementById("content");
+    const pageTitle = document.getElementById("page-title");
+
+    const sections = {
+      overview: "📊 This is the Overview section.",
+      contract: "📑 All Contracts will be shown here.",
+      dust: "✨ Dust Section – custom data here.",
+      billing: "💳 Billing details are here.",
+      payment: "💰 Payment history and actions.",
+      settings: "⚙️ Update your settings here."
+    };
+
+    navButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        // Reset styles
+        navButtons.forEach(b => b.classList.remove("bg-blue-600", "text-white"));
+        // Highlight active
+        btn.classList.add("bg-blue-600", "text-white");
+
+        // Update content
+        const tab = btn.dataset.tab;
+        pageTitle.textContent = tab;
+        content.textContent = sections[tab];
+      });
+    });
+
+    // Default active tab
+    navButtons[0].classList.add("bg-blue-600", "text-white");
+  </script>
+</body>
+</html>
