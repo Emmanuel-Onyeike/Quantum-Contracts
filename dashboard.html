@@ -590,36 +590,8 @@
     };
 </script>
 
- <div id="payment" class="tab-content active p-6 text-center bg-gray-900 border border-gray-700 rounded-xl shadow text-gray-200">
-            <div class="text-4xl text-purple-400 mb-4">💰</div>
-            <h2 class="text-2xl font-bold mb-4">Payments</h2>
-            <p class="text-xl mb-6">View and process payments securely from this section.</p>
-
-            <!-- Payment Method Selection -->
-            <div class="bg-gray-800 border border-gray-700 rounded-xl p-6 mb-8">
-                <h3 class="text-xl font-bold text-white mb-4">Select a Payment Method</h3>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <button onclick="showPaymentForm('card')" class="payment-method-btn flex flex-col items-center justify-center p-4 rounded-xl bg-gray-700 hover:bg-gray-600 transition-colors duration-300">
-                        <i class="fas fa-credit-card text-3xl mb-2"></i>
-                        <span class="text-sm">Card</span>
-                    </button>
-                    <button onclick="showPaymentForm('wallet')" class="payment-method-btn flex flex-col items-center justify-center p-4 rounded-xl bg-gray-700 hover:bg-gray-600 transition-colors duration-300">
-                        <i class="fas fa-wallet text-3xl mb-2"></i>
-                        <span class="text-sm">Wallet</span>
-                    </button>
-                    <button onclick="showPaymentForm('mobile')" class="payment-method-btn flex flex-col items-center justify-center p-4 rounded-xl bg-gray-700 hover:bg-gray-600 transition-colors duration-300">
-                        <i class="fas fa-mobile-alt text-3xl mb-2"></i>
-                        <span class="text-sm">Mobile Money</span>
-                    </button>
-                    <button onclick="showPaymentForm('bank')" class="payment-method-btn flex flex-col items-center justify-center p-4 rounded-xl bg-gray-700 hover:bg-gray-600 transition-colors duration-300">
-                        <i class="fas fa-university text-3xl mb-2"></i>
-                        <span class="text-sm">Bank Transfer</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Payment Forms Container -->
-           <div id="payment" class="tab-content active p-6 text-center bg-gray-900 border border-gray-700 rounded-xl shadow text-gray-200">
+ <!-- Payment Section -->
+        <div id="payment" class="tab-content active p-6 text-center bg-gray-900 border border-gray-700 rounded-xl shadow text-gray-200">
             <div class="text-4xl text-purple-400 mb-4">💰</div>
             <h2 class="text-2xl font-bold mb-4">Payments</h2>
             <p class="text-xl mb-6">View and process payments securely from this section.</p>
@@ -916,6 +888,7 @@
         document.getElementById('revenueCount').textContent = `$${totalRevenue.toFixed(2)}`;
     }
 </script>
+
 
       <div id="settings" class="tab-content hidden p-6 text-center">
         <div class="text-4xl text-gray-400 mb-4">⚙️</div>
@@ -1589,6 +1562,7 @@
   </script>
 </body>
 </html>
+
 
 
 
