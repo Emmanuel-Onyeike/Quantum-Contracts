@@ -56,20 +56,24 @@
   
   <!-- Stat Cards -->
   <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-  <div class="p-4 border border-white/20 rounded-xl bg-[#1a1a1a] hover:bg-[#222] transition flex items-center justify-between shadow">
-  <div>
-    <p class="text-gray-400 text-sm">Total Contracts</p>
-    <h3 id="totalContracts" class="text-2xl font-bold">0</h3>
-  </div>
-  <i class="fas fa-file-contract text-2xl text-blue-400"></i>
-</div>
-   <div class="p-4 border border-white/20 rounded-xl bg-[#1a1a1a] hover:bg-[#222] transition flex items-center justify-between shadow">
+ <!-- Pending Contracts -->
+<div class="p-4 border border-white/20 rounded-xl bg-[#1a1a1a] hover:bg-[#222] transition flex items-center justify-between shadow">
   <div>
     <p class="text-gray-400 text-sm">Pending contracts</p>
     <h3 id="pendingContracts" class="text-2xl font-bold">0</h3>
   </div>
   <i class="fas fa-file-contract text-2xl text-yellow-400"></i>
 </div>
+
+<!-- Total Contracts -->
+<div class="p-4 border border-white/20 rounded-xl bg-[#1a1a1a] hover:bg-[#222] transition flex items-center justify-between shadow">
+  <div>
+    <p class="text-gray-400 text-sm">Total Contracts</p>
+    <h3 id="totalContracts" class="text-2xl font-bold">0</h3>
+  </div>
+  <i class="fas fa-file-contract text-2xl text-blue-400"></i>
+</div>
+
 
 
     <div class="p-4 border border-white/20 rounded-xl bg-[#1a1a1a] hover:bg-[#222] transition flex items-center justify-between shadow">
@@ -387,6 +391,7 @@ function activateContract() {
   <script src="tailwind.js"></script>
 </body>
 </html>
+
 
 
 
