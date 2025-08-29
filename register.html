@@ -4,70 +4,106 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Register | Quantum</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://unpkg.com/@supabase/supabase-js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-900 text-white flex items-center justify-center h-screen">
+<body class="bg-gray-900 text-white flex items-center justify-center min-h-screen">
 
-  <div class="w-full max-w-md bg-gray-800 rounded-2xl shadow-lg p-8">
-    <h1 class="text-3xl font-bold text-purple-400 mb-6 text-center">Create Your Account</h1>
+  <main class="w-full max-w-2xl bg-gray-800 rounded-3xl shadow-2xl p-8">
+    <!-- Header -->
+    <div class="text-center mb-6">
+      <h1 class="text-3xl font-extrabold text-purple-400">Quantum Contracts</h1>
+      <p class="text-gray-400 mt-2">Create your account to join our network</p>
+    </div>
 
-    <form id="register-form" class="space-y-4">
+    <!-- Registration Form -->
+    <form id="registerForm" class="space-y-4">
       <!-- Full Name -->
       <div>
         <label for="name" class="block text-sm font-medium text-gray-300">Full Name</label>
         <input type="text" id="name" required 
-               class="w-full mt-1 px-4 py-2 bg-gray-700 rounded-lg focus:ring-2 focus:ring-purple-400 focus:outline-none">
+               class="w-full mt-1 px-4 py-2 bg-gray-700 rounded-xl focus:ring-2 focus:ring-purple-400 focus:outline-none">
       </div>
 
       <!-- Email -->
       <div>
         <label for="email" class="block text-sm font-medium text-gray-300">Email</label>
         <input type="email" id="email" required 
-               class="w-full mt-1 px-4 py-2 bg-gray-700 rounded-lg focus:ring-2 focus:ring-purple-400 focus:outline-none">
+               class="w-full mt-1 px-4 py-2 bg-gray-700 rounded-xl focus:ring-2 focus:ring-purple-400 focus:outline-none">
+      </div>
+
+      <!-- Country -->
+      <div>
+        <label for="country" class="block text-sm font-medium text-gray-300">Country</label>
+        <select id="country" required
+                class="w-full mt-1 px-4 py-2 bg-gray-700 rounded-xl focus:ring-2 focus:ring-purple-400 focus:outline-none">
+          <option value="" disabled selected>Select your country</option>
+          <option value="Nigeria">Nigeria</option>
+          <option value="USA">USA</option>
+          <option value="UK">UK</option>
+          <option value="Canada">Canada</option>
+          <option value="Germany">Germany</option>
+          <option value="Other">Other</option>
+        </select>
       </div>
 
       <!-- Password -->
       <div>
         <label for="password" class="block text-sm font-medium text-gray-300">Password</label>
         <input type="password" id="password" required 
-               class="w-full mt-1 px-4 py-2 bg-gray-700 rounded-lg focus:ring-2 focus:ring-purple-400 focus:outline-none">
+               class="w-full mt-1 px-4 py-2 bg-gray-700 rounded-xl focus:ring-2 focus:ring-purple-400 focus:outline-none">
+      </div>
+
+      <!-- Terms Checkbox -->
+      <div class="flex items-start space-x-2">
+        <input type="checkbox" id="terms" required 
+               class="mt-1 form-checkbox h-4 w-4 text-purple-400 bg-gray-900 border-gray-700 rounded focus:ring-purple-400">
+        <label for="terms" class="text-sm text-gray-400">
+          I agree to the <a href="#" class="text-purple-400 hover:underline">Terms of Service</a> and 
+          <a href="#" class="text-purple-400 hover:underline">Privacy Policy</a>.
+        </label>
       </div>
 
       <!-- Submit Button -->
       <button type="submit" 
-              class="w-full py-3 bg-purple-500 hover:bg-purple-600 rounded-lg font-semibold text-white transition">
-        Sign Up
+              class="w-full py-3 bg-purple-500 hover:bg-purple-600 rounded-xl font-semibold text-white transition">
+        Register
       </button>
     </form>
 
-    <!-- Messages -->
+    <!-- Message Box -->
     <div id="message" class="mt-4 text-center text-sm text-gray-300"></div>
-  </div>
+  </main>
 
   <script>
-    // Supabase client
     const supabaseUrl = "https://obfgfbolpsdzczydubbj.supabase.co"
     const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9iZmdmYm9scHNkemN6eWR1YmJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0NDc0NzgsImV4cCI6MjA3MjAyMzQ3OH0.xZAtHrXTeyMTwZIUZp0TvypzLOBWZ7QVYsSdb7bYstM"
     const supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey)
 
-    // Handle Register
-    const form = document.getElementById("register-form")
+    const form = document.getElementById("registerForm")
     const message = document.getElementById("message")
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault()
-      message.textContent = "Processing..."
-      
+
       const name = document.getElementById("name").value
       const email = document.getElementById("email").value
       const password = document.getElementById("password").value
+      const country = document.getElementById("country").value
+      const terms = document.getElementById("terms").checked
 
+      if (!terms) {
+        message.textContent = "❌ You must agree to the terms to register."
+        return
+      }
+
+      // Sign up with Supabase
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          data: { full_name: name }
+          data: { full_name: name, country: country },
+          emailRedirectTo: "https://your-vercel-app.vercel.app/dashboard" // redirect after email confirmation
         }
       })
 
