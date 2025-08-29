@@ -52,6 +52,8 @@
 </main>
 
 <script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Initialize Supabase
   const supabaseUrl = "https://obfgfbolpsdzczydubbj.supabase.co";
   const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9iZmdmYm9scHNkemN6eWR1YmJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0NDc0NzgsImV4cCI6MjA3MjAyMzQ3OH0.xZAtHrXTeyMTwZIUZp0TvypzLOBWZ7QVYsSdb7bYstM";
   const supabase = supabase.createClient(supabaseUrl, supabaseAnonKey);
@@ -89,7 +91,7 @@
       });
       if (error) throw error;
 
-      // Insert into users table
+      // Insert or update users table
       const { error: insertError } = await supabase.from('users').upsert([{
         id: data.user.id,
         email: data.user.email,
@@ -105,6 +107,7 @@
       message.textContent = `❌ ${err.message}`;
     }
   });
+});
 </script>
 </body>
 </html>
