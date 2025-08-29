@@ -26,6 +26,14 @@
   </style>
 </head>
 <body class="bg-black text-gray-200 font-sans">
+  <!-- Mobile Header (Fixed) -->
+  <header class="md:hidden sticky top-0 bg-black/80 backdrop-blur-sm z-40 p-4 border-b border-gray-700 flex items-center justify-between">
+    <h1 id="page-title-mobile" class="text-xl font-bold capitalize">Overview</h1>
+    <button id="openMenu" class="p-2 rounded-lg bg-gray-800 text-white">
+      <i class="fas fa-bars"></i>
+    </button>
+  </header>
+
   <div class="flex min-h-screen">
     <!-- Sidebar (Desktop) -->
     <aside id="desktop-sidebar" class="hidden md:flex w-64 flex-col bg-black border-r border-gray-700">
@@ -59,13 +67,7 @@
     </aside>
 
     <!-- Main Content -->
-    <main class="flex-1 p-6">
-      <div class="flex items-center justify-between mb-6 md:hidden">
-        <h1 id="page-title-mobile" class="text-2xl font-bold capitalize">Overview</h1>
-        <button id="openMenu" class="p-2 rounded-lg bg-gray-800 text-white">
-          <i class="fas fa-bars"></i>
-        </button>
-      </div>
+    <main class="flex-1 p-6 pt-20 md:pt-6">
       <h1 id="page-title" class="hidden md:block text-3xl font-bold mb-6 capitalize">Overview</h1>
 
       <!-- Tab Content Sections -->
