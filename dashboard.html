@@ -94,49 +94,143 @@
     </div>
   </div>
 <script>
+  // ======= COUNTS (in-memory; change to localStorage if you want persistence) =======
   let pendingContracts = 0;
   let totalContracts = 0;
 
+  // ======= HELPERS =======
+  function getEl(id) {
+    const el = document.getElementById(id);
+    if (!el) console.warn(`Element #${id} not found`);
+    return el;
+  }
+
+  function renderCounts() {
+    const p = getEl("pendingCount");
+    const t = getEl("totalCount");
+    if (p) p.textContent = String(pendingContracts);
+    if (t) t.textContent = String(totalContracts);
+  }
+
+  // ======= MODALS =======
+  function openModal(id) {
+    const m = getEl(id);
+    if (m) m.classList.remove("hidden");
+  }
+  function closeModal(id) {
+    const m = getEl(id);
+    if (m) m.classList.add("hidden");
+  }
+
+  // ======= LOADING OVERLAY =======
+  function showLoading(forMs = 6000, after) {
+    // Create (or reuse) overlay
+    let overlay = document.getElementById("loaderOverlay");
+    if (!overlay) {
+      overlay = document.createElement("div");
+      overlay.id = "loaderOverlay";
+      overlay.className = "fixed inset-0 flex items-center justify-center bg-black/80 z-[100]";
+      overlay.innerHTML = `
+        <div class="flex flex-col items-center">
+          <div class="animate-spin rounded-full h-20 w-20 border-t-4 border-b-4 border-blue-400 mb-4"></div>
+          <p class="text-white text-lg font-medium animate-pulse">Preparing your contract...</p>
+        </div>`;
+      document.body.appendChild(overlay);
+    } else {
+      overlay.classList.remove("hidden");
+    }
+
+    setTimeout(() => {
+      overlay.classList.add("hidden");
+      if (typeof after === "function") after();
+    }, forMs);
+  }
+
+  // ======= FORM: ENABLE SAVE ONLY WHEN VALID =======
+  function validateFormEnableSave() {
+    const name = getEl("userName")?.value.trim();
+    const type = getEl("contractType")?.value;
+    const code = getEl("contractCode")?.value.trim();
+    const saveBtn = getEl("saveBtn");
+
+    const isValid = Boolean(name && type && code);
+    if (saveBtn) {
+      saveBtn.disabled = !isValid;
+      saveBtn.textContent = isValid ? "Save" : "Save";
+    }
+  }
+
+  // ======= GENERATE CODE (20 chars A-Z a-z 0-9) =======
+  function generateContractCode() {
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let code = "";
+    for (let i = 0; i < 20; i++) code += chars.charAt(Math.floor(Math.random() * chars.length));
+    const codeInput = getEl("contractCode");
+    if (codeInput) codeInput.value = code;
+
+    validateFormEnableSave(); // enable Save if other fields are filled
+  }
+
+  // ======= SAVE / CONTINUE BUTTON HANDLER =======
   function continueContract() {
-    // Grab the inputs
-    const userName = document.getElementById("userName").value.trim();
-    const contractType = document.getElementById("contractType").value;
+    const userName = getEl("userName")?.value.trim();
+    const contractType = getEl("contractType")?.value;
+    const contractCode = getEl("contractCode")?.value.trim();
 
-    // Validate inputs
-    if (!userName) {
-      alert("Please enter a user name.");
-      return;
-    }
-    if (!contractType) {
-      alert("Please select a contract type.");
-      return;
-    }
+    // Guard: must be valid
+    if (!userName) { alert("Please enter a user name."); return; }
+    if (!contractType) { alert("Please select a contract type."); return; }
+    if (!contractCode) { alert("Please generate a contract code."); return; }
 
-    // Increment pending contracts
-    pendingContracts++;
-    document.getElementById("pendingCount").innerText = pendingContracts;
+    // 1) Increment Pending
+    pendingContracts += 1;
+    renderCounts();
 
-    // Close modal
+    // 2) Close the "Add Contract" modal
     closeModal("addContractModal");
 
-    // Reset inputs
-    document.getElementById("userName").value = "";
-    document.getElementById("contractType").selectedIndex = 0;
+    // 3) Show loading for 6s, then open the "Continue Contract" modal
+    showLoading(6000, () => openModal("continueContractModal"));
 
-    // Disable save button again until code is generated (if you want)
-    document.getElementById("saveBtn").disabled = true;
+    // 4) Reset form + disable save until new code generated
+    const nameEl = getEl("userName");
+    const typeEl = getEl("contractType");
+    const codeEl = getEl("contractCode");
+    const saveBtn = getEl("saveBtn");
+
+    if (nameEl) nameEl.value = "";
+    if (typeEl) typeEl.selectedIndex = 0;
+    if (codeEl) codeEl.value = "";
+    if (saveBtn) saveBtn.disabled = true;
   }
 
-  // Example function to move a contract from pending → total
+  // ======= MOVE PENDING → TOTAL (call this after payment/activation) =======
   function activateContract() {
     if (pendingContracts > 0) {
-      pendingContracts--;
-      totalContracts++;
-
-      document.getElementById("pendingCount").innerText = pendingContracts;
-      document.getElementById("totalCount").innerText = totalContracts;
+      pendingContracts -= 1;
+      totalContracts += 1;
+      renderCounts();
     }
   }
+
+  // ======= INIT (wire up live validation) =======
+  document.addEventListener("DOMContentLoaded", () => {
+    // Live-enable Save when user types/selects/generates code
+    ["userName", "contractType", "contractCode"].forEach(id => {
+      const el = getEl(id);
+      if (!el) return;
+      el.addEventListener("input", validateFormEnableSave);
+      el.addEventListener("change", validateFormEnableSave);
+    });
+    renderCounts();
+  });
+
+  // Expose for inline onclick=""
+  window.generateContractCode = generateContractCode;
+  window.continueContract = continueContract;
+  window.openModal = openModal;
+  window.closeModal = closeModal;
+  window.activateContract = activateContract;
 </script>
 
   <!-- Action Buttons -->
@@ -238,10 +332,14 @@
               class="px-5 py-3 rounded-xl bg-white/5 border border-white/20 text-white hover:bg-white/10 hover:border-white/40 transition">
         Close
       </button>
-      <button id="saveBtn" onclick="continueContract()" 
-              class="px-5 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-semibold shadow-md hover:shadow-lg transition disabled:opacity-40" disabled>
-        Save
-      </button>
+   <button id="saveBtn" onclick="continueContract()" 
+        class="px-5 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-500 
+               hover:from-blue-600 hover:to-indigo-600 text-white font-semibold 
+               shadow-md hover:shadow-lg transition disabled:opacity-40" 
+        disabled>
+  Save
+</button>
+
     </div>
   </div>
 </div>
@@ -382,6 +480,7 @@
   <script src="tailwind.js"></script>
 </body>
 </html>
+
 
 
 
