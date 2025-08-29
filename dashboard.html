@@ -209,7 +209,7 @@
 document.addEventListener('DOMContentLoaded', async () => {
   const supabaseUrl = "https://obfgfbolpsdzczydubbj.supabase.co";
   const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9iZmdmYm9scHNkemN6eWR1YmJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0NDc0NzgsImV4cCI6MjA3MjAyMzQ3OH0.xZAtHrXTeyMTwZIUZp0TvypzLOBWZ7QVYsSdb7bYstM";
-  const supabase = Supabase.createClient(supabaseUrl, supabaseAnonKey);
+const supabase = supabase.createClient(supabaseUrl, supabaseAnonKey);
 
   const userName = document.getElementById("userName");
   const userEmail = document.getElementById("userEmail");
@@ -1619,6 +1619,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   </script>
 </body>
 </html>
+
 
 
 
