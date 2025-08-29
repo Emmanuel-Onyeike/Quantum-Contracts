@@ -59,9 +59,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   const message = document.getElementById("message");
 
-  const { data: { session } } = await supabaseClient.auth.getSession();
-  if (session) window.location.href = "dashboard.html";
-
   document.getElementById("registerForm").addEventListener("submit", async (e) => {
     e.preventDefault();
     message.textContent = "";
@@ -85,10 +82,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
       if (signupError) throw signupError;
 
-      // Auto-login after signup
-      const { error: loginError } = await supabaseClient.auth.signInWithPassword({ email, password });
-      if (loginError) throw loginError;
-
       if (signupData.user) {
         const { error: insertError } = await supabaseClient.from('users').upsert([{
           id: signupData.user.id,
@@ -99,8 +92,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (insertError) throw insertError;
       }
 
-      message.textContent = "✅ Registration successful! Redirecting to dashboard...";
-      setTimeout(() => window.location.href = "dashboard.html", 1200);
+      message.textContent = "✅ Registration successful! Please check your email to confirm your account before logging in.";
+
     } catch (err) {
       message.textContent = `❌ ${err.message}`;
     }
