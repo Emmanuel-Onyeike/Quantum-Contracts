@@ -1,163 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | Quantum Contracts</title>
-
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <script src="https://unpkg.com/@supabase/supabase-js"></script>
-
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #000;
-            color: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 2rem;
-        }
-
-        .hero-bg-animation {
-            background-image: radial-gradient(circle at 0% 0%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
-                              radial-gradient(circle at 100% 100%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
-            background-size: 200% 200%;
-            animation: gradient-shift 15s ease infinite;
-        }
-
-        @keyframes gradient-shift {
-            0% { background-position: 0% 0%, 100% 100%; }
-            50% { background-position: 100% 0%, 0% 100%; }
-            100% { background-position: 0% 0%, 100% 100%; }
-        }
-
-        #message-box {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: #1c1c1c;
-            border: 1px solid #6ee7b7;
-            padding: 2rem;
-            border-radius: 1rem;
-            z-index: 100;
-            text-align: center;
-            max-width: 400px;
-            display: none;
-        }
-
-        #message-box-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.7);
-            backdrop-filter: blur(5px);
-            z-index: 99;
-            display: none;
-        }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Login | Quantum</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.35.0/dist/supabase.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="hero-bg-animation">
+<body class="bg-gray-900 text-white flex items-center justify-center min-h-screen">
 
-    <main class="w-full max-w-2xl bg-gray-800 rounded-3xl shadow-2xl p-8 md:p-12">
-        <div class="flex items-center space-x-2 justify-center mb-6">
-            <i class="fas fa-handshake text-4xl text-purple-400"></i>
-            <h1 class="text-3xl md:text-4xl font-extrabold">Quantum Contracts</h1>
-        </div>
+<main class="w-full max-w-md bg-gray-800 rounded-3xl shadow-2xl p-8 space-y-6">
+  <h1 class="text-3xl font-extrabold text-purple-400 text-center">Quantum Contracts</h1>
+  <p class="text-gray-400 text-center">Login to continue</p>
 
-        <div class="text-center mb-8">
-            <h2 class="text-2xl md:text-3xl font-bold mb-2">Login to Your Account</h2>
-            <p class="text-gray-400">Welcome back! Enter your credentials to continue.</p>
-        </div>
-
-        <!-- Login Form -->
-        <form id="login-form" class="space-y-6">
-            <div>
-                <label for="email" class="block text-gray-300 mb-2 font-semibold">Email Address</label>
-                <input type="email" id="email" class="w-full p-3 rounded-xl bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-400" placeholder="example@domain.com" required>
-            </div>
-
-            <div>
-                <label for="password" class="block text-gray-300 mb-2 font-semibold">Password</label>
-                <input type="password" id="password" class="w-full p-3 rounded-xl bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-400" placeholder="Your password" required>
-            </div>
-
-            <div class="text-right">
-                <a href="#" class="text-sm text-purple-400 hover:underline">Forgot Password?</a>
-            </div>
-
-            <button type="submit" class="w-full py-3 mt-4 rounded-full bg-purple-500 hover:bg-purple-600 font-bold text-white shadow-lg transition">
-                Login
-            </button>
-        </form>
-
-        <div class="text-center mt-6 text-gray-400">
-            <p>Don't have an account? <a href="register.html" class="text-purple-400 hover:underline font-semibold">Register now</a></p>
-        </div>
-    </main>
-
-    <!-- Message Box -->
-    <div id="message-box-overlay"></div>
-    <div id="message-box">
-        <h4 id="message-title" class="text-xl font-bold mb-2"></h4>
-        <p id="message-content" class="text-gray-300"></p>
-        <button id="close-message-box" class="mt-4 px-6 py-2 bg-purple-400 text-black font-semibold rounded-full hover:bg-purple-500 transition">OK</button>
+  <form id="loginForm" class="space-y-4">
+    <div>
+      <label class="block text-sm font-medium text-gray-300">Email</label>
+      <input type="email" id="email" required class="w-full mt-1 px-4 py-2 bg-gray-700 rounded-xl focus:ring-2 focus:ring-purple-400 focus:outline-none">
     </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-300">Password</label>
+      <input type="password" id="password" required class="w-full mt-1 px-4 py-2 bg-gray-700 rounded-xl focus:ring-2 focus:ring-purple-400 focus:outline-none">
+    </div>
+    <button type="submit" class="w-full py-3 bg-purple-500 hover:bg-purple-600 rounded-xl font-semibold text-white transition">Login</button>
+  </form>
 
-    <script>
-        const supabaseUrl = "https://obfgfbolpsdzczydubbj.supabase.co";
-        const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9iZmdmYm9scHNkemN6eWR1YmJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0NDc0NzgsImV4cCI6MjA3MjAyMzQ3OH0.xZAtHrXTeyMTwZIUZp0TvypzLOBWZ7QVYsSdb7bYstM";
-        const supabase = supabase.createClient(supabaseUrl, supabaseAnonKey);
+  <p class="text-center text-gray-400">Don't have an account? <a href="register.html" class="text-purple-400 font-semibold hover:underline">Register</a></p>
 
-        const form = document.getElementById("login-form");
-        const messageBox = document.getElementById("message-box");
-        const messageBoxOverlay = document.getElementById("message-box-overlay");
-        const messageTitle = document.getElementById("message-title");
-        const messageContent = document.getElementById("message-content");
-        const closeMessageBoxBtn = document.getElementById("close-message-box");
+  <p id="message" class="mt-4 text-center text-sm text-gray-300"></p>
+</main>
 
-        const showMessage = (title, content, redirect=false) => {
-            messageTitle.textContent = title;
-            messageContent.textContent = content;
-            messageBox.style.display = 'block';
-            messageBoxOverlay.style.display = 'block';
-            if(redirect) {
-                setTimeout(() => { window.location.href = "/dashboard.html"; }, 1500);
-            }
-        };
+<script>
+const supabaseUrl = "https://obfgfbolpsdzczydubbj.supabase.co";
+const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9iZmdmYm9scHNkemN6eWR1YmJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0NDc0NzgsImV4cCI6MjA3MjAyMzQ3OH0.xZAtHrXTeyMTwZIUZp0TvypzLOBWZ7QVYsSdb7bYstM";
+const supabase = supabase.createClient(supabaseUrl, supabaseAnonKey);
 
-        const closeMessage = () => {
-            messageBox.style.display = 'none';
-            messageBoxOverlay.style.display = 'none';
-        };
+const form = document.getElementById("loginForm");
+const message = document.getElementById("message");
 
-        closeMessageBoxBtn.addEventListener('click', closeMessage);
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
 
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById("email").value;
-            const password = document.getElementById("password").value;
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
-            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-            
-            if(error) {
-                showMessage("Login Failed", error.message);
-            } else {
-                showMessage("Login Successful", "Redirecting to your dashboard...", true);
-            }
-        });
-    </script>
+  if (error) {
+    message.textContent = "❌ " + error.message;
+  } else {
+    message.textContent = "✅ Login successful! Redirecting...";
+    setTimeout(() => { window.location.href = "dashboard.html"; }, 1500);
+  }
+});
+</script>
 </body>
 </html>
