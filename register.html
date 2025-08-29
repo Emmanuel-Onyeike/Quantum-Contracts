@@ -83,12 +83,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (signupError) throw signupError;
 
       if (signupData.user) {
-        const { error: insertError } = await supabaseClient.from('users').upsert([{
-          id: signupData.user.id,
-          email: signupData.user.email,
-          full_name: name,
-          country
-        }]);
+        const { error: insertError } = await supabaseClient
+          .from('users')
+          .insert([{ id: signupData.user.id, email: signupData.user.email, full_name: name, country }]);
         if (insertError) throw insertError;
       }
 
