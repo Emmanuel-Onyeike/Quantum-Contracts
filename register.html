@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Register | Quantum</title>
-<script src="https://unpkg.com/@supabase/supabase-js"></script>
+<script src="https://unpkg.com/@supabase/supabase-js@2.35.0/dist/supabase.min.js"></script>
 <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-900 text-white flex items-center justify-center min-h-screen">
@@ -51,22 +51,19 @@
   <div id="message" class="mt-4 text-center text-sm text-gray-300"></div>
 </main>
 
-<!-- Scripts moved to bottom -->
 <script>
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   const supabaseUrl = "https://obfgfbolpsdzczydubbj.supabase.co";
   const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9iZmdmYm9scHNkemN6eWR1YmJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0NDc0NzgsImV4cCI6MjA3MjAyMzQ3OH0.xZAtHrXTeyMTwZIUZp0TvypzLOBWZ7QVYsSdb7bYstM";
-  const supabaseClient = supabase.createClient(supabaseUrl, supabaseAnonKey);
+  const supabase = Supabase.createClient(supabaseUrl, supabaseAnonKey);
 
-  const form = document.getElementById("registerForm");
   const message = document.getElementById("message");
 
-  // Redirect logged-in users
-  supabaseClient.auth.getSession().then(({ data: { session } }) => {
-    if (session) window.location.href = "dashboard.html";
-  });
+  // Redirect if already logged in
+  const { data: { session } } = await supabase.auth.getSession();
+  if (session) window.location.href = "dashboard.html";
 
-  form.addEventListener("submit", async (e) => {
+  document.getElementById("registerForm").addEventListener("submit", async (e) => {
     e.preventDefault();
     message.textContent = "";
 
@@ -82,23 +79,31 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     try {
-      const { data, error } = await supabaseClient.auth.signUp({
+      // Sign up the user
+      const { data: signupData, error: signupError } = await supabase.auth.signUp({
         email,
         password,
         options: { data: { full_name: name, country } }
       });
-      if (error) throw error;
+      if (signupError) throw signupError;
 
-      const { error: insertError } = await supabaseClient.from('users').upsert([{
-        id: data.user.id,
-        email: data.user.email,
-        full_name: name,
-        country
-      }]);
-      if (insertError) throw insertError;
+      // Auto-login immediately
+      const { error: loginError } = await supabase.auth.signInWithPassword({ email, password });
+      if (loginError) throw loginError;
 
-      message.textContent = "✅ Registration successful! Redirecting...";
-      setTimeout(() => window.location.href = "dashboard.html", 1500);
+      // Upsert user into table
+      if (signupData.user) {
+        const { error: insertError } = await supabase.from('users').upsert([{
+          id: signupData.user.id,
+          email: signupData.user.email,
+          full_name: name,
+          country
+        }]);
+        if (insertError) throw insertError;
+      }
+
+      message.textContent = "✅ Registration successful! Redirecting to dashboard...";
+      setTimeout(() => window.location.href = "dashboard.html", 1200);
 
     } catch (err) {
       message.textContent = `❌ ${err.message}`;
