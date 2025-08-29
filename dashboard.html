@@ -142,18 +142,20 @@
   </div>
 
  <!-- Add Contract Modal -->
-<div id="addContractModal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
-  <div class="bg-gray-900 p-6 rounded-xl border border-white/30 w-96 shadow-lg">
-    <h2 class="text-xl font-bold mb-4 text-white">Add Contract</h2>
+<!-- Add Contract Modal -->
+<div id="addContractModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
+  <div class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-8 rounded-2xl border border-white/20 w-[420px] shadow-2xl relative">
+    <h2 class="text-2xl font-bold mb-6 text-white text-center">✨ Add Contract</h2>
 
     <!-- User Name -->
     <label class="block text-gray-300 text-sm mb-2">User Name</label>
     <input id="userName" type="text" placeholder="Enter user name" 
-           class="w-full mb-4 px-4 py-2 rounded-lg bg-transparent border border-white/30 text-white placeholder-gray-400 focus:outline-none focus:border-white/60">
+           class="w-full mb-5 px-4 py-3 rounded-xl bg-white/5 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/40 transition">
 
     <!-- Contract Type -->
     <label class="block text-gray-300 text-sm mb-2">Contract Type</label>
-    <select id="contractType" class="w-full mb-6 px-4 py-2 rounded-lg bg-transparent border border-white/30 text-white focus:outline-none focus:border-white/60">
+    <select id="contractType" 
+            class="w-full mb-6 px-4 py-3 rounded-xl bg-white/5 border border-white/20 text-white focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/40 transition">
       <option class="bg-gray-900 text-white">Real Estate</option>
       <option class="bg-gray-900 text-white">2 Terms</option>
       <option class="bg-gray-900 text-white">Quick Productive</option>
@@ -165,13 +167,13 @@
     </select>
 
     <!-- Contract Code -->
-    <div class="mb-6">
+    <div class="mb-8">
       <label class="block text-gray-300 text-sm mb-2">Contract Code</label>
       <div class="flex gap-2">
         <input id="contractCode" type="text" readonly placeholder="Generate a code" 
-               class="flex-1 px-4 py-2 rounded-lg bg-transparent border border-white/30 text-white placeholder-gray-500 focus:outline-none">
+               class="flex-1 px-4 py-3 rounded-xl bg-white/5 border border-white/20 text-white placeholder-gray-500 focus:outline-none">
         <button onclick="generateContractCode()" 
-                class="px-4 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white shadow">
+                class="px-4 py-3 rounded-xl bg-gradient-to-r from-green-500 to-emerald-400 hover:from-green-600 hover:to-emerald-500 text-white font-semibold shadow-md hover:shadow-lg transition">
           Create
         </button>
       </div>
@@ -180,11 +182,11 @@
     <!-- Actions -->
     <div class="flex justify-end gap-3">
       <button onclick="closeModal('addContractModal')" 
-              class="px-4 py-2 rounded-lg bg-transparent border border-white/30 text-white hover:bg-white/10 hover:border-white/60 transition">
+              class="px-5 py-3 rounded-xl bg-white/5 border border-white/20 text-white hover:bg-white/10 hover:border-white/40 transition">
         Close
       </button>
       <button id="saveBtn" onclick="continueContract()" 
-              class="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white shadow transition" disabled>
+              class="px-5 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-semibold shadow-md hover:shadow-lg transition disabled:opacity-40" disabled>
         Save
       </button>
     </div>
@@ -192,17 +194,20 @@
 </div>
 
 <!-- Loading Spinner -->
-<div id="loadingScreen" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
-  <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-white"></div>
+<div id="loadingScreen" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50">
+  <div class="flex flex-col items-center">
+    <div class="animate-spin rounded-full h-20 w-20 border-t-4 border-b-4 border-blue-400 mb-4"></div>
+    <p class="text-white text-lg font-medium animate-pulse">Preparing your contract...</p>
+  </div>
 </div>
 
 <!-- Continue Contract Modal -->
-<div id="continueContractModal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
-  <div class="bg-gray-900 p-6 rounded-xl border border-white/30 w-96 shadow-lg text-center">
-    <h2 class="text-xl font-bold mb-4 text-white">Continue Contract</h2>
-    <p class="text-gray-300 mb-6">Your contract code has been successfully generated!</p>
+<div id="continueContractModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
+  <div class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-8 rounded-2xl border border-white/20 w-[420px] shadow-2xl text-center">
+    <h2 class="text-2xl font-bold mb-4 text-white">✅ Continue Contract</h2>
+    <p class="text-gray-300 mb-8">Your contract code has been successfully generated and saved!</p>
     <button onclick="closeModal('continueContractModal')" 
-            class="px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-white shadow">
+            class="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-semibold shadow-md hover:shadow-lg transition">
       Close
     </button>
   </div>
@@ -217,20 +222,16 @@
     }
     document.getElementById("contractCode").value = code;
 
-    // Enable Save button & change text to Continue
+    // Enable Continue button
     let saveBtn = document.getElementById("saveBtn");
     saveBtn.disabled = false;
     saveBtn.innerText = "Continue";
   }
 
   function continueContract() {
-    // Close Add Contract Modal
     closeModal('addContractModal');
-
-    // Show Loading Spinner
     document.getElementById("loadingScreen").classList.remove("hidden");
 
-    // After 6 seconds, hide spinner & show continue modal
     setTimeout(() => {
       document.getElementById("loadingScreen").classList.add("hidden");
       openModal("continueContractModal");
@@ -245,6 +246,8 @@
     document.getElementById(id).classList.add("hidden");
   }
 </script>
+
+  
 
 
 
@@ -294,6 +297,7 @@
   <script src="tailwind.js"></script>
 </body>
 </html>
+
 
 
 
