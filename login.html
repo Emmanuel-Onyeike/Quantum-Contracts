@@ -1,45 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Login | Quantum</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.35.0/dist/supabase.min.js"></script>
+<script src="https://unpkg.com/@supabase/supabase-js"></script>
 <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-900 text-white flex items-center justify-center min-h-screen">
 
-<div class="w-full max-w-md bg-gray-800 rounded-2xl shadow-lg p-8 space-y-6">
-  <h1 class="text-3xl font-bold text-purple-400 text-center">Quantum Contracts</h1>
-  <p class="text-gray-400 text-center">Login to your account</p>
+<main class="w-full max-w-md bg-gray-800 rounded-3xl shadow-2xl p-8">
+  <h1 class="text-3xl font-extrabold text-purple-400 text-center mb-6">Quantum Contracts</h1>
+  <p class="text-gray-400 text-center mb-6">Login to your account</p>
 
   <form id="loginForm" class="space-y-4">
     <div>
-      <label for="email" class="block text-sm font-medium text-gray-300">Email</label>
+      <label class="block text-sm font-medium text-gray-300">Email</label>
       <input type="email" id="email" required class="w-full mt-1 px-4 py-2 bg-gray-700 rounded-xl focus:ring-2 focus:ring-purple-400 focus:outline-none">
     </div>
     <div>
-      <label for="password" class="block text-sm font-medium text-gray-300">Password</label>
+      <label class="block text-sm font-medium text-gray-300">Password</label>
       <input type="password" id="password" required class="w-full mt-1 px-4 py-2 bg-gray-700 rounded-xl focus:ring-2 focus:ring-purple-400 focus:outline-none">
     </div>
     <button type="submit" class="w-full py-3 bg-purple-500 hover:bg-purple-600 rounded-xl font-semibold text-white transition">Login</button>
   </form>
 
-  <p id="message" class="text-center text-sm mt-2 text-gray-300"></p>
-  <p class="text-center text-gray-400">Don't have an account? <a href="register.html" class="text-purple-400 font-semibold hover:underline">Register</a></p>
-</div>
+  <p class="mt-4 text-center text-sm text-gray-300">Don't have an account? <a href="register.html" class="text-purple-400 hover:underline">Register now</a></p>
+  <div id="message" class="mt-4 text-center text-sm text-gray-300"></div>
+</main>
 
 <script>
-const SUPABASE_URL = "https://obfgfbolpsdzczydubbj.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9iZmdmYm9scHNkemN6eWR1YmJqIiwicm9sZSI6ImF4cCI6MjA3MjAyMzQ3OH0.xZAtHrXTeyMTwZIUZp0TvypzLOBWZ7QVYsSdb7bYstM";
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabaseUrl = "https://obfgfbolpsdzczydubbj.supabase.co";
+const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9iZmdmYm9scHNkemN6eWR1YmJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0NDc0NzgsImV4cCI6MjA3MjAyMzQ3OH0.xZAtHrXTeyMTwZIUZp0TvypzLOBWZ7QVYsSdb7bYstM";
+const supabase = supabase.createClient(supabaseUrl, supabaseAnonKey);
 
 const form = document.getElementById("loginForm");
 const message = document.getElementById("message");
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
-  message.textContent = "";
 
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value;
@@ -50,7 +49,9 @@ form.addEventListener("submit", async (e) => {
     message.textContent = "❌ " + error.message;
   } else {
     message.textContent = "✅ Login successful! Redirecting...";
-    setTimeout(() => window.location.href = "dashboard.html", 1200);
+    setTimeout(() => {
+      window.location.href = "dashboard.html";
+    }, 1200);
   }
 });
 </script>
