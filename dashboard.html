@@ -5,26 +5,50 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TechNxxtSupport Dashboard</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide-icons@latest"></script>
 </head>
 <body class="bg-gray-100 font-sans">
   <div class="flex min-h-screen">
     <!-- Sidebar -->
-    <aside class="w-64 bg-white shadow-lg p-6">
-      <h2 class="text-xl font-bold mb-6">Dashboard</h2>
-      <nav class="flex flex-col gap-3">
-        <button class="nav-btn text-left px-4 py-2 rounded-lg hover:bg-gray-200" data-tab="overview">Overview</button>
-        <button class="nav-btn text-left px-4 py-2 rounded-lg hover:bg-gray-200" data-tab="contract">Contract</button>
-        <button class="nav-btn text-left px-4 py-2 rounded-lg hover:bg-gray-200" data-tab="dust">Dust</button>
-        <button class="nav-btn text-left px-4 py-2 rounded-lg hover:bg-gray-200" data-tab="billing">Billing</button>
-        <button class="nav-btn text-left px-4 py-2 rounded-lg hover:bg-gray-200" data-tab="payment">Payment</button>
-        <button class="nav-btn text-left px-4 py-2 rounded-lg hover:bg-gray-200" data-tab="settings">Settings</button>
+    <aside class="w-64 bg-gradient-to-b from-blue-700 to-blue-900 text-white shadow-lg flex flex-col">
+      <!-- Logo / Header -->
+      <div class="p-6 border-b border-blue-600">
+        <h2 class="text-2xl font-bold">TechNxxt</h2>
+        <p class="text-sm text-blue-200">Support Dashboard</p>
+      </div>
+
+      <!-- Nav -->
+      <nav class="flex-1 p-4 flex flex-col gap-2">
+        <button class="nav-btn flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-blue-600" data-tab="overview">
+          <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Overview
+        </button>
+        <button class="nav-btn flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-blue-600" data-tab="contract">
+          <i data-lucide="file-text" class="w-5 h-5"></i> Contract
+        </button>
+        <button class="nav-btn flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-blue-600" data-tab="dust">
+          <i data-lucide="sparkles" class="w-5 h-5"></i> Dust
+        </button>
+        <button class="nav-btn flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-blue-600" data-tab="billing">
+          <i data-lucide="credit-card" class="w-5 h-5"></i> Billing
+        </button>
+        <button class="nav-btn flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-blue-600" data-tab="payment">
+          <i data-lucide="dollar-sign" class="w-5 h-5"></i> Payment
+        </button>
+        <button class="nav-btn flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-blue-600" data-tab="settings">
+          <i data-lucide="settings" class="w-5 h-5"></i> Settings
+        </button>
       </nav>
+
+      <!-- Footer -->
+      <div class="p-4 border-t border-blue-600 text-sm text-blue-300">
+        © 2025 TechNxxt
+      </div>
     </aside>
 
     <!-- Main Content -->
-    <main class="flex-1 p-10">
-      <h1 id="page-title" class="text-2xl font-semibold mb-6 capitalize">Overview</h1>
-      <div id="content" class="bg-white p-6 rounded-xl shadow">
+    <main class="flex-1 p-8">
+      <h1 id="page-title" class="text-3xl font-bold mb-6 capitalize text-gray-800">Overview</h1>
+      <div id="content" class="bg-white p-6 rounded-xl shadow border border-gray-200 text-gray-700">
         📊 This is the Overview section.
       </div>
     </main>
@@ -36,12 +60,12 @@
     const pageTitle = document.getElementById("page-title");
 
     const sections = {
-      overview: "📊 This is the Overview section.",
-      contract: "📑 All Contracts will be shown here.",
-      dust: "✨ Dust Section – custom data here.",
-      billing: "💳 Billing details are here.",
-      payment: "💰 Payment history and actions.",
-      settings: "⚙️ Update your settings here."
+      overview: "📊 Welcome to your Overview dashboard. Quick insights and summary go here.",
+      contract: "📑 All active and past Contracts are listed here.",
+      dust: "✨ Dust Section – space for experimental or archived data.",
+      billing: "💳 Manage your Billing details, invoices, and receipts here.",
+      payment: "💰 View and process Payments securely from this section.",
+      settings: "⚙️ Customize your account, preferences, and security options here."
     };
 
     navButtons.forEach((btn) => {
@@ -60,8 +84,10 @@
 
     // Default active tab
     navButtons[0].classList.add("bg-blue-600", "text-white");
+
+    // Load Lucide icons
+    lucide.createIcons();
   </script>
-     <script src="tailwind.js"></script>
+  <script src="tailwind.js"></script>
 </body>
 </html>
-
