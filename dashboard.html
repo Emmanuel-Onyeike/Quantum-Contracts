@@ -119,12 +119,12 @@
             <i class="fas fa-file-contract text-2xl text-blue-400"></i>
           </div>
           <div class="p-4 border border-white/20 rounded-xl bg-[#1a1a1a] hover:bg-[#222] transition flex items-center justify-between shadow">
-            <div>
-              <p class="text-gray-400 text-sm">Revenue</p>
-              <h3 id="revenueCount" class="text-2xl font-bold">$0</h3>
+          <div>
+                    <p class="text-gray-400 text-sm">Revenue</p>
+                    <h3 id="revenueCount" class="text-2xl font-bold">$0</h3>
+                </div>
+                <i class="fas fa-chart-line text-2xl text-green-400"></i>
             </div>
-            <i class="fas fa-chart-line text-2xl text-green-400"></i>
-          </div>
           <div class="p-4 border border-white/20 rounded-xl bg-[#1a1a1a] hover:bg-[#222] transition flex items-center justify-between shadow">
             <div>
               <p class="text-gray-400 text-sm">Active Users</p>
@@ -140,12 +140,14 @@
           </button>
         </div>
 
-        <div class="p-6 border border-white/20 rounded-xl bg-[#1a1a1a] mb-6">
-          <h3 class="text-lg font-bold mb-3">Revenue Activity</h3>
-          <ul id="revenue-activity-log" class="space-y-2 activity-log">
-            <li class="p-3 border border-white/20 rounded-lg bg-[#0d0d0d] hover:bg-[#222] transition">No revenue activity recorded.</li>
-          </ul>
+          <div class="p-6 border border-white/20 rounded-xl bg-[#1a1a1a] mb-6">
+                <h3 class="text-lg font-bold mb-3 text-white">Revenue Activity</h3>
+                <ul id="revenue-activity-log" class="space-y-2 text-gray-400">
+                    <li class="p-3 border border-white/20 rounded-lg bg-[#0d0d0d] hover:bg-[#222] transition">No revenue activity recorded.</li>
+                </ul>
+            </div>
         </div>
+
 
         <div class="p-6 border border-white/20 rounded-xl bg-[#1a1a1a] mb-6">
           <h3 class="text-lg font-bold mb-3">Recent Activity</h3>
@@ -586,19 +588,218 @@
     };
 </script>
 
-      <div id="payment" class="tab-content hidden p-6 text-center bg-gray-900 border border-gray-700 rounded-xl shadow text-gray-200">
-        <div class="text-4xl text-purple-400 mb-4">💰</div>
-        <h2 class="text-2xl font-bold mb-4">Payments</h2>
-        <p class="text-xl mb-6">View and process payments securely from this section.</p>
+     <div id="payment" class="tab-content active p-6 text-center bg-gray-900 border border-gray-700 rounded-xl shadow text-gray-200">
+            <div class="text-4xl text-purple-400 mb-4">💰</div>
+            <h2 class="text-2xl font-bold mb-4">Payments</h2>
+            <p class="text-xl mb-6">View and process payments securely from this section.</p>
 
-        <div class="bg-gray-800 border border-gray-700 rounded-xl p-6">
-            <h3 class="text-xl font-bold text-white mb-4">Simulate a Payment</h3>
-            <p class="text-gray-400 mb-6">Click the button below to simulate a payment and see the revenue activity log update on the Overview page.</p>
-            <button onclick="simulatePayment()" class="w-full md:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-semibold shadow-md hover:shadow-lg transition">
-                <i class="fas fa-dollar-sign"></i> Simulate a $500 Payment
-            </button>
+            <!-- Payment Method Selection -->
+            <div class="bg-gray-800 border border-gray-700 rounded-xl p-6 mb-8">
+                <h3 class="text-xl font-bold text-white mb-4">Select a Payment Method</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <button onclick="showPaymentForm('card')" class="payment-method-btn flex flex-col items-center justify-center p-4 rounded-xl bg-gray-700 hover:bg-gray-600 transition-colors duration-300">
+                        <i class="fas fa-credit-card text-3xl mb-2"></i>
+                        <span class="text-sm">Card</span>
+                    </button>
+                    <button onclick="showPaymentForm('wallet')" class="payment-method-btn flex flex-col items-center justify-center p-4 rounded-xl bg-gray-700 hover:bg-gray-600 transition-colors duration-300">
+                        <i class="fas fa-wallet text-3xl mb-2"></i>
+                        <span class="text-sm">Wallet</span>
+                    </button>
+                    <button onclick="showPaymentForm('mobile')" class="payment-method-btn flex flex-col items-center justify-center p-4 rounded-xl bg-gray-700 hover:bg-gray-600 transition-colors duration-300">
+                        <i class="fas fa-mobile-alt text-3xl mb-2"></i>
+                        <span class="text-sm">Mobile Money</span>
+                    </button>
+                    <button onclick="showPaymentForm('bank')" class="payment-method-btn flex flex-col items-center justify-center p-4 rounded-xl bg-gray-700 hover:bg-gray-600 transition-colors duration-300">
+                        <i class="fas fa-university text-3xl mb-2"></i>
+                        <span class="text-sm">Bank Transfer</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Payment Forms Container -->
+            <div id="payment-forms-container">
+                <!-- Card Payment Form -->
+                <div id="card-form" class="payment-form hidden bg-gray-800 border border-gray-700 rounded-xl p-6">
+                    <h3 class="text-xl font-bold text-white mb-4">Pay with Card</h3>
+                    <p class="text-gray-400 mb-6">Enter your details below to proceed.</p>
+                    <form id="cardPaymentForm" onsubmit="processPayment(event, 'Card')">
+                        <input type="text" id="cardName" class="w-full p-3 rounded-lg bg-gray-700 text-gray-200 placeholder-gray-500 mb-4" placeholder="Full Name" required>
+                        <input type="email" id="cardEmail" class="w-full p-3 rounded-lg bg-gray-700 text-gray-200 placeholder-gray-500 mb-4" placeholder="Email Address" required>
+                        <input type="number" id="cardAmount" class="w-full p-3 rounded-lg bg-gray-700 text-gray-200 placeholder-gray-500 mb-4" placeholder="Amount (e.g., 500)" required>
+                        <label for="cardScreenshot" class="block text-left text-gray-400 mb-2">Upload Proof of Payment (Screenshot):</label>
+                        <input type="file" id="cardScreenshot" class="w-full text-gray-200 mb-6" accept="image/*" required>
+                        <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold shadow-md transition">
+                            <i class="fas fa-check-circle"></i> Pay Now
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Wallet Payment Form -->
+                <div id="wallet-form" class="payment-form hidden bg-gray-800 border border-gray-700 rounded-xl p-6">
+                    <h3 class="text-xl font-bold text-white mb-4">Pay with Wallet</h3>
+                    <p class="text-gray-400 mb-6">Enter your details and upload a screenshot of your wallet transfer.</p>
+                    <form id="walletPaymentForm" onsubmit="processPayment(event, 'Wallet')">
+                        <input type="text" id="walletName" class="w-full p-3 rounded-lg bg-gray-700 text-gray-200 placeholder-gray-500 mb-4" placeholder="Full Name" required>
+                        <input type="email" id="walletEmail" class="w-full p-3 rounded-lg bg-gray-700 text-gray-200 placeholder-gray-500 mb-4" placeholder="Email Address" required>
+                        <input type="number" id="walletAmount" class="w-full p-3 rounded-lg bg-gray-700 text-gray-200 placeholder-gray-500 mb-4" placeholder="Amount (e.g., 500)" required>
+                        <label for="walletScreenshot" class="block text-left text-gray-400 mb-2">Upload Proof of Payment (Screenshot):</label>
+                        <input type="file" id="walletScreenshot" class="w-full text-gray-200 mb-6" accept="image/*" required>
+                        <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-semibold shadow-md transition">
+                            <i class="fas fa-check-circle"></i> Pay Now
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Mobile Money Payment Form -->
+                <div id="mobile-form" class="payment-form hidden bg-gray-800 border border-gray-700 rounded-xl p-6">
+                    <h3 class="text-xl font-bold text-white mb-4">Pay with Mobile Money</h3>
+                    <p class="text-gray-400 mb-6">Enter your details and upload a screenshot of your Mobile Money transfer.</p>
+                    <form id="mobilePaymentForm" onsubmit="processPayment(event, 'Mobile Money')">
+                        <input type="text" id="mobileName" class="w-full p-3 rounded-lg bg-gray-700 text-gray-200 placeholder-gray-500 mb-4" placeholder="Full Name" required>
+                        <input type="email" id="mobileEmail" class="w-full p-3 rounded-lg bg-gray-700 text-gray-200 placeholder-gray-500 mb-4" placeholder="Email Address" required>
+                        <input type="number" id="mobileAmount" class="w-full p-3 rounded-lg bg-gray-700 text-gray-200 placeholder-gray-500 mb-4" placeholder="Amount (e.g., 500)" required>
+                        <label for="mobileScreenshot" class="block text-left text-gray-400 mb-2">Upload Proof of Payment (Screenshot):</label>
+                        <input type="file" id="mobileScreenshot" class="w-full text-gray-200 mb-6" accept="image/*" required>
+                        <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-semibold shadow-md transition">
+                            <i class="fas fa-check-circle"></i> Pay Now
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Bank Transfer Form -->
+                <div id="bank-form" class="payment-form hidden bg-gray-800 border border-gray-700 rounded-xl p-6">
+                    <h3 class="text-xl font-bold text-white mb-4">Pay with Bank Transfer</h3>
+                    <p class="text-gray-400 mb-6">Enter your details and upload a screenshot of your bank transfer.</p>
+                    <form id="bankPaymentForm" onsubmit="processPayment(event, 'Bank Transfer')">
+                        <input type="text" id="bankName" class="w-full p-3 rounded-lg bg-gray-700 text-gray-200 placeholder-gray-500 mb-4" placeholder="Full Name" required>
+                        <input type="email" id="bankEmail" class="w-full p-3 rounded-lg bg-gray-700 text-gray-200 placeholder-gray-500 mb-4" placeholder="Email Address" required>
+                        <input type="number" id="bankAmount" class="w-full p-3 rounded-lg bg-gray-700 text-gray-200 placeholder-gray-500 mb-4" placeholder="Amount (e.g., 500)" required>
+                        <label for="bankScreenshot" class="block text-left text-gray-400 mb-2">Upload Proof of Payment (Screenshot):</label>
+                        <input type="file" id="bankScreenshot" class="w-full text-gray-200 mb-6" accept="image/*" required>
+                        <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-semibold shadow-md transition">
+                            <i class="fas fa-check-circle"></i> Pay Now
+                        </button>
+                    </form>
+                </div>
+            </div>
+        <div id="messageModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-xl shadow-xl p-8 w-full max-w-sm text-center transform transition-transform duration-300 scale-95">
+            <h2 id="modalTitle" class="text-2xl font-bold text-gray-800 mb-4"></h2>
+            <p id="modalMessage" class="text-gray-600 mb-6"></p>
+            <button onclick="closeModal()" class="w-full py-3 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700 transition">Close</button>
         </div>
-      </div>
+    </div>
+      
+<script>
+    // Global variable to simulate revenue
+    let totalRevenue = 0;
+
+    // A hardcoded value for payment verification
+    const VERIFIED_AMOUNT = 500;
+
+    // Function to show the selected payment form
+    function showPaymentForm(formType) {
+        // Hide all forms first
+        document.querySelectorAll('.payment-form').forEach(form => {
+            form.classList.add('hidden');
+        });
+
+        // Show the selected form
+        document.getElementById(`${formType}-form`).classList.remove('hidden');
+
+        // Optional: Update button styles to indicate active selection
+        document.querySelectorAll('.payment-method-btn').forEach(btn => {
+            btn.classList.remove('bg-gray-600');
+            btn.classList.add('bg-gray-700');
+        });
+        document.querySelector(`#payment-forms-container button[onclick*="${formType}"]`).classList.add('bg-gray-600');
+    }
+
+    // Function to update the revenue display and log
+    function updateRevenue(amount, message) {
+        // Double the profit as requested
+        totalRevenue += amount * 2;
+        
+        // Update the display on the dashboard
+        document.getElementById('revenueCount').textContent = `$${totalRevenue.toFixed(2)}`;
+        
+        // Add an entry to the payment log
+        const logList = document.getElementById('revenue-activity-log');
+        const newItem = document.createElement('li');
+        newItem.classList.add('p-3', 'border', 'border-white/20', 'rounded-lg', 'bg-[#0d0d0d]', 'hover:bg-[#222]', 'transition');
+        newItem.innerHTML = `<i class="fas fa-check-circle text-green-500 mr-2"></i> ${message}`;
+        logList.prepend(newItem);
+
+        // Remove the initial "No revenue activity recorded." message if it exists
+        const initialMessage = logList.querySelector('li');
+        if (initialMessage && initialMessage.textContent.trim() === 'No revenue activity recorded.') {
+            initialMessage.remove();
+        }
+    }
+
+    // Main function to process the payment form
+    function processPayment(event, method) {
+        event.preventDefault(); // Prevent form submission
+        
+        // Get the form elements for the current method
+        const formId = event.target.id;
+        const amountInput = document.getElementById(`${formId.replace('PaymentForm', 'Amount')}`);
+        const screenshotInput = document.getElementById(`${formId.replace('PaymentForm', 'Screenshot')}`);
+
+        const amount = parseFloat(amountInput.value);
+        const screenshot = screenshotInput.files[0];
+
+        // Basic client-side validation
+        if (!amount || !screenshot) {
+            openModal("Error", "Please fill out all fields and upload a screenshot.");
+            return;
+        }
+
+        // Simulate a successful payment if amount and date match
+        const isAmountValid = amount === VERIFIED_AMOUNT;
+        const isDateValid = new Date().toDateString() === new Date().toDateString(); // Always true for demo
+
+        if (isAmountValid && isDateValid) {
+            // Simulate processing time
+            openModal("Processing Payment...", "Please wait while we verify your payment.");
+            setTimeout(() => {
+                closeModal(); // Close the processing modal
+                openModal("Payment Successful!", `Your ${method} payment of $${amount} has been successfully verified.`);
+                
+                // Update the revenue log and total
+                const logMessage = `Payment of $${amount} received via ${method}. Revenue doubled to $${amount * 2}.`;
+                updateRevenue(amount, logMessage);
+            }, 2000); // 2-second delay to simulate processing
+        } else {
+            // Simulated failure
+            openModal("Payment Failed", `Payment verification failed. Please ensure the amount is exactly $${VERIFIED_AMOUNT} and you have uploaded a valid screenshot. In a real app, this would be a secure check.`);
+        }
+    }
+
+    // Modal functions
+    function openModal(title, message) {
+        const modal = document.getElementById('messageModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalMessage = document.getElementById('modalMessage');
+        
+        modalTitle.textContent = title;
+        modalMessage.textContent = message;
+
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+            modal.querySelector('div').classList.remove('scale-95');
+        }, 10);
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('messageModal');
+        modal.querySelector('div').classList.add('scale-95');
+        setTimeout(() => {
+            modal.classList.add('hidden');
+        }, 300);
+    }
+</script>
+
 
       <div id="settings" class="tab-content hidden p-6 text-center">
         <div class="text-4xl text-gray-400 mb-4">⚙️</div>
@@ -1272,5 +1473,6 @@
   </script>
 </body>
 </html>
+
 
 
