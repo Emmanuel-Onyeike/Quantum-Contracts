@@ -712,10 +712,10 @@
             <p id="processingText" class="text-xl text-white mt-4">Checking for payment...</p>
         </div>
     </div>
-    
+   
 <script>
-    // Global variable to simulate revenue
-    let totalRevenue = 0;
+    // Global variable to simulate revenue. We get the value from localStorage or default to 0.
+    let totalRevenue = parseFloat(localStorage.getItem('totalRevenue')) || 0;
 
     // Function to generate a random validation code
     function generateValidationCode() {
@@ -745,11 +745,19 @@
         // Double the profit as requested
         totalRevenue += amount * 2;
         
+        // Save the new total to localStorage for persistence
+        localStorage.setItem('totalRevenue', totalRevenue.toFixed(2));
+        
         // Update the display on the dashboard
         document.getElementById('revenueCount').textContent = `$${totalRevenue.toFixed(2)}`;
         
         // Add an entry to the payment log
         const logList = document.getElementById('revenue-activity-log');
+        // Check if the log list is empty. If it is, create the ul tag.
+        if (logList.innerHTML.trim() === '') {
+            logList.innerHTML = `<ul id="revenue-activity-log" class="space-y-2 text-gray-400"></ul>`;
+        }
+        
         const newItem = document.createElement('li');
         newItem.classList.add('p-3', 'border', 'border-white/20', 'rounded-lg', 'bg-[#0d0d0d]', 'hover:bg-[#222]', 'transition');
         newItem.innerHTML = `<i class="fas fa-check-circle text-green-500 mr-2"></i> ${message}`;
@@ -844,6 +852,11 @@
     function closeProcessingModal() {
         const modal = document.getElementById('processingModal');
         modal.classList.add('hidden');
+    }
+
+    // Load initial revenue when the page loads
+    window.onload = function() {
+        document.getElementById('revenueCount').textContent = `$${totalRevenue.toFixed(2)}`;
     }
 </script>
 
@@ -1519,6 +1532,7 @@
   </script>
 </body>
 </html>
+
 
 
 
