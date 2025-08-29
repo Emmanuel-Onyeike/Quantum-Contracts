@@ -52,87 +52,92 @@
       <h1 id="page-title" class="hidden md:block text-3xl font-bold mb-6 capitalize">Overview</h1>
 
       <!-- Content -->
-      <div id="content" class="bg-black border border-gray-700 p-6 rounded-xl shadow text-gray-300">
-        
-        <!-- Stat Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-          <div class="p-4 border border-gray-700 rounded-xl bg-gray-900 flex items-center justify-between">
-            <div>
-              <p class="text-gray-400 text-sm">Total Contracts</p>
-              <h3 class="text-2xl font-bold">0</h3>
-            </div>
-            <i class="fas fa-file-contract text-2xl text-blue-400"></i>
-          </div>
-          <div class="p-4 border border-gray-700 rounded-xl bg-gray-900 flex items-center justify-between">
-            <div>
-              <p class="text-gray-400 text-sm">Pending Payments</p>
-              <h3 class="text-2xl font-bold">0</h3>
-            </div>
-            <i class="fas fa-dollar-sign text-2xl text-green-400"></i>
-          </div>
-          <div class="p-4 border border-gray-700 rounded-xl bg-gray-900 flex items-center justify-between">
-            <div>
-              <p class="text-gray-400 text-sm">Revenue</p>
-              <h3 class="text-2xl font-bold">$0</h3>
-            </div>
-            <i class="fas fa-chart-line text-2xl text-yellow-400"></i>
-          </div>
-          <div class="p-4 border border-gray-700 rounded-xl bg-gray-900 flex items-center justify-between">
-            <div>
-              <p class="text-gray-400 text-sm">Active Users</p>
-              <h3 class="text-2xl font-bold">0</h3>
-            </div>
-            <i class="fas fa-users text-2xl text-purple-400"></i>
-          </div>
-        </div>
-
-        <!-- Action Buttons -->
-        <div class="flex gap-3 mb-6">
-          <button onclick="openModal('addContractModal')" class="px-4 py-2 bg-blue-600 rounded-lg text-white hover:bg-blue-700">
-            <i class="fas fa-plus"></i> Add Contract
-          </button>
-          <button onclick="openModal('addPaymentModal')" class="px-4 py-2 bg-green-600 rounded-lg text-white hover:bg-green-700">
-            <i class="fas fa-credit-card"></i> Add Payment
-          </button>
-        </div>
-
-        <!-- Chart Placeholder -->
-        <div class="p-6 border border-gray-700 rounded-xl bg-gray-900 mb-6">
-          <h3 class="text-lg font-bold mb-3">Revenue Overview</h3>
-          <div class="w-full h-64 flex items-center justify-center text-gray-500 border border-dashed border-gray-600 rounded-lg">
-            Chart Placeholder
-          </div>
-        </div>
-
-        <!-- Recent Activity -->
-        <div class="p-6 border border-gray-700 rounded-xl bg-gray-900 mb-6">
-          <h3 class="text-lg font-bold mb-3">Recent Activity</h3>
-          <ul class="space-y-2">
-            <li class="p-3 border border-gray-700 rounded-lg bg-black">No activity yet.</li>
-          </ul>
-        </div>
-
-        <!-- Table Placeholder -->
-        <div class="p-6 border border-gray-700 rounded-xl bg-gray-900">
-          <h3 class="text-lg font-bold mb-3">Recent Contracts</h3>
-          <table class="w-full text-left border border-gray-700 rounded-lg">
-            <thead class="bg-gray-800 text-gray-400">
-              <tr>
-                <th class="px-4 py-2 border-b border-gray-700">ID</th>
-                <th class="px-4 py-2 border-b border-gray-700">Client</th>
-                <th class="px-4 py-2 border-b border-gray-700">Status</th>
-                <th class="px-4 py-2 border-b border-gray-700">Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td colspan="4" class="text-center text-gray-500 py-4">No contracts yet.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
+    <div id="content" class="bg-[#0d0d0d] border border-gray-700 p-6 rounded-xl shadow text-gray-200">
+  
+  <!-- Stat Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+    <div class="p-4 border border-white/20 rounded-xl bg-[#1a1a1a] hover:bg-[#222] transition flex items-center justify-between shadow">
+      <div>
+        <p class="text-gray-400 text-sm">Total Contracts</p>
+        <h3 class="text-2xl font-bold">0</h3>
       </div>
+      <i class="fas fa-file-contract text-2xl text-blue-400 group-hover:scale-110 transition"></i>
+    </div>
+    <div class="p-4 border border-white/20 rounded-xl bg-[#1a1a1a] hover:bg-[#222] transition flex items-center justify-between shadow">
+      <div>
+        <p class="text-gray-400 text-sm">Pending Payments</p>
+        <h3 class="text-2xl font-bold">0</h3>
+      </div>
+      <i class="fas fa-dollar-sign text-2xl text-green-400"></i>
+    </div>
+    <div class="p-4 border border-white/20 rounded-xl bg-[#1a1a1a] hover:bg-[#222] transition flex items-center justify-between shadow">
+      <div>
+        <p class="text-gray-400 text-sm">Revenue</p>
+        <h3 class="text-2xl font-bold">$0</h3>
+      </div>
+      <i class="fas fa-chart-line text-2xl text-yellow-400"></i>
+    </div>
+    <div class="p-4 border border-white/20 rounded-xl bg-[#1a1a1a] hover:bg-[#222] transition flex items-center justify-between shadow">
+      <div>
+        <p class="text-gray-400 text-sm">Active Users</p>
+        <h3 class="text-2xl font-bold">0</h3>
+      </div>
+      <i class="fas fa-users text-2xl text-purple-400"></i>
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="flex gap-3 mb-6">
+    <button onclick="openModal('addContractModal')" 
+      class="px-5 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow hover:shadow-lg hover:scale-105 transition">
+      <i class="fas fa-plus"></i> Add Contract
+    </button>
+    <button onclick="openModal('addPaymentModal')" 
+      class="px-5 py-2 rounded-xl bg-gradient-to-r from-green-600 to-green-500 text-white shadow hover:shadow-lg hover:scale-105 transition">
+      <i class="fas fa-credit-card"></i> Add Payment
+    </button>
+  </div>
+
+  <!-- Chart Placeholder -->
+  <div class="p-6 border border-white/20 rounded-xl bg-[#1a1a1a] mb-6">
+    <h3 class="text-lg font-bold mb-3">Revenue Overview</h3>
+    <div class="w-full h-64 flex items-center justify-center text-gray-500 border-2 border-dashed border-white/30 rounded-lg">
+      Chart Placeholder
+    </div>
+  </div>
+
+  <!-- Recent Activity -->
+  <div class="p-6 border border-white/20 rounded-xl bg-[#1a1a1a] mb-6">
+    <h3 class="text-lg font-bold mb-3">Recent Activity</h3>
+    <ul class="space-y-2">
+      <li class="p-3 border border-white/20 rounded-lg bg-[#0d0d0d] hover:bg-[#222] transition">No activity yet.</li>
+    </ul>
+  </div>
+
+  <!-- Table Placeholder -->
+  <div class="p-6 border border-white/20 rounded-xl bg-[#1a1a1a]">
+    <h3 class="text-lg font-bold mb-3">Recent Contracts</h3>
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border border-white/20 rounded-lg text-gray-300">
+        <thead class="bg-[#111] text-gray-400">
+          <tr>
+            <th class="px-4 py-2 border-b border-white/20">ID</th>
+            <th class="px-4 py-2 border-b border-white/20">Client</th>
+            <th class="px-4 py-2 border-b border-white/20">Status</th>
+            <th class="px-4 py-2 border-b border-white/20">Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="hover:bg-[#222] transition">
+            <td colspan="4" class="text-center text-gray-500 py-4">No contracts yet.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
     </main>
   </div>
 
@@ -204,6 +209,7 @@
   <script src="tailwind.js"></script>
 </body>
 </html>
+
 
 
 
