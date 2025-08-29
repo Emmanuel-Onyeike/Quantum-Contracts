@@ -53,15 +53,14 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', async () => {
-  const supabaseUrl = "https://obfgfbolpsdzczydubbj.supabase.co";
-  const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9iZmdmYm9scHNkemN6eWR1YmJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0NDc0NzgsImV4cCI6MjA3MjAyMzQ3OH0.xZAtHrXTeyMTwZIUZp0TvypzLOBWZ7QVYsSdb7bYstM";
- const supabase = supabase.createClient(supabaseUrl, supabaseAnonKey);
-  
+  const SUPABASE_URL = "https://obfgfbolpsdzczydubbj.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9iZmdmYm9scHNkemN6eWR1YmJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0NDc0NzgsImV4cCI6MjA3MjAyMzQ3OH0.xZAtHrXTeyMTwZIUZp0TvypzLOBWZ7QVYsSdb7bYstM";
 
+  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   const message = document.getElementById("message");
 
   // Redirect if already logged in
-  const { data: { session } } = await supabase.auth.getSession();
+  const { data: { session } } = await supabaseClient.auth.getSession();
   if (session) window.location.href = "dashboard.html";
 
   document.getElementById("registerForm").addEventListener("submit", async (e) => {
@@ -80,21 +79,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     try {
-      // Sign up the user
-      const { data: signupData, error: signupError } = await supabase.auth.signUp({
+      // Sign up
+      const { data: signupData, error: signupError } = await supabaseClient.auth.signUp({
         email,
         password,
         options: { data: { full_name: name, country } }
       });
       if (signupError) throw signupError;
 
-      // Auto-login immediately
-      const { error: loginError } = await supabase.auth.signInWithPassword({ email, password });
+      // Auto-login
+      const { error: loginError } = await supabaseClient.auth.signInWithPassword({ email, password });
       if (loginError) throw loginError;
 
-      // Upsert user into table
+      // Upsert user table
       if (signupData.user) {
-        const { error: insertError } = await supabase.from('users').upsert([{
+        const { error: insertError } = await supabaseClient.from('users').upsert([{
           id: signupData.user.id,
           email: signupData.user.email,
           full_name: name,
