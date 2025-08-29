@@ -619,26 +619,43 @@
             </div>
 
             <!-- Payment Forms Container -->
-            <div id="payment-forms-container">
-                <!-- Card Payment Form -->
-                <div id="card-form" class="payment-form hidden bg-gray-800 border border-gray-700 rounded-xl p-6">
-                    <h3 class="text-xl font-bold text-white mb-4">Pay with Card</h3>
-                    <p class="text-gray-400 mb-6">Enter your details below to proceed.</p>
-                    <form id="cardPaymentForm" onsubmit="processPayment(event, 'Card')">
-                        <input type="text" id="cardName" class="w-full p-3 rounded-lg bg-gray-700 text-gray-200 placeholder-gray-500 mb-4" placeholder="Full Name" required>
-                        <input type="email" id="cardEmail" class="w-full p-3 rounded-lg bg-gray-700 text-gray-200 placeholder-gray-500 mb-4" placeholder="Email Address" required>
-                        <input type="number" id="cardAmount" class="w-full p-3 rounded-lg bg-gray-700 text-gray-200 placeholder-gray-500 mb-4" placeholder="Amount (e.g., 500)" required>
-                        <label for="cardScreenshot" class="block text-left text-gray-400 mb-2">Upload Proof of Payment (Screenshot):</label>
-                        <input type="file" id="cardScreenshot" class="w-full text-gray-200 mb-6" accept="image/*" required>
-                        <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold shadow-md transition">
-                            <i class="fas fa-check-circle"></i> Pay Now
-                        </button>
-                    </form>
-                </div>
+           <div id="payment" class="tab-content active p-6 text-center bg-gray-900 border border-gray-700 rounded-xl shadow text-gray-200">
+            <div class="text-4xl text-purple-400 mb-4">💰</div>
+            <h2 class="text-2xl font-bold mb-4">Payments</h2>
+            <p class="text-xl mb-6">View and process payments securely from this section.</p>
 
+            <!-- Payment Method Selection -->
+            <div class="bg-gray-800 border border-gray-700 rounded-xl p-6 mb-8">
+                <h3 class="text-xl font-bold text-white mb-4">Select a Payment Method</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <button onclick="displayComingSoon()" class="payment-method-btn flex flex-col items-center justify-center p-4 rounded-xl bg-gray-700 hover:bg-gray-600 transition-colors duration-300">
+                        <i class="fas fa-credit-card text-3xl mb-2"></i>
+                        <span class="text-sm">Coming Soon</span>
+                    </button>
+                    <button onclick="showPaymentForm('wallet')" class="payment-method-btn flex flex-col items-center justify-center p-4 rounded-xl bg-gray-700 hover:bg-gray-600 transition-colors duration-300">
+                        <i class="fas fa-wallet text-3xl mb-2"></i>
+                        <span class="text-sm">Wallet</span>
+                    </button>
+                    <button onclick="displayComingSoon()" class="payment-method-btn flex flex-col items-center justify-center p-4 rounded-xl bg-gray-700 hover:bg-gray-600 transition-colors duration-300">
+                        <i class="fas fa-mobile-alt text-3xl mb-2"></i>
+                        <span class="text-sm">Coming Soon</span>
+                    </button>
+                    <button onclick="displayComingSoon()" class="payment-method-btn flex flex-col items-center justify-center p-4 rounded-xl bg-gray-700 hover:bg-gray-600 transition-colors duration-300">
+                        <i class="fas fa-university text-3xl mb-2"></i>
+                        <span class="text-sm">Coming Soon</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Payment Forms Container -->
+            <div id="payment-forms-container">
                 <!-- Wallet Payment Form -->
                 <div id="wallet-form" class="payment-form hidden bg-gray-800 border border-gray-700 rounded-xl p-6">
                     <h3 class="text-xl font-bold text-white mb-4">Pay with Wallet</h3>
+                    <div class="p-4 rounded-lg bg-gray-700 text-gray-200 mb-6">
+                        <p class="text-sm font-semibold text-gray-400">Wallet Address</p>
+                        <p class="text-lg text-white break-all">0x742d35Cc6634C2d89Db9b0D09Ff827aE8231De1d</p>
+                    </div>
                     <p class="text-gray-400 mb-6">Enter your details and upload a screenshot of your wallet transfer.</p>
                     <form id="walletPaymentForm" onsubmit="processPayment(event, 'Wallet')">
                         <input type="text" id="walletName" class="w-full p-3 rounded-lg bg-gray-700 text-gray-200 placeholder-gray-500 mb-4" placeholder="Full Name" required>
@@ -652,36 +669,11 @@
                     </form>
                 </div>
 
-                <!-- Mobile Money Payment Form -->
-                <div id="mobile-form" class="payment-form hidden bg-gray-800 border border-gray-700 rounded-xl p-6">
-                    <h3 class="text-xl font-bold text-white mb-4">Pay with Mobile Money</h3>
-                    <p class="text-gray-400 mb-6">Enter your details and upload a screenshot of your Mobile Money transfer.</p>
-                    <form id="mobilePaymentForm" onsubmit="processPayment(event, 'Mobile Money')">
-                        <input type="text" id="mobileName" class="w-full p-3 rounded-lg bg-gray-700 text-gray-200 placeholder-gray-500 mb-4" placeholder="Full Name" required>
-                        <input type="email" id="mobileEmail" class="w-full p-3 rounded-lg bg-gray-700 text-gray-200 placeholder-gray-500 mb-4" placeholder="Email Address" required>
-                        <input type="number" id="mobileAmount" class="w-full p-3 rounded-lg bg-gray-700 text-gray-200 placeholder-gray-500 mb-4" placeholder="Amount (e.g., 500)" required>
-                        <label for="mobileScreenshot" class="block text-left text-gray-400 mb-2">Upload Proof of Payment (Screenshot):</label>
-                        <input type="file" id="mobileScreenshot" class="w-full text-gray-200 mb-6" accept="image/*" required>
-                        <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-semibold shadow-md transition">
-                            <i class="fas fa-check-circle"></i> Pay Now
-                        </button>
-                    </form>
-                </div>
-
-                <!-- Bank Transfer Form -->
-                <div id="bank-form" class="payment-form hidden bg-gray-800 border border-gray-700 rounded-xl p-6">
-                    <h3 class="text-xl font-bold text-white mb-4">Pay with Bank Transfer</h3>
-                    <p class="text-gray-400 mb-6">Enter your details and upload a screenshot of your bank transfer.</p>
-                    <form id="bankPaymentForm" onsubmit="processPayment(event, 'Bank Transfer')">
-                        <input type="text" id="bankName" class="w-full p-3 rounded-lg bg-gray-700 text-gray-200 placeholder-gray-500 mb-4" placeholder="Full Name" required>
-                        <input type="email" id="bankEmail" class="w-full p-3 rounded-lg bg-gray-700 text-gray-200 placeholder-gray-500 mb-4" placeholder="Email Address" required>
-                        <input type="number" id="bankAmount" class="w-full p-3 rounded-lg bg-gray-700 text-gray-200 placeholder-gray-500 mb-4" placeholder="Amount (e.g., 500)" required>
-                        <label for="bankScreenshot" class="block text-left text-gray-400 mb-2">Upload Proof of Payment (Screenshot):</label>
-                        <input type="file" id="bankScreenshot" class="w-full text-gray-200 mb-6" accept="image/*" required>
-                        <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-semibold shadow-md transition">
-                            <i class="fas fa-check-circle"></i> Pay Now
-                        </button>
-                    </form>
+                <!-- Coming Soon Message -->
+                <div id="coming-soon-message" class="hidden bg-gray-800 border border-gray-700 rounded-xl p-6 text-center">
+                    <div class="text-6xl mb-4">🚧</div>
+                    <h3 class="text-xl font-bold text-white mb-2">Coming Soon</h3>
+                    <p class="text-gray-400">This payment method will be available shortly. Please check back later!</p>
                 </div>
             </div>
             
@@ -696,12 +688,18 @@
 
     </div>
 
-    <!-- Modal HTML for Success Message -->
-    <div id="successModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-xl shadow-xl p-8 w-full max-w-sm text-center transform transition-transform duration-300 scale-95">
-            <h2 class="text-2xl font-bold text-green-600 mb-4">Payment Successful!</h2>
-            <p id="successModalMessage" class="text-gray-600 mb-6"></p>
-            <button onclick="closeSuccessModal()" class="w-full py-3 rounded-xl bg-green-600 text-white font-semibold hover:bg-green-700 transition">Close</button>
+    <!-- Receipt Modal HTML -->
+    <div id="receiptModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-xl shadow-xl p-8 w-full max-w-md text-gray-800 flex flex-col justify-between" style="min-height: 400px;">
+            <div id="receiptContent" class="overflow-auto flex-1">
+                <!-- Receipt content will be dynamically generated here -->
+            </div>
+            <div class="mt-6 flex gap-4 justify-between">
+                <button onclick="closeReceiptModal()" class="flex-1 py-3 rounded-xl bg-gray-200 text-gray-800 font-semibold hover:bg-gray-300 transition">Close</button>
+                <button onclick="window.print()" class="flex-1 py-3 rounded-xl bg-green-600 text-white font-semibold hover:bg-green-700 transition">
+                    <i class="fas fa-print mr-2"></i> Print / Download
+                </button>
+            </div>
         </div>
     </div>
     
@@ -712,7 +710,7 @@
             <p id="processingText" class="text-xl text-white mt-4">Checking for payment...</p>
         </div>
     </div>
-   
+    
 <script>
     // Global variable to simulate revenue. We get the value from localStorage or default to 0.
     let totalRevenue = parseFloat(localStorage.getItem('totalRevenue')) || 0;
@@ -728,6 +726,7 @@
         document.querySelectorAll('.payment-form').forEach(form => {
             form.classList.add('hidden');
         });
+        document.getElementById('coming-soon-message').classList.add('hidden');
 
         // Show the selected form
         document.getElementById(`${formType}-form`).classList.remove('hidden');
@@ -737,7 +736,28 @@
             btn.classList.remove('bg-gray-600');
             btn.classList.add('bg-gray-700');
         });
-        document.querySelector(`#payment-forms-container button[onclick*="${formType}"]`).classList.add('bg-gray-600');
+        document.querySelector(`button[onclick*="showPaymentForm('${formType}')"]`).classList.add('bg-gray-600');
+    }
+
+    // New function to display a "Coming Soon" message
+    function displayComingSoon() {
+        // Hide all forms first
+        document.querySelectorAll('.payment-form').forEach(form => {
+            form.classList.add('hidden');
+        });
+        
+        // Show the coming soon message
+        document.getElementById('coming-soon-message').classList.remove('hidden');
+
+        // Update button styles to indicate active selection
+        document.querySelectorAll('.payment-method-btn').forEach(btn => {
+            btn.classList.remove('bg-gray-600');
+            btn.classList.add('bg-gray-700');
+        });
+        
+        // Find the clicked button and apply the active style
+        const activeBtn = event.currentTarget;
+        activeBtn.classList.add('bg-gray-600');
     }
 
     // Function to update the revenue display and log
@@ -753,21 +773,60 @@
         
         // Add an entry to the payment log
         const logList = document.getElementById('revenue-activity-log');
-        // Check if the log list is empty. If it is, create the ul tag.
-        if (logList.innerHTML.trim() === '') {
-            logList.innerHTML = `<ul id="revenue-activity-log" class="space-y-2 text-gray-400"></ul>`;
-        }
         
-        const newItem = document.createElement('li');
-        newItem.classList.add('p-3', 'border', 'border-white/20', 'rounded-lg', 'bg-[#0d0d0d]', 'hover:bg-[#222]', 'transition');
-        newItem.innerHTML = `<i class="fas fa-check-circle text-green-500 mr-2"></i> ${message}`;
-        logList.prepend(newItem);
-
         // Remove the initial "No revenue activity recorded." message if it exists
         const initialMessage = logList.querySelector('li');
         if (initialMessage && initialMessage.textContent.trim() === 'No revenue activity recorded.') {
             initialMessage.remove();
         }
+
+        const newItem = document.createElement('li');
+        newItem.classList.add('p-3', 'border', 'border-white/20', 'rounded-lg', 'bg-[#0d0d0d]', 'hover:bg-[#222]', 'transition');
+        newItem.innerHTML = `<i class="fas fa-check-circle text-green-500 mr-2"></i> ${message}`;
+        logList.prepend(newItem);
+    }
+
+    // Function to generate the receipt HTML
+    function generateReceipt(details) {
+        const { name, email, amount, method, validationCode } = details;
+        const transactionId = `TXN-${Math.random().toString(36).substring(2, 12).toUpperCase()}`;
+        const date = new Date().toLocaleString();
+
+        return `
+            <div class="text-center">
+                <div class="text-2xl font-bold text-gray-800 mb-2">Tech Nxxt</div>
+                <p class="text-sm text-gray-500">Your Payment Receipt</p>
+            </div>
+            <div class="my-6 border-b border-gray-200"></div>
+            <div class="space-y-4">
+                <div>
+                    <p class="text-xs font-semibold text-gray-500 uppercase">Transaction ID</p>
+                    <p class="font-mono text-lg text-gray-900">${transactionId}</p>
+                </div>
+                <div>
+                    <p class="text-xs font-semibold text-gray-500 uppercase">Date</p>
+                    <p class="text-lg text-gray-900">${date}</p>
+                </div>
+                <div>
+                    <p class="text-xs font-semibold text-gray-500 uppercase">Amount Paid</p>
+                    <p class="text-3xl font-bold text-green-600">$${parseFloat(amount).toFixed(2)}</p>
+                </div>
+                <div>
+                    <p class="text-xs font-semibold text-gray-500 uppercase">Paid By</p>
+                    <p class="text-lg text-gray-900">${name}</p>
+                </div>
+                <div>
+                    <p class="text-xs font-semibold text-gray-500 uppercase">Payment Method</p>
+                    <p class="text-lg text-gray-900">${method}</p>
+                </div>
+            </div>
+            <div class="my-6 border-b border-gray-200"></div>
+            <div class="text-center">
+                <p class="text-sm text-gray-500">Validation Code:</p>
+                <p class="text-xl font-bold text-purple-600">${validationCode}</p>
+                <p class="mt-4 text-sm text-gray-500">Thank you for your payment!</p>
+            </div>
+        `;
     }
 
     // Main function to process the payment form
@@ -777,14 +836,19 @@
         // Get the form elements for the current method
         const formId = event.target.id;
         const amountInput = document.getElementById(`${formId.replace('PaymentForm', 'Amount')}`);
+        const nameInput = document.getElementById(`${formId.replace('PaymentForm', 'Name')}`);
+        const emailInput = document.getElementById(`${formId.replace('PaymentForm', 'Email')}`);
         const screenshotInput = document.getElementById(`${formId.replace('PaymentForm', 'Screenshot')}`);
 
         const amount = parseFloat(amountInput.value);
+        const name = nameInput.value;
+        const email = emailInput.value;
         const screenshot = screenshotInput.files[0];
 
         // Basic client-side validation
-        if (!amount || !screenshot) {
-            openSuccessModal("Error", "Please fill out all fields and upload a screenshot.", false);
+        if (!amount || !name || !email || !screenshot) {
+            // Note: I am not validating card details as this is a front-end simulation
+            openModal('processingModal', 'Error', 'Please fill out all required fields and upload a screenshot.', false);
             return;
         }
 
@@ -801,42 +865,35 @@
             setTimeout(() => {
                 closeProcessingModal(); // Close the processing modal
                 
-                // Get name and email from the form
-                const name = document.getElementById(`${formId.replace('PaymentForm', 'Name')}`).value;
-                const email = document.getElementById(`${formId.replace('PaymentForm', 'Email')}`).value;
-
                 // Generate validation code
                 const validationCode = generateValidationCode();
-                
-                // Open success modal
-                const successMessage = `Your ${method} payment of $${amount} has been successfully submitted. Your validation code is: <strong>${validationCode}</strong>. Please use this code to validate your payment.`;
-                openSuccessModal("Payment Successful!", successMessage, true);
+
+                // Generate and display the receipt
+                const receiptDetails = { name, email, amount, method, validationCode };
+                const receiptHtml = generateReceipt(receiptDetails);
+                document.getElementById('receiptContent').innerHTML = receiptHtml;
+                openReceiptModal();
                 
                 // Update the revenue log and total
                 const logMessage = `Payment of $${amount} from ${name} received via ${method}. Revenue doubled to $${amount * 2}.`;
                 updateRevenue(amount, logMessage);
+
             }, 1000); // 1-second delay for "confirming" message
         }, 6000); // 6-second initial delay
     }
 
-    // Modal functions for success
-    function openSuccessModal(title, message, isSuccess) {
-        const modal = document.getElementById('successModal');
-        const modalTitle = modal.querySelector('h2');
-        const modalMessage = document.getElementById('successModalMessage');
-        
-        modalTitle.textContent = title;
-        modalMessage.innerHTML = message;
-
+    // Modal functions for receipt
+    function openReceiptModal() {
+        const modal = document.getElementById('receiptModal');
         modal.classList.remove('hidden');
         setTimeout(() => {
-            modal.querySelector('div').classList.remove('scale-95');
+            modal.classList.add('active');
         }, 10);
     }
 
-    function closeSuccessModal() {
-        const modal = document.getElementById('successModal');
-        modal.querySelector('div').classList.add('scale-95');
+    function closeReceiptModal() {
+        const modal = document.getElementById('receiptModal');
+        modal.classList.remove('active');
         setTimeout(() => {
             modal.classList.add('hidden');
         }, 300);
@@ -1532,6 +1589,7 @@
   </script>
 </body>
 </html>
+
 
 
 
