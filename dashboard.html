@@ -197,16 +197,18 @@
         </div>
 
           <!-- User Profile Section -->
-  <section id="userProfile" class="w-full max-w-md bg-gray-800 rounded-2xl shadow-lg p-6 space-y-4">
-    <h2 class="text-2xl font-bold text-gray-300">Your Profile</h2>
-    <p><strong>Name:</strong> <span id="userName"></span></p>
-    <p><strong>Email:</strong> <span id="userEmail"></span></p>
-    <p><strong>Country:</strong> <span id="userCountry"></span></p>
-    <p><strong>Email Verified:</strong> <span id="emailStatus"></span></p>
-  </section>
+  <section id="userProfile" class="w-full bg-gray-700 rounded-2xl shadow-lg p-6 space-y-4">
+      <h2 class="text-2xl font-bold text-gray-300">Your Profile</h2>
+      <p><strong>Name:</strong> <span id="userName">Loading...</span></p>
+      <p><strong>Email:</strong> <span id="userEmail">Loading...</span></p>
+      <p><strong>Country:</strong> <span id="userCountry">Loading...</span></p>
+      <p><strong>Email Verified:</strong> <span id="emailStatus">Loading...</span></p>
+    </section>
+
+    <button id="logoutBtn" class="w-full py-3 bg-red-500 hover:bg-red-600 rounded-xl font-semibold text-white transition">Logout</button>
+  </main>
 
   <script>
-    // Supabase config
     const supabaseUrl = "https://obfgfbolpsdzczydubbj.supabase.co";
     const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9iZmdmYm9scHNkemN6eWR1YmJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0NDc0NzgsImV4cCI6MjA3MjAyMzQ3OH0.xZAtHrXTeyMTwZIUZp0TvypzLOBWZ7QVYsSdb7bYstM";
     const supabase = supabase.createClient(supabaseUrl, supabaseAnonKey);
@@ -215,15 +217,27 @@
       const { data: { user }, error } = await supabase.auth.getUser();
 
       if (error || !user) {
-        // Not logged in → redirect to login
         window.location.href = "login.html";
+        return;
+      }
+      
+      // Fetch additional user data from the 'users' table
+      const { data: userData, error: userDataError } = await supabase
+        .from('users')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+      
+      if (userDataError) {
+        console.error('Error fetching user profile:', userDataError);
+        document.getElementById("userName").textContent = 'Error loading profile.';
         return;
       }
 
       // Fill profile info
-      document.getElementById("userName").textContent = user.user_metadata.full_name || "N/A";
+      document.getElementById("userName").textContent = userData.full_name || "N/A";
       document.getElementById("userEmail").textContent = user.email;
-      document.getElementById("userCountry").textContent = user.user_metadata.country || "N/A";
+      document.getElementById("userCountry").textContent = userData.country || "N/A";
       document.getElementById("emailStatus").textContent = user.confirmed_at ? "✅ Verified" : "❌ Not Verified";
     }
 
@@ -1607,6 +1621,7 @@
   </script>
 </body>
 </html>
+
 
 
 
