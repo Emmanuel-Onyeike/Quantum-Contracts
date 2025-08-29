@@ -689,7 +689,115 @@
                     </form>
                 </div>
             </div>
+<script>
+    // Global variable to simulate revenue
+    let totalRevenue = 0;
 
+    // A hardcoded value for payment verification
+    const VERIFIED_AMOUNT = 500;
+
+    // Function to show the selected payment form
+    function showPaymentForm(formType) {
+        // Hide all forms first
+        document.querySelectorAll('.payment-form').forEach(form => {
+            form.classList.add('hidden');
+        });
+
+        // Show the selected form
+        document.getElementById(`${formType}-form`).classList.remove('hidden');
+
+        // Optional: Update button styles to indicate active selection
+        document.querySelectorAll('.payment-method-btn').forEach(btn => {
+            btn.classList.remove('bg-gray-600');
+            btn.classList.add('bg-gray-700');
+        });
+        document.querySelector(`#payment-forms-container button[onclick*="${formType}"]`).classList.add('bg-gray-600');
+    }
+
+    // Function to update the revenue display and log
+    function updateRevenue(amount, message) {
+        // Double the profit as requested
+        totalRevenue += amount * 2;
+        
+        // Update the display on the dashboard
+        document.getElementById('revenueCount').textContent = `$${totalRevenue.toFixed(2)}`;
+        
+        // Add an entry to the payment log
+        const logList = document.getElementById('revenue-activity-log');
+        const newItem = document.createElement('li');
+        newItem.classList.add('p-3', 'border', 'border-white/20', 'rounded-lg', 'bg-[#0d0d0d]', 'hover:bg-[#222]', 'transition');
+        newItem.innerHTML = `<i class="fas fa-check-circle text-green-500 mr-2"></i> ${message}`;
+        logList.prepend(newItem);
+
+        // Remove the initial "No revenue activity recorded." message if it exists
+        const initialMessage = logList.querySelector('li');
+        if (initialMessage && initialMessage.textContent.trim() === 'No revenue activity recorded.') {
+            initialMessage.remove();
+        }
+    }
+
+    // Main function to process the payment form
+    function processPayment(event, method) {
+        event.preventDefault(); // Prevent form submission
+        
+        // Get the form elements for the current method
+        const formId = event.target.id;
+        const amountInput = document.getElementById(`${formId.replace('PaymentForm', 'Amount')}`);
+        const screenshotInput = document.getElementById(`${formId.replace('PaymentForm', 'Screenshot')}`);
+
+        const amount = parseFloat(amountInput.value);
+        const screenshot = screenshotInput.files[0];
+
+        // Basic client-side validation
+        if (!amount || !screenshot) {
+            openModal("Error", "Please fill out all fields and upload a screenshot.");
+            return;
+        }
+
+        // Simulate a successful payment if amount and date match
+        const isAmountValid = amount === VERIFIED_AMOUNT;
+        const isDateValid = new Date().toDateString() === new Date().toDateString(); // Always true for demo
+
+        if (isAmountValid && isDateValid) {
+            // Simulate processing time
+            openModal("Processing Payment...", "Please wait while we verify your payment.");
+            setTimeout(() => {
+                closeModal(); // Close the processing modal
+                openModal("Payment Successful!", `Your ${method} payment of $${amount} has been successfully verified.`);
+                
+                // Update the revenue log and total
+                const logMessage = `Payment of $${amount} received via ${method}. Revenue doubled to $${amount * 2}.`;
+                updateRevenue(amount, logMessage);
+            }, 2000); // 2-second delay to simulate processing
+        } else {
+            // Simulated failure
+            openModal("Payment Failed", `Payment verification failed. Please ensure the amount is exactly $${VERIFIED_AMOUNT} and you have uploaded a valid screenshot. In a real app, this would be a secure check.`);
+        }
+    }
+
+    // Modal functions
+    function openModal(title, message) {
+        const modal = document.getElementById('messageModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalMessage = document.getElementById('modalMessage');
+        
+        modalTitle.textContent = title;
+        modalMessage.textContent = message;
+
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+            modal.querySelector('div').classList.remove('scale-95');
+        }, 10);
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('messageModal');
+        modal.querySelector('div').classList.add('scale-95');
+        setTimeout(() => {
+            modal.classList.add('hidden');
+        }, 300);
+    }
+</script>
 
       <div id="settings" class="tab-content hidden p-6 text-center">
         <div class="text-4xl text-gray-400 mb-4">⚙️</div>
@@ -1363,6 +1471,7 @@
   </script>
 </body>
 </html>
+
 
 
 
