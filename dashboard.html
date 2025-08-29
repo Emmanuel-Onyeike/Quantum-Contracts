@@ -57,21 +57,23 @@
   <!-- Stat Cards -->
   <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
  <!-- Pending Contracts -->
+<!-- Pending Contracts -->
+<!-- Pending Contracts -->
 <div class="p-4 border border-white/20 rounded-xl bg-[#1a1a1a] hover:bg-[#222] transition flex items-center justify-between shadow">
   <div>
     <p class="text-gray-400 text-sm">Pending contracts</p>
-    <h3 id="pendingContracts" class="text-2xl font-bold">0</h3>
+    <h3 id="pendingCount" class="text-2xl font-bold">0</h3>
   </div>
-  <i class="fas fa-file-contract text-2xl text-yellow-400"></i>
+  <i class="fas fa-file-contract"></i>
 </div>
 
 <!-- Total Contracts -->
 <div class="p-4 border border-white/20 rounded-xl bg-[#1a1a1a] hover:bg-[#222] transition flex items-center justify-between shadow">
   <div>
     <p class="text-gray-400 text-sm">Total Contracts</p>
-    <h3 id="totalContracts" class="text-2xl font-bold">0</h3>
+    <h3 id="totalCount" class="text-2xl font-bold">0</h3>
   </div>
-  <i class="fas fa-file-contract text-2xl text-blue-400"></i>
+  <i class="fas fa-file-contract text-2xl text-blue-400 group-hover:scale-110 transition"></i>
 </div>
 
 
@@ -92,62 +94,51 @@
     </div>
   </div>
 <script>
-  let pendingCount = 0;
-let totalCount = 0;
+  let pendingContracts = 0;
+  let totalContracts = 0;
 
-// Generate 20-char contract code
-function generateContractCode() {
-  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  let code = "";
-  for (let i = 0; i < 20; i++) {
-    code += chars.charAt(Math.floor(Math.random() * chars.length));
+  function continueContract() {
+    // Grab the inputs
+    const userName = document.getElementById("userName").value.trim();
+    const contractType = document.getElementById("contractType").value;
+
+    // Validate inputs
+    if (!userName) {
+      alert("Please enter a user name.");
+      return;
+    }
+    if (!contractType) {
+      alert("Please select a contract type.");
+      return;
+    }
+
+    // Increment pending contracts
+    pendingContracts++;
+    document.getElementById("pendingCount").innerText = pendingContracts;
+
+    // Close modal
+    closeModal("addContractModal");
+
+    // Reset inputs
+    document.getElementById("userName").value = "";
+    document.getElementById("contractType").selectedIndex = 0;
+
+    // Disable save button again until code is generated (if you want)
+    document.getElementById("saveBtn").disabled = true;
   }
-  document.getElementById("contractCode").value = code;
-  document.getElementById("saveBtn").disabled = false;
-}
 
-// When Save is clicked
-function continueContract() {
-  // Increment pending contracts
-  pendingCount++;
-  document.getElementById("pendingContracts").textContent = pendingCount;
+  // Example function to move a contract from pending → total
+  function activateContract() {
+    if (pendingContracts > 0) {
+      pendingContracts--;
+      totalContracts++;
 
-  // Show loading modal
-  showLoading(() => {
-    openModal("continueContractModal");
-  });
-
-  // Reset form
-  document.getElementById("userName").value = "";
-  document.getElementById("contractType").selectedIndex = 0;
-  document.getElementById("contractCode").value = "";
-  document.getElementById("saveBtn").disabled = true;
-}
-
-// Simulated loading
-function showLoading(callback) {
-  const loader = document.createElement("div");
-  loader.id = "loaderOverlay";
-  loader.className = "fixed inset-0 flex items-center justify-center bg-black/80 z-[100]";
-  loader.innerHTML = `<div class="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>`;
-  document.body.appendChild(loader);
-
-  setTimeout(() => {
-    document.getElementById("loaderOverlay").remove();
-    callback();
-  }, 6000);
-}
-
-// Move pending to total when contract is activated
-function activateContract() {
-  if (pendingCount > 0) {
-    pendingCount--;
-    totalCount++;
-    document.getElementById("pendingContracts").textContent = pendingCount;
-    document.getElementById("totalContracts").textContent = totalCount;
+      document.getElementById("pendingCount").innerText = pendingContracts;
+      document.getElementById("totalCount").innerText = totalContracts;
+    }
   }
-}
 </script>
+
   <!-- Action Buttons -->
   <div class="flex gap-3 mb-6">
   <button onclick="openModal('addContractModal')" 
@@ -391,6 +382,7 @@ function activateContract() {
   <script src="tailwind.js"></script>
 </body>
 </html>
+
 
 
 
