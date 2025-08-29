@@ -7,9 +7,23 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
   <style>
-    /* Ensure modals are on top of other content */
     .modal-overlay {
       z-index: 100;
+    }
+    /* Add a basic pulsing effect for the simulated scan */
+    @keyframes pulse-border {
+      0% {
+        box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.7);
+      }
+      70% {
+        box-shadow: 0 0 0 10px rgba(37, 99, 235, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(37, 99, 235, 0);
+      }
+    }
+    .scan-pulse {
+      animation: pulse-border 1.5s infinite;
     }
   </style>
 </head>
@@ -251,7 +265,7 @@
             <i class="fas fa-spinner fa-spin text-4xl text-blue-400"></i>
         </div>
         <h2 id="verificationTitle" class="text-xl font-bold mb-2 text-white">Verifying...</h2>
-        <p id="verificationMessage" class="text-gray-400">Please wait while we review your receipt.</p>
+        <p id="verificationMessage" class="text-gray-400">Scanning receipt and checking code...</p>
         <button id="closeVerificationBtn" onclick="closeModal('verificationModal')" class="mt-6 px-6 py-2 rounded-xl bg-gray-700 text-white hidden">Close</button>
     </div>
   </div>
@@ -260,8 +274,6 @@
     // ======= COUNTS (persistent with localStorage) =======
     let pendingContracts = parseInt(localStorage.getItem("pendingContracts")) || 0;
     let totalContracts = parseInt(localStorage.getItem("totalContracts")) || 0;
-
-    // Use a variable to hold the last generated code for verification
     let lastGeneratedCode = localStorage.getItem("lastGeneratedCode") || "";
 
     function saveCounts() {
@@ -270,7 +282,6 @@
       localStorage.setItem("lastGeneratedCode", lastGeneratedCode);
     }
 
-    // ======= HELPERS =======
     function getEl(id) {
       const el = document.getElementById(id);
       if (!el) console.warn(`Element #${id} not found`);
@@ -284,7 +295,6 @@
       if (t) t.textContent = String(totalContracts);
     }
 
-    // ======= MODALS =======
     function openModal(id) {
       const m = getEl(id);
       if (m) m.classList.remove("hidden");
@@ -294,7 +304,6 @@
       if (m) m.classList.add("hidden");
     }
 
-    // ======= LOADING OVERLAY =======
     function showLoading(forMs = 6000, after) {
       let overlay = getEl("loadingScreen");
       if (!overlay) {
@@ -308,7 +317,6 @@
       }, forMs);
     }
 
-    // ======= FORM: ENABLE SAVE ONLY WHEN VALID =======
     function validateFormEnableSave() {
       const name = getEl("userName")?.value.trim();
       const type = getEl("contractType")?.value;
@@ -322,19 +330,17 @@
       }
     }
 
-    // ======= GENERATE CODE =======
     function generateContractCode() {
       const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
       let code = "";
       for (let i = 0; i < 20; i++) code += chars.charAt(Math.floor(Math.random() * chars.length));
       const codeInput = getEl("contractCode");
       if (codeInput) codeInput.value = code;
-      lastGeneratedCode = code; // Store the new code
-      saveCounts(); // Save it to localStorage
+      lastGeneratedCode = code;
+      saveCounts();
       validateFormEnableSave();
     }
 
-    // ======= SAVE / CONTINUE =======
     function continueContract() {
       const userName = getEl("userName")?.value.trim();
       const contractType = getEl("contractType")?.value;
@@ -352,7 +358,6 @@
       closeModal("addContractModal");
       showLoading(6000, () => openModal("continueContractModal"));
 
-      // Reset form
       const nameEl = getEl("userName");
       const typeEl = getEl("contractType");
       const codeEl = getEl("contractCode");
@@ -364,7 +369,7 @@
       if (saveBtn) saveBtn.disabled = true;
     }
 
-    // ======= PAYMENT VERIFICATION LOGIC (NEW) =======
+    // NEW: Verification and Activation Logic
     function verifyAndActivate() {
       const inputCode = getEl("activationCode")?.value.trim();
       const file = getEl("receiptUpload")?.files[0];
@@ -377,56 +382,55 @@
         return;
       }
 
-      // Show verification modal
       openModal('verificationModal');
-      getEl('verificationTitle').textContent = "Verifying...";
-      getEl('verificationMessage').textContent = "Please wait while we review your receipt.";
-      getEl('verificationIcon').innerHTML = `<i class="fas fa-spinner fa-spin text-4xl text-blue-400"></i>`;
-      getEl('closeVerificationBtn').classList.add('hidden');
+      const verifyTitle = getEl('verificationTitle');
+      const verifyMessage = getEl('verificationMessage');
+      const verifyIcon = getEl('verificationIcon');
+      const closeBtn = getEl('closeVerificationBtn');
+      const verifyBtn = getEl('verifyBtn');
 
-      // Simulate a 30-second review process
+      verifyTitle.textContent = "Verifying...";
+      verifyMessage.textContent = "Scanning receipt and checking code...";
+      verifyIcon.innerHTML = `<i class="fas fa-spinner fa-spin text-4xl text-blue-400"></i>`;
+      closeBtn.classList.add('hidden');
+      verifyBtn.disabled = true; // Disable the button during verification
+
       setTimeout(() => {
         let isCodeMatch = (inputCode === lastGeneratedCode);
-        let verificationResult;
 
         if (isCodeMatch && file) {
-          // Success case
-          verificationResult = "success";
-          getEl('verificationIcon').innerHTML = `<i class="fas fa-check-circle text-4xl text-green-500"></i>`;
-          getEl('verificationTitle').textContent = "Verification Successful!";
-          getEl('verificationMessage').textContent = "The contract code matched the receipt. You can now activate your contract.";
-          
-          // Allow activation
-          activateContract();
-
+          verifyIcon.innerHTML = `<i class="fas fa-check-circle text-4xl text-green-500"></i>`;
+          verifyTitle.textContent = "Verification Successful!";
+          verifyMessage.textContent = "Code and receipt are valid. The contract is now active.";
+          activateContract(); // Call the activation function
         } else {
-          // Failure case
-          verificationResult = "invalid";
-          getEl('verificationIcon').innerHTML = `<i class="fas fa-times-circle text-4xl text-red-500"></i>`;
-          getEl('verificationTitle').textContent = "Verification Failed";
-          getEl('verificationMessage').textContent = "The code you entered does not match the generated code or the receipt is invalid.";
+          verifyIcon.innerHTML = `<i class="fas fa-times-circle text-4xl text-red-500"></i>`;
+          verifyTitle.textContent = "Verification Failed";
+          verifyMessage.textContent = "The code is incorrect or the receipt is invalid.";
+          alert("The code you entered is invalid. Please check your receipt and try again.");
         }
 
-        getEl('closeVerificationBtn').classList.remove('hidden');
-
-      }, 5000); // 5 seconds for demo, can be changed to 30000 (30 secs)
+        closeBtn.classList.remove('hidden');
+        verifyBtn.disabled = false; // Re-enable the button after verification
+      }, 5000); // Simulate a 5-second review (can be adjusted to 30000ms for 30 seconds)
     }
 
-    // ======= ACTIVATE CONTRACT (Pending → Total) =======
     function activateContract() {
       if (pendingContracts > 0) {
         pendingContracts -= 1;
         totalContracts += 1;
         saveCounts();
         renderCounts();
-        // Clear last generated code as it's now used
-        lastGeneratedCode = "";
+        lastGeneratedCode = ""; // In a real app, this would be marked as "used"
         saveCounts();
-        // Update status message
         const statusEl = getEl("verification-status");
         statusEl.textContent = "Contract activated successfully!";
         statusEl.className = "mt-4 text-center text-sm font-semibold text-green-500";
         statusEl.classList.remove("hidden");
+        // Clear the input fields after successful activation
+        getEl('activationCode').value = '';
+        getEl('receiptUpload').value = '';
+        getEl('file-preview').classList.add('hidden');
       } else {
         const statusEl = getEl("verification-status");
         statusEl.textContent = "No pending contracts to activate.";
@@ -435,7 +439,7 @@
       }
     }
 
-    // ======= IMAGE PREVIEW (NEW) =======
+    // Image preview logic
     const receiptUpload = getEl('receiptUpload');
     if (receiptUpload) {
         receiptUpload.addEventListener('change', (event) => {
@@ -452,7 +456,7 @@
         });
     }
 
-    // ======= TAB NAVIGATION =======
+    // Tab Navigation Logic
     const navButtons = document.querySelectorAll(".nav-btn");
     const tabContents = document.querySelectorAll(".tab-content");
     const pageTitle = getEl("page-title");
@@ -462,14 +466,11 @@
       navButtons.forEach(btn => btn.classList.remove("bg-gray-800", "text-white"));
       const activeBtn = document.querySelector(`[data-tab="${tabName}"]`);
       if (activeBtn) activeBtn.classList.add("bg-gray-800", "text-white");
-
       tabContents.forEach(tab => tab.classList.add("hidden"));
       const activeTab = getEl(tabName);
       if (activeTab) activeTab.classList.remove("hidden");
-
       if (pageTitle) pageTitle.textContent = tabName;
       if (pageTitleMobile) pageTitleMobile.textContent = tabName;
-
       closeModal('continueContractModal');
     }
 
@@ -479,23 +480,20 @@
       });
     });
 
-    // ======= INIT =======
+    // Init
     document.addEventListener("DOMContentLoaded", () => {
       if (navButtons.length) {
         navButtons[0].classList.add("bg-gray-800", "text-white");
       }
-
       ["userName", "contractType", "contractCode"].forEach(id => {
         const el = getEl(id);
         if (!el) return;
         el.addEventListener("input", validateFormEnableSave);
         el.addEventListener("change", validateFormEnableSave);
       });
-
       renderCounts();
     });
 
-    // Make functions globally available
     window.generateContractCode = generateContractCode;
     window.continueContract = continueContract;
     window.openModal = openModal;
