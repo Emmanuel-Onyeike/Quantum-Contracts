@@ -123,14 +123,32 @@
                 </div>
                 <i class="fas fa-chart-line text-2xl text-green-400"></i>
             </div>
-          <div class="p-4 border border-white/20 rounded-xl bg-[#1a1a1a] hover:bg-[#222] transition flex items-center justify-between shadow">
-            <div>
-              <p class="text-gray-400 text-sm">Active Users</p>
-              <h3 id="usersCount" class="text-2xl font-bold">0</h3>
-            </div>
-            <i class="fas fa-users text-2xl text-purple-400"></i>
-          </div>
+         <div class="p-4 border border-white/20 rounded-xl bg-[#1a1a1a] hover:bg-[#222] transition flex items-center justify-between shadow">
+  <div>
+    <p class="text-gray-400 text-sm">Active Users</p>
+    <h3 id="usersCount" class="text-2xl font-bold">0</h3>
+  </div>
+  <i class="fas fa-users text-2xl text-purple-400"></i>
+</div>
+
+<script>
+  let activeUsers = 1; // you (always at least 1)
+
+  // Show initial
+  const usersCountEl = document.getElementById("usersCount");
+  usersCountEl.textContent = activeUsers;
+
+  // Fake random users joining/leaving
+  setInterval(() => {
+    const change = Math.random() > 0.5 ? 1 : -1;
+    activeUsers = Math.max(1, activeUsers + change); // never below 1
+    usersCountEl.textContent = activeUsers;
+  }, 2000); // update every 2s
+</script>
+
         </div>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js"></script>
 
         <div class="flex flex-col md:flex-row gap-3 mb-6">
           <button onclick="openModal('addContractModal')" class="w-full md:w-auto px-5 py-2 rounded-xl bg-transparent border border-white/30 text-white hover:bg-white/10 hover:border-white/60 hover:scale-105 transition shadow-sm">
@@ -1549,6 +1567,7 @@
   </script>
 </body>
 </html>
+
 
 
 
