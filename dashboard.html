@@ -85,7 +85,7 @@
             <i class="fas fa-users text-2xl text-purple-400"></i>
           </div>
         </div>
-        
+
         <div class="flex gap-3 mb-6">
           <button onclick="openModal('addContractModal')" class="px-5 py-2 rounded-xl bg-transparent border border-white/30 text-white hover:bg-white/10 hover:border-white/60 hover:scale-105 transition shadow-sm">
             <i class="fas fa-plus"></i> Add Contract
@@ -130,10 +130,35 @@
 
       <div id="contract" class="tab-content hidden p-6 text-center">
         <div class="text-4xl text-blue-400 mb-4">📑</div>
-        <p class="text-xl">All active and past Contracts are listed here.</p>
-        <button onclick="activateContract()" class="mt-4 px-6 py-3 rounded-xl bg-gradient-to-r from-green-500 to-emerald-400 text-white font-semibold">
-          Activate Pending Contract
-        </button>
+        <p class="text-xl mb-4">All active and pending Contracts are listed here.</p>
+
+        <div class="bg-gray-900 border border-gray-700 rounded-xl p-6 md:p-10 text-left">
+          <h3 class="text-2xl font-bold text-white mb-4">Activate a Pending Contract</h3>
+          <p class="text-gray-400 mb-6">To activate your contract, please enter the unique code from your payment receipt and upload a screenshot of the receipt itself.</p>
+          
+          <div class="space-y-6">
+            <div>
+              <label for="activationCode" class="block text-gray-300 text-sm font-medium mb-2">Contract Code</label>
+              <input type="text" id="activationCode" placeholder="Enter code from receipt" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/20 text-white placeholder-gray-500 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/40 transition">
+            </div>
+
+            <div>
+              <label for="receiptUpload" class="block text-gray-300 text-sm font-medium mb-2">Payment Receipt Screenshot</label>
+              <div class="flex items-center gap-3">
+                <input type="file" id="receiptUpload" accept="image/*" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer">
+              </div>
+            </div>
+            
+            <div id="file-preview" class="hidden relative w-full h-48 bg-gray-800 border-2 border-dashed border-gray-600 rounded-lg flex items-center justify-center overflow-hidden">
+                <img id="preview-image" src="" alt="Image Preview" class="object-cover w-full h-full">
+            </div>
+
+            <button id="verifyBtn" onclick="verifyAndActivate()" class="w-full px-6 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-semibold shadow-md hover:shadow-lg transition">
+              Verify and Activate
+            </button>
+            <p id="verification-status" class="mt-4 text-center text-sm font-semibold hidden"></p>
+          </div>
+        </div>
       </div>
 
       <div id="dust" class="tab-content hidden p-6 text-center">
@@ -161,10 +186,8 @@
   <div id="addContractModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center modal-overlay">
     <div class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-8 rounded-2xl border border-white/20 w-[420px] shadow-2xl relative">
       <h2 class="text-2xl font-bold mb-6 text-white text-center">✨ Add Contract</h2>
-
       <label class="block text-gray-300 text-sm mb-2">User Name</label>
       <input id="userName" type="text" placeholder="Enter user name" class="w-full mb-5 px-4 py-3 rounded-xl bg-white/5 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/40 transition">
-
       <label class="block text-gray-300 text-sm mb-2">Contract Type</label>
       <select id="contractType" class="w-full mb-6 px-4 py-3 rounded-xl bg-white/5 border border-white/20 text-white focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/40 transition">
         <option class="bg-gray-900 text-white">Real Estate</option>
@@ -176,7 +199,6 @@
         <option class="bg-gray-900 text-white">Infrastructure</option>
         <option class="bg-gray-900 text-white">Premium Quick Contract</option>
       </select>
-
       <div class="mb-8">
         <label class="block text-gray-300 text-sm mb-2">Contract Code</label>
         <div class="flex gap-2">
@@ -186,7 +208,6 @@
           </button>
         </div>
       </div>
-
       <div class="flex justify-end gap-3">
         <button onclick="closeModal('addContractModal')" class="px-5 py-3 rounded-xl bg-white/5 border border-white/20 text-white hover:bg-white/10 hover:border-white/40 transition">
           Close
@@ -210,20 +231,28 @@
       <div class="flex justify-center mb-4">
         <i class="fas fa-file-contract text-4xl text-red-500"></i>
       </div>
-
       <div class="bg-red-600/20 border border-red-500 text-red-400 p-4 rounded-xl mb-6">
         <h2 class="text-xl font-bold mb-2">⚠️ Pending Contract</h2>
         <p class="text-sm">Your contract has been generated but is not yet active.<br>Please make a payment to activate your contract.</p>
       </div>
-
       <p class="text-gray-300 mb-3">Proceed to payment to activate:</p>
       <button onclick="openTab('payment')" class="block w-full text-center px-6 py-3 rounded-xl bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white font-semibold shadow-md hover:shadow-lg transition">
         💳 Go to Payment Page
       </button>
-
       <button onclick="closeModal('continueContractModal')" class="mt-5 px-6 py-2 rounded-xl bg-white/10 border border-white/20 text-gray-300 hover:bg-white/20 hover:text-white transition">
         Close
       </button>
+    </div>
+  </div>
+  
+  <div id="verificationModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center modal-overlay">
+    <div class="bg-gray-900 p-8 rounded-2xl border border-gray-700 shadow-2xl w-[420px] text-center">
+        <div id="verificationIcon" class="mb-4">
+            <i class="fas fa-spinner fa-spin text-4xl text-blue-400"></i>
+        </div>
+        <h2 id="verificationTitle" class="text-xl font-bold mb-2 text-white">Verifying...</h2>
+        <p id="verificationMessage" class="text-gray-400">Please wait while we review your receipt.</p>
+        <button id="closeVerificationBtn" onclick="closeModal('verificationModal')" class="mt-6 px-6 py-2 rounded-xl bg-gray-700 text-white hidden">Close</button>
     </div>
   </div>
 
@@ -232,9 +261,13 @@
     let pendingContracts = parseInt(localStorage.getItem("pendingContracts")) || 0;
     let totalContracts = parseInt(localStorage.getItem("totalContracts")) || 0;
 
+    // Use a variable to hold the last generated code for verification
+    let lastGeneratedCode = localStorage.getItem("lastGeneratedCode") || "";
+
     function saveCounts() {
       localStorage.setItem("pendingContracts", pendingContracts);
       localStorage.setItem("totalContracts", totalContracts);
+      localStorage.setItem("lastGeneratedCode", lastGeneratedCode);
     }
 
     // ======= HELPERS =======
@@ -285,7 +318,7 @@
       const isValid = Boolean(name && type && code);
       if (saveBtn) {
         saveBtn.disabled = !isValid;
-        saveBtn.textContent = "Continue"; // Ensure button text is "Continue"
+        saveBtn.textContent = "Continue";
       }
     }
 
@@ -296,6 +329,8 @@
       for (let i = 0; i < 20; i++) code += chars.charAt(Math.floor(Math.random() * chars.length));
       const codeInput = getEl("contractCode");
       if (codeInput) codeInput.value = code;
+      lastGeneratedCode = code; // Store the new code
+      saveCounts(); // Save it to localStorage
       validateFormEnableSave();
     }
 
@@ -310,9 +345,7 @@
         return;
       }
 
-      // Increment pending
       pendingContracts += 1;
-      totalContracts += 1; // It's better to increment total immediately, as a pending contract is still a contract.
       saveCounts();
       renderCounts();
 
@@ -331,19 +364,92 @@
       if (saveBtn) saveBtn.disabled = true;
     }
 
+    // ======= PAYMENT VERIFICATION LOGIC (NEW) =======
+    function verifyAndActivate() {
+      const inputCode = getEl("activationCode")?.value.trim();
+      const file = getEl("receiptUpload")?.files[0];
+      const verificationStatusEl = getEl("verification-status");
+
+      if (!inputCode || !file) {
+        verificationStatusEl.textContent = "Please enter the code and upload a screenshot.";
+        verificationStatusEl.className = "mt-4 text-center text-sm font-semibold text-red-500";
+        verificationStatusEl.classList.remove("hidden");
+        return;
+      }
+
+      // Show verification modal
+      openModal('verificationModal');
+      getEl('verificationTitle').textContent = "Verifying...";
+      getEl('verificationMessage').textContent = "Please wait while we review your receipt.";
+      getEl('verificationIcon').innerHTML = `<i class="fas fa-spinner fa-spin text-4xl text-blue-400"></i>`;
+      getEl('closeVerificationBtn').classList.add('hidden');
+
+      // Simulate a 30-second review process
+      setTimeout(() => {
+        let isCodeMatch = (inputCode === lastGeneratedCode);
+        let verificationResult;
+
+        if (isCodeMatch && file) {
+          // Success case
+          verificationResult = "success";
+          getEl('verificationIcon').innerHTML = `<i class="fas fa-check-circle text-4xl text-green-500"></i>`;
+          getEl('verificationTitle').textContent = "Verification Successful!";
+          getEl('verificationMessage').textContent = "The contract code matched the receipt. You can now activate your contract.";
+          
+          // Allow activation
+          activateContract();
+
+        } else {
+          // Failure case
+          verificationResult = "invalid";
+          getEl('verificationIcon').innerHTML = `<i class="fas fa-times-circle text-4xl text-red-500"></i>`;
+          getEl('verificationTitle').textContent = "Verification Failed";
+          getEl('verificationMessage').textContent = "The code you entered does not match the generated code or the receipt is invalid.";
+        }
+
+        getEl('closeVerificationBtn').classList.remove('hidden');
+
+      }, 5000); // 5 seconds for demo, can be changed to 30000 (30 secs)
+    }
+
     // ======= ACTIVATE CONTRACT (Pending → Total) =======
-    // This function can now be used for a future "payment success" event
     function activateContract() {
-      // This logic now ensures you only activate a pending contract
-      // It's a placeholder for when a payment is actually made.
       if (pendingContracts > 0) {
         pendingContracts -= 1;
+        totalContracts += 1;
         saveCounts();
         renderCounts();
-        alert("Contract activated!");
+        // Clear last generated code as it's now used
+        lastGeneratedCode = "";
+        saveCounts();
+        // Update status message
+        const statusEl = getEl("verification-status");
+        statusEl.textContent = "Contract activated successfully!";
+        statusEl.className = "mt-4 text-center text-sm font-semibold text-green-500";
+        statusEl.classList.remove("hidden");
       } else {
-        alert("No pending contracts to activate.");
+        const statusEl = getEl("verification-status");
+        statusEl.textContent = "No pending contracts to activate.";
+        statusEl.className = "mt-4 text-center text-sm font-semibold text-yellow-500";
+        statusEl.classList.remove("hidden");
       }
+    }
+
+    // ======= IMAGE PREVIEW (NEW) =======
+    const receiptUpload = getEl('receiptUpload');
+    if (receiptUpload) {
+        receiptUpload.addEventListener('change', (event) => {
+            const [file] = event.target.files;
+            const preview = getEl('preview-image');
+            const previewContainer = getEl('file-preview');
+            if (file) {
+                preview.src = URL.createObjectURL(file);
+                previewContainer.classList.remove('hidden');
+            } else {
+                preview.src = '';
+                previewContainer.classList.add('hidden');
+            }
+        });
     }
 
     // ======= TAB NAVIGATION =======
@@ -352,21 +458,11 @@
     const pageTitle = getEl("page-title");
     const pageTitleMobile = getEl("page-title-mobile");
 
-    // Static content for other tabs (to avoid re-rendering issues)
-    const sectionsHTML = {
-      overview: document.getElementById("overview").innerHTML,
-      contract: `<div class="p-6 text-center"><div class="text-4xl text-blue-400 mb-4">📑</div><p class="text-xl">All active and past Contracts are listed here.</p><button onclick="activateContract()" class="mt-4 px-6 py-3 rounded-xl bg-gradient-to-r from-green-500 to-emerald-400 text-white font-semibold">Activate Pending Contract</button></div>`,
-      dust: `<div class="p-6 text-center"><div class="text-4xl text-yellow-400 mb-4">✨</div><p class="text-xl">Dust Section – space for experimental or archived data.</p></div>`,
-      billing: `<div class="p-6 text-center"><div class="text-4xl text-pink-400 mb-4">💳</div><p class="text-xl">Manage your Billing details, invoices, and receipts here.</p></div>`,
-      payment: `<div class="p-6 text-center"><div class="text-4xl text-purple-400 mb-4">💰</div><p class="text-xl">View and process Payments securely from this section.</p></div>`,
-      settings: `<div class="p-6 text-center"><div class="text-4xl text-gray-400 mb-4">⚙️</div><p class="text-xl">Customize your account, preferences, and security options here.</p></div>`,
-    };
-
     function openTab(tabName) {
       navButtons.forEach(btn => btn.classList.remove("bg-gray-800", "text-white"));
       const activeBtn = document.querySelector(`[data-tab="${tabName}"]`);
       if (activeBtn) activeBtn.classList.add("bg-gray-800", "text-white");
-      
+
       tabContents.forEach(tab => tab.classList.add("hidden"));
       const activeTab = getEl(tabName);
       if (activeTab) activeTab.classList.remove("hidden");
@@ -374,7 +470,6 @@
       if (pageTitle) pageTitle.textContent = tabName;
       if (pageTitleMobile) pageTitleMobile.textContent = tabName;
 
-      // Close modal if still open
       closeModal('continueContractModal');
     }
 
@@ -386,18 +481,17 @@
 
     // ======= INIT =======
     document.addEventListener("DOMContentLoaded", () => {
-      // Set initial tab to active
       if (navButtons.length) {
         navButtons[0].classList.add("bg-gray-800", "text-white");
       }
-      
-      // Attach event listeners for form validation
+
       ["userName", "contractType", "contractCode"].forEach(id => {
         const el = getEl(id);
         if (!el) return;
         el.addEventListener("input", validateFormEnableSave);
         el.addEventListener("change", validateFormEnableSave);
       });
+
       renderCounts();
     });
 
@@ -408,6 +502,7 @@
     window.closeModal = closeModal;
     window.activateContract = activateContract;
     window.openTab = openTab;
+    window.verifyAndActivate = verifyAndActivate;
   </script>
 </body>
 </html>
