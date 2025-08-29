@@ -197,48 +197,7 @@
           </div>
         </div>
 
-     <section id="userSection" class="bg-gray-800 p-6 rounded-2xl shadow-md max-w-md">
-    <h3 class="text-lg font-bold text-purple-400 mb-2">Your Account</h3>
-    <p><strong>Name:</strong> <span id="userName">Loading...</span></p>
-    <p><strong>Email:</strong> <span id="userEmail">Loading...</span></p>
-    <p><strong>Country:</strong> <span id="userCountry">Loading...</span></p>
-  </section>
-
-
-<script>
-document.addEventListener('DOMContentLoaded', async () => {
-  const SUPABASE_URL = "https://obfgfbolpsdzczydubbj.supabase.co";
-  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9iZmdmYm9scHNkemN6eWR1YmJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0NDc0NzgsImV4cCI6MjA3MjAyMzQ3OH0.xZAtHrXTeyMTwZIUZp0TvypzLOBWZ7QVYsSdb7bYstM";
-
-  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-  const userName = document.getElementById("userName");
-  const userEmail = document.getElementById("userEmail");
-  const userCountry = document.getElementById("userCountry");
-  const logoutBtn = document.getElementById("logoutBtn");
-
-  const { data: { session } } = await supabaseClient.auth.getSession();
-  if (!session) window.location.href = "login.html";
-
-  const userId = session.user.id;
-  const { data: userData, error } = await supabaseClient.from('users').select('*').eq('id', userId).single();
-
-  if (error || !userData) {
-    userName.textContent = "Error loading user";
-    userEmail.textContent = "-";
-    userCountry.textContent = "-";
-  } else {
-    userName.textContent = userData.full_name;
-    userEmail.textContent = userData.email;
-    userCountry.textContent = userData.country;
-  }
-
-  logoutBtn.addEventListener('click', async () => {
-    await supabaseClient.auth.signOut();
-    window.location.href = "login.html";
-  });
-});
-</script>
+   
       </div>
 
       <div id="contract" class="tab-content hidden p-6 text-center">
@@ -1612,6 +1571,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   </script>
 </body>
 </html>
+
 
 
 
