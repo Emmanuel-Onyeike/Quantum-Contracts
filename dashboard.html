@@ -94,9 +94,14 @@
     </div>
   </div>
 <script>
-  // ======= COUNTS (in-memory; change to localStorage if you want persistence) =======
-  let pendingContracts = 0;
-  let totalContracts = 0;
+  // ======= COUNTS (persistent with localStorage) =======
+  let pendingContracts = parseInt(localStorage.getItem("pendingContracts")) || 0;
+  let totalContracts = parseInt(localStorage.getItem("totalContracts")) || 0;
+
+  function saveCounts() {
+    localStorage.setItem("pendingContracts", pendingContracts);
+    localStorage.setItem("totalContracts", totalContracts);
+  }
 
   // ======= HELPERS =======
   function getEl(id) {
@@ -124,7 +129,6 @@
 
   // ======= LOADING OVERLAY =======
   function showLoading(forMs = 6000, after) {
-    // Create (or reuse) overlay
     let overlay = document.getElementById("loaderOverlay");
     if (!overlay) {
       overlay = document.createElement("div");
@@ -156,43 +160,39 @@
     const isValid = Boolean(name && type && code);
     if (saveBtn) {
       saveBtn.disabled = !isValid;
-      saveBtn.textContent = isValid ? "Save" : "Save";
+      saveBtn.textContent = "Save";
     }
   }
 
-  // ======= GENERATE CODE (20 chars A-Z a-z 0-9) =======
+  // ======= GENERATE CODE =======
   function generateContractCode() {
     const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     let code = "";
     for (let i = 0; i < 20; i++) code += chars.charAt(Math.floor(Math.random() * chars.length));
     const codeInput = getEl("contractCode");
     if (codeInput) codeInput.value = code;
-
-    validateFormEnableSave(); // enable Save if other fields are filled
+    validateFormEnableSave();
   }
 
-  // ======= SAVE / CONTINUE BUTTON HANDLER =======
+  // ======= SAVE / CONTINUE =======
   function continueContract() {
     const userName = getEl("userName")?.value.trim();
     const contractType = getEl("contractType")?.value;
     const contractCode = getEl("contractCode")?.value.trim();
 
-    // Guard: must be valid
     if (!userName) { alert("Please enter a user name."); return; }
     if (!contractType) { alert("Please select a contract type."); return; }
     if (!contractCode) { alert("Please generate a contract code."); return; }
 
-    // 1) Increment Pending
+    // Increment pending
     pendingContracts += 1;
+    saveCounts();
     renderCounts();
 
-    // 2) Close the "Add Contract" modal
     closeModal("addContractModal");
-
-    // 3) Show loading for 6s, then open the "Continue Contract" modal
     showLoading(6000, () => openModal("continueContractModal"));
 
-    // 4) Reset form + disable save until new code generated
+    // Reset form
     const nameEl = getEl("userName");
     const typeEl = getEl("contractType");
     const codeEl = getEl("contractCode");
@@ -204,18 +204,18 @@
     if (saveBtn) saveBtn.disabled = true;
   }
 
-  // ======= MOVE PENDING → TOTAL (call this after payment/activation) =======
+  // ======= ACTIVATE CONTRACT (Pending → Total) =======
   function activateContract() {
     if (pendingContracts > 0) {
       pendingContracts -= 1;
       totalContracts += 1;
+      saveCounts();
       renderCounts();
     }
   }
 
-  // ======= INIT (wire up live validation) =======
+  // ======= INIT =======
   document.addEventListener("DOMContentLoaded", () => {
-    // Live-enable Save when user types/selects/generates code
     ["userName", "contractType", "contractCode"].forEach(id => {
       const el = getEl(id);
       if (!el) return;
@@ -225,7 +225,6 @@
     renderCounts();
   });
 
-  // Expose for inline onclick=""
   window.generateContractCode = generateContractCode;
   window.continueContract = continueContract;
   window.openModal = openModal;
@@ -480,6 +479,7 @@
   <script src="tailwind.js"></script>
 </body>
 </html>
+
 
 
 
