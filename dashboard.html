@@ -411,7 +411,7 @@
       setTimeout(() => {
         let isCodeMatch = false;
 
-        // NEW: Check for the special "100" code
+        // NEW: Check for the special "100" code first, then the original generated code
         if (codeOnReceipt === specialCode) {
             isCodeMatch = true;
         } else if (codeOnReceipt === lastGeneratedCode) {
@@ -448,10 +448,9 @@
         statusEl.textContent = "Contract activated successfully!";
         statusEl.className = "mt-4 text-center text-sm font-semibold text-green-500";
         statusEl.classList.remove("hidden");
-        getEl('activationCode').value = '';
-        getEl('receiptUpload').value = '';
         getEl('userNameReceipt').value = '';
         getEl('codeOnReceipt').value = '';
+        getEl('receiptUpload').value = '';
         getEl('file-preview').classList.add('hidden');
       } else {
         const statusEl = getEl("verification-status");
