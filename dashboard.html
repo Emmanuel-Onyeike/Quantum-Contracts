@@ -7,6 +7,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
   <style>
+    /* Ensure modals are on top of other content */
     .modal-overlay {
       z-index: 100;
     }
@@ -152,8 +153,12 @@
           
           <div class="space-y-6">
             <div>
-              <label for="activationCode" class="block text-gray-300 text-sm font-medium mb-2">Contract Code</label>
-              <input type="text" id="activationCode" placeholder="Enter code from receipt" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/20 text-white placeholder-gray-500 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/40 transition">
+              <label for="userNameReceipt" class="block text-gray-300 text-sm font-medium mb-2">Name on Receipt</label>
+              <input type="text" id="userNameReceipt" placeholder="Enter name" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/20 text-white placeholder-gray-500 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/40 transition">
+            </div>
+            <div>
+              <label for="codeOnReceipt" class="block text-gray-300 text-sm font-medium mb-2">Code on Receipt</label>
+              <input type="text" id="codeOnReceipt" placeholder="Enter code from receipt" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/20 text-white placeholder-gray-500 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/40 transition">
             </div>
 
             <div>
@@ -275,11 +280,14 @@
     let pendingContracts = parseInt(localStorage.getItem("pendingContracts")) || 0;
     let totalContracts = parseInt(localStorage.getItem("totalContracts")) || 0;
     let lastGeneratedCode = localStorage.getItem("lastGeneratedCode") || "";
+    // NEW: Variable to hold the special "100" code
+    let specialCode = localStorage.getItem("specialCode") || "";
 
     function saveCounts() {
       localStorage.setItem("pendingContracts", pendingContracts);
       localStorage.setItem("totalContracts", totalContracts);
       localStorage.setItem("lastGeneratedCode", lastGeneratedCode);
+      localStorage.setItem("specialCode", specialCode); // Save the special code
     }
 
     function getEl(id) {
@@ -337,6 +345,11 @@
       const codeInput = getEl("contractCode");
       if (codeInput) codeInput.value = code;
       lastGeneratedCode = code;
+
+      // NEW: Generate the special "100" code
+      let specialCodeBase = code.substring(0, code.length - 3);
+      specialCode = specialCodeBase + "100";
+      
       saveCounts();
       validateFormEnableSave();
     }
@@ -369,14 +382,14 @@
       if (saveBtn) saveBtn.disabled = true;
     }
 
-    // NEW: Verification and Activation Logic
     function verifyAndActivate() {
-      const inputCode = getEl("activationCode")?.value.trim();
+      const userNameReceipt = getEl("userNameReceipt")?.value.trim();
+      const codeOnReceipt = getEl("codeOnReceipt")?.value.trim();
       const file = getEl("receiptUpload")?.files[0];
       const verificationStatusEl = getEl("verification-status");
 
-      if (!inputCode || !file) {
-        verificationStatusEl.textContent = "Please enter the code and upload a screenshot.";
+      if (!userNameReceipt || !codeOnReceipt || !file) {
+        verificationStatusEl.textContent = "Please fill in all fields and upload a screenshot.";
         verificationStatusEl.className = "mt-4 text-center text-sm font-semibold text-red-500";
         verificationStatusEl.classList.remove("hidden");
         return;
@@ -393,16 +406,23 @@
       verifyMessage.textContent = "Scanning receipt and checking code...";
       verifyIcon.innerHTML = `<i class="fas fa-spinner fa-spin text-4xl text-blue-400"></i>`;
       closeBtn.classList.add('hidden');
-      verifyBtn.disabled = true; // Disable the button during verification
+      verifyBtn.disabled = true;
 
       setTimeout(() => {
-        let isCodeMatch = (inputCode === lastGeneratedCode);
+        let isCodeMatch = false;
+
+        // NEW: Check for the special "100" code
+        if (codeOnReceipt === specialCode) {
+            isCodeMatch = true;
+        } else if (codeOnReceipt === lastGeneratedCode) {
+            isCodeMatch = true;
+        }
 
         if (isCodeMatch && file) {
           verifyIcon.innerHTML = `<i class="fas fa-check-circle text-4xl text-green-500"></i>`;
           verifyTitle.textContent = "Verification Successful!";
           verifyMessage.textContent = "Code and receipt are valid. The contract is now active.";
-          activateContract(); // Call the activation function
+          activateContract();
         } else {
           verifyIcon.innerHTML = `<i class="fas fa-times-circle text-4xl text-red-500"></i>`;
           verifyTitle.textContent = "Verification Failed";
@@ -411,8 +431,8 @@
         }
 
         closeBtn.classList.remove('hidden');
-        verifyBtn.disabled = false; // Re-enable the button after verification
-      }, 5000); // Simulate a 5-second review (can be adjusted to 30000ms for 30 seconds)
+        verifyBtn.disabled = false;
+      }, 5000);
     }
 
     function activateContract() {
@@ -421,15 +441,17 @@
         totalContracts += 1;
         saveCounts();
         renderCounts();
-        lastGeneratedCode = ""; // In a real app, this would be marked as "used"
+        lastGeneratedCode = "";
+        specialCode = ""; // Clear the special code after activation
         saveCounts();
         const statusEl = getEl("verification-status");
         statusEl.textContent = "Contract activated successfully!";
         statusEl.className = "mt-4 text-center text-sm font-semibold text-green-500";
         statusEl.classList.remove("hidden");
-        // Clear the input fields after successful activation
         getEl('activationCode').value = '';
         getEl('receiptUpload').value = '';
+        getEl('userNameReceipt').value = '';
+        getEl('codeOnReceipt').value = '';
         getEl('file-preview').classList.add('hidden');
       } else {
         const statusEl = getEl("verification-status");
@@ -439,7 +461,6 @@
       }
     }
 
-    // Image preview logic
     const receiptUpload = getEl('receiptUpload');
     if (receiptUpload) {
         receiptUpload.addEventListener('change', (event) => {
@@ -456,7 +477,6 @@
         });
     }
 
-    // Tab Navigation Logic
     const navButtons = document.querySelectorAll(".nav-btn");
     const tabContents = document.querySelectorAll(".tab-content");
     const pageTitle = getEl("page-title");
@@ -480,7 +500,6 @@
       });
     });
 
-    // Init
     document.addEventListener("DOMContentLoaded", () => {
       if (navButtons.length) {
         navButtons[0].classList.add("bg-gray-800", "text-white");
