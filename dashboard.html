@@ -197,50 +197,43 @@
         </div>
 
           <!-- User Profile Section -->
-<section id="userProfile" class="w-full max-w-md bg-gray-800 rounded-2xl shadow-lg p-6 space-y-3">
-  <h2 class="text-2xl font-bold text-gray-300">Your Profile</h2>
-  <p><strong>Name:</strong> <span id="userName"></span></p>
-  <p><strong>Email:</strong> <span id="userEmail"></span></p>
-  <p><strong>Country:</strong> <span id="userCountry"></span></p>
-  <p><strong>Email Verified:</strong> <span id="emailStatus"></span></p>
-</section>
+  <section id="userProfile" class="w-full max-w-md bg-gray-800 rounded-2xl shadow-lg p-6 space-y-4">
+    <h2 class="text-2xl font-bold text-gray-300">Your Profile</h2>
+    <p><strong>Name:</strong> <span id="userName"></span></p>
+    <p><strong>Email:</strong> <span id="userEmail"></span></p>
+    <p><strong>Country:</strong> <span id="userCountry"></span></p>
+    <p><strong>Email Verified:</strong> <span id="emailStatus"></span></p>
+  </section>
 
-<button id="logoutBtn" class="mt-6 px-6 py-3 bg-purple-500 hover:bg-purple-600 rounded-xl font-semibold text-white transition">
-  Logout
-</button>
+  <script>
+    // Supabase config
+    const supabaseUrl = "https://obfgfbolpsdzczydubbj.supabase.co";
+    const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9iZmdmYm9scHNkemN6eWR1YmJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0NDc0NzgsImV4cCI6MjA3MjAyMzQ3OH0.xZAtHrXTeyMTwZIUZp0TvypzLOBWZ7QVYsSdb7bYstM";
+    const supabase = supabase.createClient(supabaseUrl, supabaseAnonKey);
 
-<script>
-const SUPABASE_URL = "https://obfgfbolpsdzczydubbj.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9iZmdmYm9scHNkemN6eWR1YmJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0NDc0NzgsImV4cCI6MjA3MjAyMzQ3OH0.xZAtHrXTeyMTwZIUZp0TvypzLOBWZ7QVYsSdb7bYstM";
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    async function loadUser() {
+      const { data: { user }, error } = await supabase.auth.getUser();
 
-// Load logged-in user info
-async function loadUser() {
-  const { data, error } = await supabase.auth.getUser();
+      if (error || !user) {
+        // Not logged in → redirect to login
+        window.location.href = "login.html";
+        return;
+      }
 
-  if (error || !data.user) {
-    // Not logged in → redirect to login
-    window.location.href = "login.html";
-    return;
-  }
+      // Fill profile info
+      document.getElementById("userName").textContent = user.user_metadata.full_name || "N/A";
+      document.getElementById("userEmail").textContent = user.email;
+      document.getElementById("userCountry").textContent = user.user_metadata.country || "N/A";
+      document.getElementById("emailStatus").textContent = user.confirmed_at ? "✅ Verified" : "❌ Not Verified";
+    }
 
-  const user = data.user;
-  document.getElementById("userName").textContent = user.user_metadata?.full_name || "N/A";
-  document.getElementById("userEmail").textContent = user.email;
-  document.getElementById("userCountry").textContent = user.user_metadata?.country || "N/A";
-  document.getElementById("emailStatus").textContent = "✅ Registered";
-}
+    document.getElementById("logoutBtn").addEventListener("click", async () => {
+      await supabase.auth.signOut();
+      window.location.href = "login.html";
+    });
 
-// Logout button
-document.getElementById("logoutBtn").addEventListener("click", async () => {
-  await supabase.auth.signOut();
-  window.location.href = "login.html";
-});
-
-// Run on page load
-loadUser();
-</script>
-
+    loadUser();
+  </script>
       </div>
 
       <div id="contract" class="tab-content hidden p-6 text-center">
@@ -1614,6 +1607,7 @@ loadUser();
   </script>
 </body>
 </html>
+
 
 
 
