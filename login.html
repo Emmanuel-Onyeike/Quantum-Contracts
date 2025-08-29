@@ -28,22 +28,21 @@
   <p class="mt-4 text-center text-sm text-gray-300">
     Don't have an account? <a href="register.html" class="text-purple-400 hover:underline">Register now</a>
   </p>
-
   <div id="message" class="mt-4 text-center text-sm text-gray-300"></div>
 </main>
 
+<!-- Scripts moved to bottom -->
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  // Initialize Supabase
   const supabaseUrl = "https://obfgfbolpsdzczydubbj.supabase.co";
   const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9iZmdmYm9scHNkemN6eWR1YmJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0NDc0NzgsImV4cCI6MjA3MjAyMzQ3OH0.xZAtHrXTeyMTwZIUZp0TvypzLOBWZ7QVYsSdb7bYstM";
-  const supabase = supabase.createClient(supabaseUrl, supabaseAnonKey);
+  const supabaseClient = supabase.createClient(supabaseUrl, supabaseAnonKey);
 
   const form = document.getElementById("loginForm");
   const message = document.getElementById("message");
 
-  // Redirect if already logged in
-  supabase.auth.getSession().then(({ data: { session } }) => {
+  // Redirect logged-in users
+  supabaseClient.auth.getSession().then(({ data: { session } }) => {
     if (session) window.location.href = "dashboard.html";
   });
 
@@ -55,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const password = document.getElementById("password").value;
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
       if (error) throw error;
 
       message.textContent = "✅ Login successful! Redirecting...";
