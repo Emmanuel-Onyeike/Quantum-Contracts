@@ -174,6 +174,47 @@
             <li class="p-3 border border-white/20 rounded-lg bg-[#0d0d0d] hover:bg-[#222] transition">No activity yet.</li>
           </ul>
         </div>
+         <section id="userProfile" class="w-full max-w-md bg-gray-800 rounded-2xl shadow-lg p-6 space-y-3">
+    <h2 class="text-2xl font-bold text-gray-300">Your Profile</h2>
+    <p><strong>Name:</strong> <span id="userName"></span></p>
+    <p><strong>Email:</strong> <span id="userEmail"></span></p>
+    <p><strong>Country:</strong> <span id="userCountry"></span></p>
+    <p><strong>Email Verified:</strong> <span id="emailStatus"></span></p>
+  </section>
+
+  <button id="logoutBtn" class="mt-6 px-6 py-3 bg-purple-500 hover:bg-purple-600 rounded-xl font-semibold text-white transition">
+    Logout
+  </button>
+
+  <script>
+    const supabaseUrl = "https://obfgfbolpsdzczydubbj.supabase.co"
+    const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9iZmdmYm9scHNkemN6eWR1YmJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0NDc0NzgsImV4cCI6MjA3MjAyMzQ3OH0.xZAtHrXTeyMTwZIUZp0TvypzLOBWZ7QVYsSdb7bYstM"
+    const supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey)
+
+    async function loadUser() {
+      const { data: { user }, error } = await supabase.auth.getUser()
+
+      if (error || !user) {
+        // Not logged in or error → redirect to login
+        window.location.href = "/login"
+        return
+      }
+
+      // Fill in the profile section
+      document.getElementById("userName").textContent = user.user_metadata.full_name || "N/A"
+      document.getElementById("userEmail").textContent = user.email
+      document.getElementById("userCountry").textContent = user.user_metadata.country || "N/A"
+      document.getElementById("emailStatus").textContent = user.confirmed_at ? "✅ Verified" : "❌ Not Verified"
+    }
+
+    document.getElementById("logoutBtn").addEventListener("click", async () => {
+      await supabase.auth.signOut()
+      window.location.href = "/login"
+    })
+
+    loadUser()
+  </script>
+
         <div class="p-6 border border-white/20 rounded-xl bg-[#1a1a1a]">
           <h3 class="text-lg font-bold mb-3">Recent Contracts</h3>
           <div class="activity-log overflow-x-auto">
@@ -1567,6 +1608,7 @@
   </script>
 </body>
 </html>
+
 
 
 
