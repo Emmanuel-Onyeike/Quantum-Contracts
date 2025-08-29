@@ -8,52 +8,54 @@
 <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-900 text-white flex items-center justify-center min-h-screen">
+  <main class="w-full max-w-md bg-gray-800 rounded-3xl shadow-2xl p-8">
+    <h1 class="text-3xl font-extrabold text-purple-400 text-center mb-6">Quantum Contracts</h1>
+    <p class="text-gray-400 text-center mb-6">Login to your account</p>
 
-<main class="w-full max-w-md bg-gray-800 rounded-3xl shadow-2xl p-8">
-  <h1 class="text-3xl font-extrabold text-purple-400 text-center mb-6">Quantum Contracts</h1>
-  <p class="text-gray-400 text-center mb-6">Login to your account</p>
+    <form id="loginForm" class="space-y-4">
+      <div>
+        <label for="email" class="block text-sm font-medium text-gray-300">Email</label>
+        <input type="email" id="email" required class="w-full mt-1 px-4 py-2 bg-gray-700 rounded-xl focus:ring-2 focus:ring-purple-400 focus:outline-none">
+      </div>
+      <div>
+        <label for="password" class="block text-sm font-medium text-gray-300">Password</label>
+        <input type="password" id="password" required class="w-full mt-1 px-4 py-2 bg-gray-700 rounded-xl focus:ring-2 focus:ring-purple-400 focus:outline-none">
+      </div>
+      <button type="submit" class="w-full py-3 bg-purple-500 hover:bg-purple-600 rounded-xl font-semibold text-white transition">Login</button>
+    </form>
 
-  <form id="loginForm" class="space-y-4">
-    <div>
-      <label class="block text-sm font-medium text-gray-300">Email</label>
-      <input type="email" id="email" required class="w-full mt-1 px-4 py-2 bg-gray-700 rounded-xl focus:ring-2 focus:ring-purple-400 focus:outline-none">
-    </div>
-    <div>
-      <label class="block text-sm font-medium text-gray-300">Password</label>
-      <input type="password" id="password" required class="w-full mt-1 px-4 py-2 bg-gray-700 rounded-xl focus:ring-2 focus:ring-purple-400 focus:outline-none">
-    </div>
-    <button type="submit" class="w-full py-3 bg-purple-500 hover:bg-purple-600 rounded-xl font-semibold text-white transition">Login</button>
-  </form>
+    <p class="mt-4 text-center text-sm text-gray-300">Don't have an account? <a href="register.html" class="text-purple-400 hover:underline">Register now</a></p>
+    <div id="message" class="mt-4 text-center text-sm text-gray-300"></div>
+  </main>
 
-  <p class="mt-4 text-center text-sm text-gray-300">Don't have an account? <a href="register.html" class="text-purple-400 hover:underline">Register now</a></p>
-  <div id="message" class="mt-4 text-center text-sm text-gray-300"></div>
-</main>
+  <script>
+    const supabaseUrl = "https://obfgfbolpsdzczydubbj.supabase.co";
+    const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9iZmdmYm9scHNkemN6eWR1YmJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0NDc0NzgsImV4cCI6MjA3MjAyMzQ3OH0.xZAtHrXTeyMTwZIUZp0TvypzLOBWZ7QVYsSdb7bYstM";
+    const supabase = supabase.createClient(supabaseUrl, supabaseAnonKey);
 
-<script>
-const supabaseUrl = "https://obfgfbolpsdzczydubbj.supabase.co";
-const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9iZmdmYm9scHNkemN6eWR1YmJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0NDc0NzgsImV4cCI6MjA3MjAyMzQ3OH0.xZAtHrXTeyMTwZIUZp0TvypzLOBWZ7QVYsSdb7bYstM";
-const supabase = supabase.createClient(supabaseUrl, supabaseAnonKey);
+    const form = document.getElementById("loginForm");
+    const message = document.getElementById("message");
 
-const form = document.getElementById("loginForm");
-const message = document.getElementById("message");
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      message.textContent = "";
 
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
 
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value;
+      try {
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
 
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        message.textContent = "✅ Login successful! Redirecting...";
+        setTimeout(() => {
+          window.location.href = "dashboard.html";
+        }, 1200);
 
-  if (error) {
-    message.textContent = "❌ " + error.message;
-  } else {
-    message.textContent = "✅ Login successful! Redirecting...";
-    setTimeout(() => {
-      window.location.href = "dashboard.html";
-    }, 1200);
-  }
-});
-</script>
+      } catch (error) {
+        message.textContent = `❌ ${error.message}`;
+      }
+    });
+  </script>
 </body>
 </html>
