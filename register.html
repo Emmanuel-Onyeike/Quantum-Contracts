@@ -1,231 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register | Quantum Contracts</title>
-    
-    <!--
-    This is a professional and responsive registration page for Quantum Contracts.
-    It features a clean design, a custom selection field, and is fully optimized for both desktop and mobile devices.
-    The code is self-contained and ready to use.
-    -->
-    
-    <!-- Tailwind CSS CDN for a utility-first styling approach -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Google Fonts for professional typography: 'Inter' is a clean, modern font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Font Awesome for a wide range of professional icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <style>
-        /* ========================================= */
-        /* Custom CSS Variables & Base Styles */
-        /* ========================================= */
-        :root {
-            --navy-blue: #000033;
-            --primary-accent: #6ee7b7; /* green-400 */
-        }
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #000;
-            color: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 2rem;
-        }
-
-        /* Subtle background animation to match the landing page */
-        .hero-bg-animation {
-            background-image: radial-gradient(circle at 0% 0%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-                              radial-gradient(circle at 100% 100%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
-            background-size: 200% 200%;
-            animation: gradient-shift 15s ease infinite;
-        }
-        @keyframes gradient-shift {
-            0% { background-position: 0% 0%, 100% 100%; }
-            50% { background-position: 100% 0%, 0% 100%; }
-            100% { background-position: 0% 0%, 100% 100%; }
-        }
-
-        /* Style for the custom message box */
-        #message-box {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: #1c1c1c;
-            border: 1px solid #6ee7b7;
-            padding: 2rem;
-            border-radius: 1rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            z-index: 100;
-            text-align: center;
-            max-width: 400px;
-            display: none; /* Initially hidden */
-        }
-        #message-box-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(5px);
-            z-index: 99;
-            display: none; /* Initially hidden */
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register | Quantum</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body class="bg-black text-white hero-bg-animation">
+<body class="bg-gray-900 text-white flex items-center justify-center h-screen">
 
-    <!-- Main Registration Container -->
-    <main class="w-full max-w-2xl bg-navy-blue rounded-3xl p-8 md:p-12 shadow-2xl border border-gray-700">
-        <!-- Header -->
-        <div class="flex items-center space-x-2 justify-center mb-6">
-            <i class="fas fa-handshake text-4xl text-white"></i>
-            <h1 class="text-3xl md:text-4xl font-extrabold">Quantum Contracts</h1>
-        </div>
-        <div class="text-center mb-8">
-            <h2 class="text-2xl md:text-3xl font-bold mb-2">Create Your Account</h2>
-            <p class="text-gray-400">Join our network to get started with your high-stakes negotiations.</p>
-        </div>
+  <div class="w-full max-w-md bg-gray-800 rounded-2xl shadow-lg p-8">
+    <h1 class="text-3xl font-bold text-purple-400 mb-6 text-center">Create Your Account</h1>
 
-        <!-- Registration Form -->
-        <form id="registration-form" class="space-y-6">
-            <!-- Full Name Field -->
-            <div>
-                <label for="full-name" class="block text-gray-300 mb-2 font-semibold">Full Name</label>
-                <input type="text" id="full-name" name="full-name" class="w-full p-3 rounded-xl bg-black/50 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-accent" placeholder="Enter your full name" required>
-            </div>
+    <form id="register-form" class="space-y-4">
+      <!-- Full Name -->
+      <div>
+        <label for="name" class="block text-sm font-medium text-gray-300">Full Name</label>
+        <input type="text" id="name" required 
+               class="w-full mt-1 px-4 py-2 bg-gray-700 rounded-lg focus:ring-2 focus:ring-purple-400 focus:outline-none">
+      </div>
 
-            <!-- Email Address Field -->
-            <div>
-                <label for="email" class="block text-gray-300 mb-2 font-semibold">Email Address</label>
-                <input type="email" id="email" name="email" class="w-full p-3 rounded-xl bg-black/50 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-accent" placeholder="example@domain.com" required>
-            </div>
-            <div>
-                <label for="Country" class="block text-gray-300 mb-2 font-semibold">Country</label>
-                <input type="text" id="Country" name="Country" class="w-full p-3 rounded-xl bg-black/50 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-accent" placeholder="Enter your Country" required>
-            </div>
+      <!-- Email -->
+      <div>
+        <label for="email" class="block text-sm font-medium text-gray-300">Email</label>
+        <input type="email" id="email" required 
+               class="w-full mt-1 px-4 py-2 bg-gray-700 rounded-lg focus:ring-2 focus:ring-purple-400 focus:outline-none">
+      </div>
 
-            <!-- Password Field -->
-            <div>
-                <label for="password" class="block text-gray-300 mb-2 font-semibold">Password</label>
-                <input type="password" id="password" name="password" class="w-full p-3 rounded-xl bg-black/50 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-accent" placeholder="Create a strong password" required>
-            </div>
+      <!-- Password -->
+      <div>
+        <label for="password" class="block text-sm font-medium text-gray-300">Password</label>
+        <input type="password" id="password" required 
+               class="w-full mt-1 px-4 py-2 bg-gray-700 rounded-lg focus:ring-2 focus:ring-purple-400 focus:outline-none">
+      </div>
 
-            <!-- Confirm Password Field -->
-            <div>
-                <label for="confirm-password" class="block text-gray-300 mb-2 font-semibold">Confirm Password</label>
-                <input type="password" id="confirm-password" name="confirm-password" class="w-full p-3 rounded-xl bg-black/50 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-accent" placeholder="Confirm your password" required>
-            </div>
+      <!-- Submit Button -->
+      <button type="submit" 
+              class="w-full py-3 bg-purple-500 hover:bg-purple-600 rounded-lg font-semibold text-white transition">
+        Sign Up
+      </button>
+    </form>
 
-            <!-- Selection Field for Contract Type -->
-            <div>
-                <label for="contract-type" class="block text-gray-300 mb-2 font-semibold">Area of Interest</label>
-                <div class="relative">
-                    <select id="contract-type" name="contract-type" class="w-full p-3 rounded-xl appearance-none bg-black/50 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-accent pr-10">
-                        <option value="" disabled selected>Select a primary contract type</option>
-                        <option value="real-estate">Real Estate</option>
-                        <option value="technology">Technology & SaaS</option>
-                        <option value="ma">Mergers & Acquisitions</option>
-                        <option value="financial">Financial Services</option>
-                        <option value="government">Government & Public Sector</option>
-                        <option value="other">Other</option>
-                    </select>
-                    <!-- Custom Arrow Icon for Select Field -->
-                    <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                        <i class="fas fa-chevron-down text-gray-400"></i>
-                    </div>
-                </div>
-            </div>
+    <!-- Messages -->
+    <div id="message" class="mt-4 text-center text-sm text-gray-300"></div>
+  </div>
 
-            <!-- Terms and Conditions Checkbox -->
-            <div class="flex items-start space-x-2">
-                <input type="checkbox" id="terms" name="terms" class="mt-1 form-checkbox h-4 w-4 text-primary-accent bg-gray-900 border-gray-700 rounded focus:ring-primary-accent" required>
-                <label for="terms" class="text-sm text-gray-400">I agree to the <a href="#" class="text-primary-accent hover:underline">Terms of Service</a> and <a href="#" class="text-primary-accent hover:underline">Privacy Policy</a>.</label>
-            </div>
+  <script>
+    // Supabase client
+    const supabaseUrl = "https://obfgfbolpsdzczydubbj.supabase.co"
+    const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9iZmdmYm9scHNkemN6eWR1YmJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0NDc0NzgsImV4cCI6MjA3MjAyMzQ3OH0.xZAtHrXTeyMTwZIUZp0TvypzLOBWZ7QVYsSdb7bYstM"
+    const supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey)
 
-            <!-- Submit Button -->
-            <button type="submit" class="w-full py-3 mt-4 rounded-full bg-white text-black font-bold shadow-lg hover:bg-gray-200 transition-colors duration-300">
-                Register Your Account
-            </button>
-        </form>
-    </main>
+    // Handle Register
+    const form = document.getElementById("register-form")
+    const message = document.getElementById("message")
 
-    <!-- Message Box Overlay and Container -->
-    <div id="message-box-overlay"></div>
-    <div id="message-box">
-        <h4 id="message-title" class="text-xl font-bold mb-2"></h4>
-        <p id="message-content" class="text-gray-300"></p>
-        <button id="close-message-box" class="mt-4 px-6 py-2 bg-primary-accent text-gray-900 font-semibold rounded-full hover:bg-green-300 transition-colors duration-300">OK</button>
-    </div>
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault()
+      message.textContent = "Processing..."
+      
+      const name = document.getElementById("name").value
+      const email = document.getElementById("email").value
+      const password = document.getElementById("password").value
 
-    <!-- JavaScript for Form Validation and Redirection -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const form = document.getElementById('registration-form');
-            const password = document.getElementById('password');
-            const confirmPassword = document.getElementById('confirm-password');
-            const termsCheckbox = document.getElementById('terms');
-            const messageBox = document.getElementById('message-box');
-            const messageBoxOverlay = document.getElementById('message-box-overlay');
-            const messageTitle = document.getElementById('message-title');
-            const messageContent = document.getElementById('message-content');
-            const closeMessageBoxBtn = document.getElementById('close-message-box');
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: { full_name: name }
+        }
+      })
 
-            // Function to display a custom message box
-            const showMessage = (title, message, isSuccess = false) => {
-                messageTitle.textContent = title;
-                messageContent.textContent = message;
-                messageBox.style.display = 'block';
-                messageBoxOverlay.style.display = 'block';
-
-                if (isSuccess) {
-                    // Redirect after a short delay for the user to see the success message
-                    setTimeout(() => {
-                        window.location.href = 'dashboard.html';
-                    }, 1500);
-                }
-            };
-
-            // Function to close the custom message box
-            const closeMessage = () => {
-                messageBox.style.display = 'none';
-                messageBoxOverlay.style.display = 'none';
-            };
-
-            closeMessageBoxBtn.addEventListener('click', closeMessage);
-
-            // Handle form submission
-            form.addEventListener('submit', (e) => {
-                e.preventDefault(); // Prevent default form submission
-
-                // Simple validation checks
-                if (password.value !== confirmPassword.value) {
-                    showMessage("Password Mismatch", "The passwords you entered do not match. Please try again.");
-                    password.focus();
-                    return;
-                }
-
-                if (!termsCheckbox.checked) {
-                    showMessage("Terms Not Accepted", "You must agree to the Terms of Service to register.");
-                    return;
-                }
-
-                // If all checks pass, show success message and trigger redirection
-                showMessage("Success!", "Account created successfully. Redirecting you to your dashboard...", true);
-                
-                // Note: No need for `form.reset()` or `console.log()` as we are redirecting.
-            });
-        });
-    </script>
+      if (error) {
+        message.textContent = "❌ " + error.message
+      } else {
+        message.textContent = "✅ Registration successful! Check your email to confirm your account."
+        form.reset()
+      }
+    })
+  </script>
 </body>
 </html>
