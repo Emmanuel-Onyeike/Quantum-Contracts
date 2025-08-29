@@ -1,1249 +1,940 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TechNxxt Support Dashboard</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Font Awesome for icons -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-  <style>
-    /* Custom CSS for slide-out menu */
-    .slide-out-menu {
-      transform: translateX(100%);
-      transition: transform 0.3s ease-in-out;
-    }
-    .slide-out-menu.open {
-      transform: translateX(0);
-    }
-    .modal-overlay {
-      z-index: 100;
-    }
-    /* Ensure no horizontal scrolling on smaller screens */
-    html, body {
-      overflow-x: hidden;
-    }
-    /* Skeleton Loader */
-    .skeleton-loader {
-      background-color: #1a1a1a;
-      border-radius: 0.5rem;
-      animation: pulse 1.5s infinite ease-in-out;
-    }
-    .skeleton-loader-text {
-        height: 1rem;
-        margin-bottom: 0.5rem;
-    }
-    .skeleton-loader-card {
-        height: 6rem;
-    }
-    @keyframes pulse {
-      0% { opacity: 0.8; }
-      50% { opacity: 0.5; }
-      100% { opacity: 0.8; }
-    }
-    /* Scrollable Activity Log */
-    .activity-log {
-        max-height: 20rem; /* Adjust this value as needed */
-        overflow-y: auto;
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TechNxxt Support Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <style>
+    /* Custom CSS for slide-out menu */
+    .slide-out-menu {
+      transform: translateX(100%);
+      transition: transform 0.3s ease-in-out;
+    }
+    .slide-out-menu.open {
+      transform: translateX(0);
+    }
+    .modal-overlay {
+      z-index: 100;
+    }
+    /* Ensure no horizontal scrolling on smaller screens */
+    html, body {
+      overflow-x: hidden;
+    }
+    /* Skeleton Loader */
+    .skeleton-loader {
+      background-color: #1a1a1a;
+      border-radius: 0.5rem;
+      animation: pulse 1.5s infinite ease-in-out;
+    }
+    .skeleton-loader-text {
+        height: 1rem;
+        margin-bottom: 0.5rem;
+    }
+    .skeleton-loader-card {
+        height: 6rem;
+    }
+    @keyframes pulse {
+      0% { opacity: 0.8; }
+      50% { opacity: 0.5; }
+      100% { opacity: 0.8; }
+    }
+    /* Scrollable Activity Log */
+    .activity-log {
+        max-height: 20rem; /* Adjust this value as needed */
+        overflow-y: auto;
+    }
+  </style>
 </head>
 <body class="bg-black text-gray-200 font-sans">
-  <!-- Mobile Header (Fixed) -->
-  <header class="md:hidden sticky top-0 bg-black/80 backdrop-blur-sm z-40 p-4 border-b border-gray-700 flex items-center justify-between">
-    <h1 id="page-title-mobile" class="text-xl font-bold capitalize">Overview</h1>
-    <button id="openMenu" class="p-2 rounded-lg bg-gray-800 text-white">
-      <i class="fas fa-bars"></i>
-    </button>
-  </header>
-
-  <div class="flex min-h-screen">
-    <!-- Sidebar (Desktop) -->
-    <aside id="desktop-sidebar" class="hidden md:flex w-64 flex-col bg-black border-r border-gray-700">
-      <div class="p-6 border-b border-gray-700">
-        <h2 class="text-2xl font-bold text-white">TechNxxt</h2>
-        <p class="text-sm text-gray-400">Support Dashboard</p>
-      </div>
-      <nav class="flex-1 p-4 flex flex-col gap-2">
-        <button class="nav-btn flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-800" data-tab="overview">
-          <i class="fas fa-chart-line"></i> Overview
-        </button>
-        <button class="nav-btn flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-800" data-tab="contract">
-          <i class="fas fa-file-contract"></i> Contract
-        </button>
-        <button class="nav-btn flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-800" data-tab="dust">
-          <i class="fas fa-magic"></i> Dust
-        </button>
-        <button class="nav-btn flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-800" data-tab="billing">
-          <i class="fas fa-receipt"></i> Billing
-        </button>
-        <button class="nav-btn flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-800" data-tab="payment">
-          <i class="fas fa-dollar-sign"></i> Payment
-        </button>
-        <button class="nav-btn flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-800" data-tab="settings">
-          <i class="fas fa-cog"></i> Settings
-        </button>
-      </nav>
-      <div class="p-4 border-t border-gray-700 text-sm text-gray-500">
-        © 2025 TechNxxt
-      </div>
-    </aside>
-
-    <!-- Main Content -->
-    <main class="flex-1 p-6 pt-20 md:pt-6">
-      <h1 id="page-title" class="hidden md:block text-3xl font-bold mb-6 capitalize">Overview</h1>
-
-      <!-- Skeleton Loader for initial page load -->
-      <div id="initial-loader" class="space-y-6">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div class="skeleton-loader skeleton-loader-card"></div>
-          <div class="skeleton-loader skeleton-loader-card"></div>
-          <div class="skeleton-loader skeleton-loader-card"></div>
-          <div class="skeleton-loader skeleton-loader-card"></div>
-        </div>
-        <div class="skeleton-loader h-10 w-48"></div>
-        <div class="skeleton-loader h-64"></div>
-        <div class="skeleton-loader h-64"></div>
-        <div class="skeleton-loader h-64"></div>
-      </div>
-      
-      <!-- Tab Content Sections -->
-      <div id="overview" class="tab-content bg-[#0d0d0d] border border-gray-700 p-6 rounded-xl shadow text-gray-200 hidden">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-          <div class="p-4 border border-white/20 rounded-xl bg-[#1a1a1a] hover:bg-[#222] transition flex items-center justify-between shadow">
-            <div>
-              <p class="text-gray-400 text-sm">Pending contracts</p>
-              <h3 id="pendingCount" class="text-2xl font-bold">0</h3>
-            </div>
-            <i class="fas fa-file-contract text-2xl text-red-500"></i>
-          </div>
-          <div class="p-4 border border-white/20 rounded-xl bg-[#1a1a1a] hover:bg-[#222] transition flex items-center justify-between shadow">
-            <div>
-              <p class="text-gray-400 text-sm">Total Contracts</p>
-              <h3 id="totalCount" class="text-2xl font-bold">0</h3>
-            </div>
-            <i class="fas fa-file-contract text-2xl text-blue-400"></i>
-          </div>
-          <div class="p-4 border border-white/20 rounded-xl bg-[#1a1a1a] hover:bg-[#222] transition flex items-center justify-between shadow">
-            <div>
-              <p class="text-gray-400 text-sm">Revenue</p>
-              <h3 id="revenueCount" class="text-2xl font-bold">$0</h3>
-            </div>
-            <i class="fas fa-chart-line text-2xl text-green-400"></i>
-          </div>
-          <div class="p-4 border border-white/20 rounded-xl bg-[#1a1a1a] hover:bg-[#222] transition flex items-center justify-between shadow">
-            <div>
-              <p class="text-gray-400 text-sm">Active Users</p>
-              <h3 id="usersCount" class="text-2xl font-bold">0</h3>
-            </div>
-            <i class="fas fa-users text-2xl text-purple-400"></i>
-          </div>
-        </div>
-
-        <div class="flex flex-col md:flex-row gap-3 mb-6">
-          <button onclick="openModal('addContractModal')" class="w-full md:w-auto px-5 py-2 rounded-xl bg-transparent border border-white/30 text-white hover:bg-white/10 hover:border-white/60 hover:scale-105 transition shadow-sm">
-            <i class="fas fa-plus"></i> Add Contract
-          </button>
-        </div>
-
-        <div class="p-6 border border-white/20 rounded-xl bg-[#1a1a1a] mb-6">
-          <h3 class="text-lg font-bold mb-3">Revenue Activity</h3>
-          <ul id="revenue-activity-log" class="space-y-2 activity-log">
-            <li class="p-3 border border-white/20 rounded-lg bg-[#0d0d0d] hover:bg-[#222] transition">No revenue activity recorded.</li>
-          </ul>
-        </div>
-
-        <div class="p-6 border border-white/20 rounded-xl bg-[#1a1a1a] mb-6">
-          <h3 class="text-lg font-bold mb-3">Recent Activity</h3>
-          <ul id="recent-activity-log" class="space-y-2 activity-log">
-            <li class="p-3 border border-white/20 rounded-lg bg-[#0d0d0d] hover:bg-[#222] transition">No activity yet.</li>
-          </ul>
-        </div>
-
-        <div class="p-6 border border-white/20 rounded-xl bg-[#1a1a1a]">
-          <h3 class="text-lg font-bold mb-3">Recent Contracts</h3>
-          <div class="activity-log overflow-x-auto">
-            <table class="w-full text-left border border-white/20 rounded-lg text-gray-300">
-              <thead class="bg-[#111] text-gray-400">
-                <tr>
-                  <th class="px-4 py-2 border-b border-white/20">ID</th>
-                  <th class="px-4 py-2 border-b border-white/20">Client</th>
-                  <th class="px-4 py-2 border-b border-white/20">Status</th>
-                  <th class="px-4 py-2 border-b border-white/20">Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="hover:bg-[#222] transition">
-                  <td colspan="4" class="text-center text-gray-500 py-4">No contracts yet.</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <div id="contract" class="tab-content hidden p-6 text-center">
-        <div class="text-4xl text-blue-400 mb-4">📑</div>
-        <p class="text-xl mb-4">All active and pending Contracts are listed here.</p>
-        
-        <button onclick="openModal('dustContractModal')" class="w-full md:w-auto px-5 py-2 rounded-xl bg-yellow-600/20 text-yellow-400 border border-yellow-500 hover:bg-yellow-600/30 transition shadow-sm mb-6">
-          <i class="fas fa-trash-alt"></i> Dust Contract
-        </button>
-
-        <div class="bg-gray-900 border border-gray-700 rounded-xl p-6 md:p-10 text-left">
-          <h3 class="text-2xl font-bold text-white mb-4">Activate a Pending Contract</h3>
-          <p class="text-gray-400 mb-6">To activate your contract, please enter the unique code from your payment receipt.</p>
-          
-          <div class="space-y-6">
-            <!-- New Code Fields -->
-            <div>
-              <label for="autoGeneratedCode" class="block text-gray-300 text-sm font-medium mb-2">Auto-Generated Code</label>
-              <input type="text" id="autoGeneratedCode" readonly placeholder="No code yet" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/20 text-white placeholder-gray-500 cursor-not-allowed">
-            </div>
-            
-            <div>
-              <label for="newCodeOnReceipt" class="block text-gray-300 text-sm font-medium mb-2">Code on Receipt (Ends with 100)</label>
-              <input type="text" id="newCodeOnReceipt" placeholder="Enter new code from receipt" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/20 text-white placeholder-gray-500 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/40 transition">
-            </div>
-
-            <button id="verifyBtn" onclick="verifyAndActivate()" class="w-full px-6 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-semibold shadow-md hover:shadow-lg transition">
-              Verify and Activate
-            </button>
-            <p id="verification-status" class="mt-4 text-center text-sm font-semibold hidden"></p>
-          </div>
-        </div>
-      </div>
-
-      <div id="dust" class="tab-content hidden bg-gray-900 border border-gray-700 p-6 rounded-xl shadow text-gray-200">
-        <div class="flex items-center gap-4 mb-4">
-          <div class="text-4xl text-yellow-400">✨</div>
-          <h2 class="text-2xl font-bold text-white">Dusted Contracts</h2>
-        </div>
-        <p class="text-gray-400 mb-6">
-          This is where you can find contracts that have been archived or retired.
-          They are no longer active, but you can restore them at any time.
-        </p>
-        
-        <div id="dusted-contracts-list" class="space-y-4">
-          <!-- Dusted contracts will be dynamically inserted here -->
-          <div class="text-center text-gray-500 py-10">No contracts have been dusted yet.</div>
-        </div>
-      </div>
-
-      <div id="billing" class="tab-content hidden p-6 text-center bg-gray-900 border border-gray-700 rounded-xl shadow text-gray-200">
-        <div class="text-4xl text-pink-400 mb-4">💳</div>
-        <p class="text-xl">Manage your Billing details, invoices, and receipts here.</p>
-        
-        <!-- Billing Plans Section -->
-        <div class="my-8">
-            <div class="inline-flex rounded-full bg-gray-800 p-1 mb-8">
-                <button id="monthlyBtn" onclick="showPlans('monthly')" class="px-6 py-2 rounded-full text-white font-semibold bg-blue-500 transition-colors duration-300">
-                    Monthly
-                </button>
-                <button id="yearlyBtn" onclick="showPlans('yearly')" class="px-6 py-2 rounded-full text-gray-400 hover:text-white transition-colors duration-300">
-                    Yearly
-                </button>
-            </div>
-
-            <!-- Monthly Plans -->
-            <div id="monthly-plans" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Free Plan -->
-                <div class="flex flex-col p-8 rounded-2xl bg-gray-800 border border-white/20 transition-all duration-300 transform hover:scale-105 shadow-xl">
-                    <h3 class="text-2xl font-bold text-white">Free</h3>
-                    <p class="text-gray-400 mt-2">Get started with basic tools.</p>
-                    <p class="text-4xl font-extrabold text-blue-400 my-6">
-                        $0<span class="text-lg font-normal text-gray-400">/mo</span>
-                    </p>
-                    <ul class="text-left space-y-3 flex-1 mb-8">
-                        <li class="flex items-center gap-3 text-gray-300">
-                            <i class="fas fa-check-circle text-green-500"></i> Basic Contract Creation
-                        </li>
-                        <li class="flex items-center gap-3 text-gray-300">
-                            <i class="fas fa-check-circle text-green-500"></i> Revenue Tracking
-                        </li>
-                        <li class="flex items-center gap-3 text-gray-300">
-                            <i class="fas fa-check-circle text-green-500"></i> Standard Support
-                        </li>
-                    </ul>
-                    <button onclick="handlePayment('Free Monthly')" class="w-full py-3 rounded-xl bg-gray-600 text-white font-semibold hover:bg-gray-700 transition">Current Plan</button>
-                </div>
-
-                <!-- Beta Plan -->
-                <div class="flex flex-col p-8 rounded-2xl bg-gray-800 border-2 border-indigo-500 transition-all duration-300 transform hover:scale-105 shadow-xl relative overflow-hidden">
-                    <div class="absolute top-0 right-0 bg-indigo-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">BETA</div>
-                    <h3 class="text-2xl font-bold text-white">Beta</h3>
-                    <p class="text-gray-400 mt-2">Access our features.</p>
-                    <p class="text-4xl font-extrabold text-indigo-400 my-6">
-                        custom<span class="text-lg font-normal text-gray-400">/</span>
-                    </p>
-                    <ul class="text-left space-y-3 flex-1 mb-8">
-                        <li class="flex items-center gap-3 text-gray-300">
-                            <i class="fas fa-check-circle text-green-500"></i> Everything 
-                        </li>
-                        <li class="flex items-center gap-3 text-gray-300">
-                            <i class="fas fa-check-circle text-green-500"></i> Early Access to New Features
-                        </li>
-                        <li class="flex items-center gap-3 text-gray-300">
-                            <i class="fas fa-check-circle text-green-500"></i> Priority Bug Fixes
-                        </li>
-                    </ul>
-                    <button onclick="handlePayment('Beta Monthly')" class="w-full py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-semibold shadow-md hover:shadow-lg transition">Upgrade Now</button>
-                </div>
-                
-                <!-- Custom Plan -->
-                <div class="flex flex-col p-8 rounded-2xl bg-gray-800 border border-white/20 transition-all duration-300 transform hover:scale-105 shadow-xl">
-                    <h3 class="text-2xl font-bold text-white">Custom</h3>
-                    <p class="text-gray-400 mt-2">Tailor a plan to your needs.</p>
-                    <p class="text-4xl font-extrabold text-orange-400 my-6">
-                        Quote
-                    </p>
-                    <ul class="text-left space-y-3 flex-1 mb-8">
-                        <li class="flex items-center gap-3 text-gray-300">
-                            <i class="fas fa-check-circle text-green-500"></i> Advanced API Access
-                        </li>
-                        <li class="flex items-center gap-3 text-gray-300">
-                            <i class="fas fa-check-circle text-green-500"></i> Dedicated Account Manager
-                        </li>
-                        <li class="flex items-center gap-3 text-gray-300">
-                            <i class="fas fa-check-circle text-green-500"></i> Unlimited Contracts
-                        </li>
-                    </ul>
-                    <button onclick="handlePayment('Custom Monthly')" class="w-full py-3 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 text-white font-semibold shadow-md hover:shadow-lg transition">Contact Sales</button>
-                </div>
-
-                <!-- 3 Months Plan -->
-                <div class="flex flex-col p-8 rounded-2xl bg-gray-800 border border-white/20 transition-all duration-300 transform hover:scale-105 shadow-xl">
-                    <h3 class="text-2xl font-bold text-white">Starter</h3>
-                    <p class="text-gray-400 mt-2">The essential package for rapid growth.</p>
-                    <p class="text-4xl font-extrabold text-green-400 my-6">
-                        $400<span class="text-lg font-normal text-gray-400">/3mo</span>
-                    </p>
-                    <ul class="text-left space-y-3 flex-1 mb-8">
-                        <li class="flex items-center gap-3 text-gray-300">
-                            <i class="fas fa-check-circle text-green-500"></i> 5 Contracts / Month
-                        </li>
-                        <li class="flex items-center gap-3 text-gray-300">
-                            <i class="fas fa-check-circle text-green-500"></i> Priority Queueing
-                        </li>
-                        <li class="flex items-center gap-3 text-gray-300">
-                            <i class="fas fa-check-circle text-green-500"></i> 24/7 Live Chat Support
-                        </li>
-                    </ul>
-                    <button onclick="handlePayment('Starter Monthly')" class="w-full py-3 rounded-xl bg-gradient-to-r from-green-500 to-emerald-500 text-white font-semibold shadow-md hover:shadow-lg transition">Pay Now</button>
-                </div>
-
-                <!-- 6 Months Plan -->
-                <div class="flex flex-col p-8 rounded-2xl bg-gray-800 border-2 border-yellow-500 transition-all duration-300 transform hover:scale-105 shadow-xl">
-                    <h3 class="text-2xl font-bold text-white">Business</h3>
-                    <p class="text-gray-400 mt-2">Designed for scaling businesses.</p>
-                    <p class="text-4xl font-extrabold text-yellow-400 my-6">
-                        $600<span class="text-lg font-normal text-gray-400">/6mo</span>
-                    </p>
-                    <ul class="text-left space-y-3 flex-1 mb-8">
-                        <li class="flex items-center gap-3 text-gray-300">
-                            <i class="fas fa-check-circle text-green-500"></i> 15 Contracts / Month
-                        </li>
-                        <li class="flex items-center gap-3 text-gray-300">
-                            <i class="fas fa-check-circle text-green-500"></i> Unlimited Dusted Contracts
-                        </li>
-                        <li class="flex items-center gap-3 text-gray-300">
-                            <i class="fas fa-check-circle text-green-500"></i> API Access & Integrations
-                        </li>
-                    </ul>
-                    <button onclick="handlePayment('Business Monthly')" class="w-full py-3 rounded-xl bg-gradient-to-r from-yellow-500 to-amber-500 text-white font-semibold shadow-md hover:shadow-lg transition">Pay Now</button>
-                </div>
-                
-                <!-- 9 Months Plan -->
-                <div class="flex flex-col p-8 rounded-2xl bg-gray-800 border border-white/20 transition-all duration-300 transform hover:scale-105 shadow-xl">
-                    <h3 class="text-2xl font-bold text-white">Enterprise</h3>
-                    <p class="text-gray-400 mt-2">The ultimate solution for large-scale operations.</p>
-                    <p class="text-4xl font-extrabold text-red-400 my-6">
-                        $1000<span class="text-lg font-normal text-gray-400">/9mo</span>
-                    </p>
-                    <ul class="text-left space-y-3 flex-1 mb-8">
-                        <li class="flex items-center gap-3 text-gray-300">
-                            <i class="fas fa-check-circle text-green-500"></i> Unlimited Contracts
-                        </li>
-                        <li class="flex items-center gap-3 text-gray-300">
-                            <i class="fas fa-check-circle text-green-500"></i> Dedicated Onboarding Specialist
-                        </li>
-                        <li class="flex items-center gap-3 text-gray-300">
-                            <i class="fas fa-check-circle text-green-500"></i> Advanced Security & Audits
-                        </li>
-                    </ul>
-                    <button onclick="handlePayment('Enterprise Monthly')" class="w-full py-3 rounded-xl bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold shadow-md hover:shadow-lg transition">Pay Now</button>
-                </div>
-            </div>
-
-            <!-- Yearly Plans (Initially hidden) -->
-            <div id="yearly-plans" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Free Plan -->
-                <div class="flex flex-col p-8 rounded-2xl bg-gray-800 border border-white/20 transition-all duration-300 transform hover:scale-105 shadow-xl">
-                    <h3 class="text-2xl font-bold text-white">Free</h3>
-                    <p class="text-gray-400 mt-2">Get started with basic tools.</p>
-                    <p class="text-4xl font-extrabold text-blue-400 my-6">
-                        $0<span class="text-lg font-normal text-gray-400">/yr</span>
-                    </p>
-                    <ul class="text-left space-y-3 flex-1 mb-8">
-                        <li class="flex items-center gap-3 text-gray-300">
-                            <i class="fas fa-check-circle text-green-500"></i> Basic Contract Creation
-                        </li>
-                        <li class="flex items-center gap-3 text-gray-300">
-                            <i class="fas fa-check-circle text-green-500"></i> Revenue Tracking
-                        </li>
-                        <li class="flex items-center gap-3 text-gray-300">
-                            <i class="fas fa-check-circle text-green-500"></i> Standard Support
-                        </li>
-                    </ul>
-                    <button onclick="handlePayment('Free Yearly')" class="w-full py-3 rounded-xl bg-gray-600 text-white font-semibold hover:bg-gray-700 transition">Current Plan</button>
-                </div>
-
-                <!-- Beta Plan -->
-                <div class="flex flex-col p-8 rounded-2xl bg-gray-800 border-2 border-indigo-500 transition-all duration-300 transform hover:scale-105 shadow-xl relative overflow-hidden">
-                    <div class="absolute top-0 right-0 bg-indigo-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">BETA</div>
-                    <h3 class="text-2xl font-bold text-white">Beta</h3>
-                    <p class="text-gray-400 mt-2">Access our  features.</p>
-                    <p class="text-4xl font-extrabold text-indigo-400 my-6">
-                        Custom v2<span class="text-lg font-normal text-gray-400">/</span>
-                    </p>
-                    <ul class="text-left space-y-3 flex-1 mb-8">
-                        <li class="flex items-center gap-3 text-gray-300">
-                            <i class="fas fa-check-circle text-green-500"></i> Everything 
-                        </li>
-                        <li class="flex items-center gap-3 text-gray-300">
-                            <i class="fas fa-check-circle text-green-500"></i> Early Access to New Features
-                        </li>
-                        <li class="flex items-center gap-3 text-gray-300">
-                            <i class="fas fa-check-circle text-green-500"></i> Priority Bug Fixes
-                        </li>
-                    </ul>
-                    <button onclick="handlePayment('Beta Yearly')" class="w-full py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-semibold shadow-md hover:shadow-lg transition">Upgrade Now</button>
-                </div>
-                
-                <!-- Custom Plan -->
-                <div class="flex flex-col p-8 rounded-2xl bg-gray-800 border border-white/20 transition-all duration-300 transform hover:scale-105 shadow-xl">
-                    <h3 class="text-2xl font-bold text-white">Custom</h3>
-                    <p class="text-gray-400 mt-2">Tailor a plan to your needs.</p>
-                    <p class="text-4xl font-extrabold text-orange-400 my-6">
-                        Quote
-                    </p>
-                    <ul class="text-left space-y-3 flex-1 mb-8">
-                        <li class="flex items-center gap-3 text-gray-300">
-                            <i class="fas fa-check-circle text-green-500"></i> Advanced API Access
-                        </li>
-                        <li class="flex items-center gap-3 text-gray-300">
-                            <i class="fas fa-check-circle text-green-500"></i> Dedicated Account Manager
-                        </li>
-                        <li class="flex items-center gap-3 text-gray-300">
-                            <i class="fas fa-check-circle text-green-500"></i> Unlimited Contracts
-                        </li>
-                    </ul>
-                    <button onclick="handlePayment('Custom Yearly')" class="w-full py-3 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 text-white font-semibold shadow-md hover:shadow-lg transition">Contact Sales</button>
-                </div>
-
-                <!-- 2 Years Plan -->
-                <div class="flex flex-col p-8 rounded-2xl bg-gray-800 border border-white/20 transition-all duration-300 transform hover:scale-105 shadow-xl">
-                    <h3 class="text-2xl font-bold text-white">Growth</h3>
-                    <p class="text-gray-400 mt-2">Unlock continuous growth and scale.</p>
-                    <p class="text-4xl font-extrabold text-green-400 my-6">
-                        $1900<span class="text-lg font-normal text-gray-400">/2yrs</span>
-                    </p>
-                    <ul class="text-left space-y-3 flex-1 mb-8">
-                        <li class="flex items-center gap-3 text-gray-300">
-                            <i class="fas fa-check-circle text-green-500"></i> All Monthly Business Features
-                        </li>
-                        <li class="flex items-center gap-3 text-gray-300">
-                            <i class="fas fa-check-circle text-green-500"></i> 10% Discount on Add-ons
-                        </li>
-                        <li class="flex items-center gap-3 text-gray-300">
-                            <i class="fas fa-check-circle text-green-500"></i> Annual Performance Review
-                        </li>
-                    </ul>
-                    <button onclick="handlePayment('Growth Yearly')" class="w-full py-3 rounded-xl bg-gradient-to-r from-green-500 to-emerald-500 text-white font-semibold shadow-md hover:shadow-lg transition">Pay Now</button>
-                </div>
-
-                <!-- 4 Years Plan -->
-                <div class="flex flex-col p-8 rounded-2xl bg-gray-800 border-2 border-yellow-500 transition-all duration-300 transform hover:scale-105 shadow-xl">
-                    <h3 class="text-2xl font-bold text-white">Scale</h3>
-                    <p class="text-gray-400 mt-2">Supercharge your operations.</p>
-                    <p class="text-4xl font-extrabold text-yellow-400 my-6">
-                        $4000<span class="text-lg font-normal text-gray-400">/4yrs</span>
-                    </p>
-                    <ul class="text-left space-y-3 flex-1 mb-8">
-                        <li class="flex items-center gap-3 text-gray-300">
-                            <i class="fas fa-check-circle text-green-500"></i> All Monthly Enterprise Features
-                        </li>
-                        <li class="flex items-center gap-3 text-gray-300">
-                            <i class="fas fa-check-circle text-green-500"></i> Dedicated Support Channel
-                        </li>
-                        <li class="flex items-center gap-3 text-gray-300">
-                            <i class="fas fa-check-circle text-green-500"></i> Custom Reporting Dashboards
-                        </li>
-                    </ul>
-                    <button onclick="handlePayment('Scale Yearly')" class="w-full py-3 rounded-xl bg-gradient-to-r from-yellow-500 to-amber-500 text-white font-semibold shadow-md hover:shadow-lg transition">Pay Now</button>
-                </div>
-
-                <!-- 7 Years Plan -->
-                <div class="flex flex-col p-8 rounded-2xl bg-gray-800 border border-white/20 transition-all duration-300 transform hover:scale-105 shadow-xl">
-                    <h3 class="text-2xl font-bold text-white">Master</h3>
-                    <p class="text-gray-400 mt-2">Become a leader in your field.</p>
-                    <p class="text-4xl font-extrabold text-red-400 my-6">
-                        $6000<span class="text-lg font-normal text-gray-400">/7yrs</span>
-                    </p>
-                    <ul class="text-left space-y-3 flex-1 mb-8">
-                        <li class="flex items-center gap-3 text-gray-300">
-                            <i class="fas fa-check-circle text-green-500"></i> Early Product Demos
-                        </li>
-                        <li class="flex items-center gap-3 text-gray-300">
-                            <i class="fas fa-check-circle text-green-500"></i> On-site Support (2 per year)
-                        </li>
-                        <li class="flex items-center gap-3 text-gray-300">
-                            <i class="fas fa-check-circle text-green-500"></i> Bi-annual Strategy Session
-                        </li>
-                    </ul>
-                    <button onclick="handlePayment('Master Yearly')" class="w-full py-3 rounded-xl bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold shadow-md hover:shadow-lg transition">Pay Now</button>
-                </div>
-                
-                <!-- 9 Years Plan -->
-                <div class="flex flex-col p-8 rounded-2xl bg-gray-800 border-2 border-purple-500 transition-all duration-300 transform hover:scale-105 shadow-xl">
-                    <h3 class="text-2xl font-bold text-white">Elite</h3>
-                    <p class="text-gray-400 mt-2">The ultimate, all-inclusive package.</p>
-                    <p class="text-4xl font-extrabold text-purple-400 my-6">
-                        $8000<span class="text-lg font-normal text-gray-400">/9yrs</span>
-                    </p>
-                    <ul class="text-left space-y-3 flex-1 mb-8">
-                        <li class="flex items-center gap-3 text-gray-300">
-                            <i class="fas fa-check-circle text-green-500"></i> Your Branding on Dashboard
-                        </li>
-                        <li class="flex items-center gap-3 text-gray-300">
-                            <i class="fas fa-check-circle text-green-500"></i> Dedicated Engineering Team
-                        </li>
-                        <li class="flex items-center gap-3 text-gray-300">
-                            <i class="fas fa-check-circle text-green-500"></i> VIP Invitation to Events
-                        </li>
-                    </ul>
-                    <button onclick="handlePayment('Elite Yearly')" class="w-full py-3 rounded-xl bg-gradient-to-r from-purple-500 to-indigo-500 text-white font-semibold shadow-md hover:shadow-lg transition">Pay Now</button>
-                </div>
-            </div>
-        </div>
-      </div>
-
-
-      <div id="payment" class="tab-content hidden p-6 text-center bg-gray-900 border border-gray-700 rounded-xl shadow text-gray-200">
-        <div class="text-4xl text-purple-400 mb-4">💰</div>
-        <h2 class="text-2xl font-bold mb-4">Payments</h2>
-        <p class="text-xl mb-6">View and process payments securely from this section.</p>
-
-        <div class="bg-gray-800 border border-gray-700 rounded-xl p-6">
-            <h3 class="text-xl font-bold text-white mb-4">Simulate a Payment</h3>
-            <p class="text-gray-400 mb-6">Click the button below to simulate a payment and see the revenue activity log update on the Overview page.</p>
-            <button onclick="simulatePayment()" class="w-full md:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-semibold shadow-md hover:shadow-lg transition">
-                <i class="fas fa-dollar-sign"></i> Simulate a $500 Payment
-            </button>
-        </div>
-      </div>
-
-      <div id="settings" class="tab-content hidden p-6 text-center">
-        <div class="text-4xl text-gray-400 mb-4">⚙️</div>
-        <p class="text-xl">Customize your account, preferences, and security options here.</p>
-      </div>
-    </main>
-  </div>
-
-  <!-- Mobile Menu Modal -->
-  <div id="mobileMenuModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden md:hidden z-50">
-    <div class="absolute right-0 top-0 h-full w-64 bg-black border-l border-gray-700 slide-out-menu">
-      <div class="p-6 border-b border-gray-700 flex justify-between items-center">
-        <h2 class="text-2xl font-bold text-white">Menu</h2>
-        <button id="closeMenu" class="p-2 rounded-lg text-white">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
-      <nav class="flex-1 p-4 flex flex-col gap-2">
-        <button class="nav-btn-mobile flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-800" data-tab="overview">
-          <i class="fas fa-chart-line"></i> Overview
-        </button>
-        <button class="nav-btn-mobile flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-800" data-tab="contract">
-          <i class="fas fa-file-contract"></i> Contract
-        </button>
-        <button class="nav-btn-mobile flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-800" data-tab="dust">
-          <i class="fas fa-magic"></i> Dust
-        </button>
-        <button class="nav-btn-mobile flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-800" data-tab="billing">
-          <i class="fas fa-receipt"></i> Billing
-        </button>
-        <button class="nav-btn-mobile flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-800" data-tab="payment">
-          <i class="fas fa-dollar-sign"></i> Payment
-        </button>
-        <button class="nav-btn-mobile flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-800" data-tab="settings">
-          <i class="fas fa-cog"></i> Settings
-        </button>
-      </nav>
-    </div>
-  </div>
-
-
-  <!-- All Modals and Overlays -->
-  <div id="addContractModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center modal-overlay p-4">
-    <div class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-8 rounded-2xl border border-white/20 w-full max-w-lg shadow-2xl relative">
-      <h2 class="text-2xl font-bold mb-6 text-white text-center">✨ Add Contract</h2>
-      <label class="block text-gray-300 text-sm mb-2">User Name</label>
-      <input id="userName" type="text" placeholder="Enter user name" class="w-full mb-5 px-4 py-3 rounded-xl bg-white/5 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/40 transition">
-      <label class="block text-gray-300 text-sm mb-2">Contract Type</label>
-      <select id="contractType" class="w-full mb-6 px-4 py-3 rounded-xl bg-white/5 border border-white/20 text-white focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/40 transition">
-        <option class="bg-gray-900 text-white">Real Estate</option>
-        <option class="bg-gray-900 text-white">2 Terms</option>
-        <option class="bg-gray-900 text-white">Quick Productive</option>
-        <option class="bg-gray-900 text-white">Binary</option>
-        <option class="bg-gray-900 text-white">Development</option>
-        <option class="bg-gray-900 text-white">Oil Reign</option>
-        <option class="bg-gray-900 text-white">Infrastructure</option>
-        <option class="bg-gray-900 text-white">Premium Quick Contract</option>
-      </select>
-      <div class="mb-8">
-        <label class="block text-gray-300 text-sm mb-2">Contract Code</label>
-        <div class="flex flex-col sm:flex-row gap-2">
-          <input id="contractCode" type="text" readonly placeholder="Generate a code" class="flex-1 px-4 py-3 rounded-xl bg-white/5 border border-white/20 text-white placeholder-gray-500 focus:outline-none">
-          <button onclick="generateContractCode()" class="px-4 py-3 rounded-xl bg-gradient-to-r from-green-500 to-emerald-400 hover:from-green-600 hover:to-emerald-500 text-white font-semibold shadow-md hover:shadow-lg transition">
-            Create
-          </button>
-        </div>
-      </div>
-      <div class="flex flex-col sm:flex-row justify-end gap-3">
-        <button onclick="closeModal('addContractModal')" class="px-5 py-3 rounded-xl bg-white/5 border border-white/20 text-white hover:bg-white/10 hover:border-white/40 transition">
-          Close
-        </button>
-        <button id="saveBtn" onclick="continueContract()" class="px-5 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-semibold shadow-md hover:shadow-lg transition disabled:opacity-40" disabled>
-          Continue
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <div id="loadingScreen" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center modal-overlay">
-    <div class="flex flex-col items-center">
-      <div class="animate-spin rounded-full h-20 w-20 border-t-4 border-b-4 border-blue-400 mb-4"></div>
-      <p id="loading-message" class="text-white text-lg font-medium animate-pulse">Preparing your contract...</p>
-    </div>
-  </div>
-
-  <div id="continueContractModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center modal-overlay p-4">
-    <div class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-8 rounded-2xl border border-white/20 w-full max-w-lg shadow-2xl text-center">
-      <div class="flex justify-center mb-4">
-        <i class="fas fa-file-contract text-4xl text-red-500"></i>
-      </div>
-      <div class="bg-red-600/20 border border-red-500 text-red-400 p-4 rounded-xl mb-6">
-        <h2 class="text-xl font-bold mb-2">⚠️ Pending Contract</h2>
-        <p class="text-sm">Your contract has been generated but is not yet active.<br>Please make a payment to activate your contract.</p>
-      </div>
-      <p class="text-gray-300 mb-3">Proceed to contract page to activate:</p>
-      <button onclick="openTab('contract')" class="block w-full text-center px-6 py-3 rounded-xl bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white font-semibold shadow-md hover:shadow-lg transition">
-        💳 Go to Contract Page
-      </button>
-      <button onclick="closeModal('continueContractModal')" class="mt-5 px-6 py-2 rounded-xl bg-white/10 border border-white/20 text-gray-300 hover:bg-white/20 hover:text-white transition">
-        Close
-      </button>
-    </div>
-  </div>
-  
-  <div id="verificationModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center modal-overlay p-4">
-    <div class="bg-gray-900 p-8 rounded-2xl border border-gray-700 shadow-2xl w-full max-w-lg text-center">
-        <div id="verificationIcon" class="mb-4">
-            <i class="fas fa-spinner fa-spin text-4xl text-blue-400"></i>
-        </div>
-        <h2 id="verificationTitle" class="text-xl font-bold mb-2 text-white">Verifying...</h2>
-        <p id="verificationMessage" class="text-gray-400">Checking code...</p>
-        <button id="closeVerificationBtn" onclick="closeModal('verificationModal')" class="mt-6 px-6 py-2 rounded-xl bg-gray-700 text-white hidden">Close</button>
-    </div>
-  </div>
-
-  <div id="dustContractModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center modal-overlay p-4">
-    <div class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-8 rounded-2xl border border-white/20 w-full max-w-lg shadow-2xl relative">
-      <h2 class="text-2xl font-bold mb-6 text-white text-center">Dust a Contract</h2>
-      <p class="text-gray-400 mb-4 text-sm text-center">Select an active contract to move it to the "Dust" archive.</p>
-      <select id="activeContractsDropdown" class="w-full mb-6 px-4 py-3 rounded-xl bg-white/5 border border-white/20 text-white focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-500/40 transition">
-        <option value="" disabled selected>-- Select a contract --</option>
-      </select>
-      <div class="flex flex-col sm:flex-row justify-end gap-3">
-        <button onclick="closeModal('dustContractModal')" class="px-5 py-3 rounded-xl bg-white/5 border border-white/20 text-white hover:bg-white/10 hover:border-white/40 transition">
-          Cancel
-        </button>
-        <button onclick="dustSelectedContract()" class="px-5 py-3 rounded-xl bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-semibold shadow-md hover:shadow-lg transition">
-          <i class="fas fa-trash-alt"></i> Dust It
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <div id="restoreContractModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center modal-overlay p-4">
-    <div class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-8 rounded-2xl border border-white/20 w-full max-w-lg shadow-2xl relative">
-      <h2 class="text-2xl font-bold mb-6 text-white text-center">Restore a Contract</h2>
-      <p class="text-gray-400 mb-4 text-sm text-center">Select a dusted contract to restore it to the active list.</p>
-      <select id="dustedContractsDropdown" class="w-full mb-6 px-4 py-3 rounded-xl bg-white/5 border border-white/20 text-white focus:outline-none focus:border-green-400 focus:ring-2 focus:ring-green-500/40 transition">
-        <option value="" disabled selected>-- Select a contract --</option>
-      </select>
-      <div class="flex flex-col sm:flex-row justify-end gap-3">
-        <button onclick="closeModal('restoreContractModal')" class="px-5 py-3 rounded-xl bg-white/5 border border-white/20 text-white hover:bg-white/10 hover:border-white/40 transition">
-          Cancel
-        </button>
-        <button onclick="restoreSelectedContract()" class="px-5 py-3 rounded-xl bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-semibold shadow-md hover:shadow-lg transition">
-          <i class="fas fa-sync-alt"></i> Restore It
-        </button>
-      </div>
-    </div>
-  </div>
-  
-  <script>
-    // ======= GLOBAL DATA (persistent with localStorage) =======
-    // For testing, explicitly reset all data to a 'null' state
-    let pendingContractsCount = 0;
-    let totalContractsCount = 0;
-    let revenueCount = 0; // New variable to track total revenue
-    let lastGeneratedCode = "";
-    let contracts = [];
-    let dustedContracts = [];
-    let recentActivity = [];
-    let revenueActivity = [];
-
-    // Initialize data in localStorage for the first time if needed, otherwise reset
-    function initializeData() {
-        localStorage.setItem("pendingContractsCount", "0");
-        localStorage.setItem("totalContractsCount", "0");
-        localStorage.setItem("revenueCount", "0");
-        localStorage.setItem("lastGeneratedCode", "");
-        localStorage.setItem("contracts", "[]");
-        localStorage.setItem("dustedContracts", "[]");
-        localStorage.setItem("recentActivity", "[]");
-        localStorage.setItem("revenueActivity", "[]");
-    }
-
-    // Call this to start a fresh test session
-    initializeData();
-
-    function saveState() {
-      localStorage.setItem("pendingContractsCount", pendingContractsCount);
-      localStorage.setItem("totalContractsCount", totalContractsCount);
-      localStorage.setItem("revenueCount", revenueCount);
-      localStorage.setItem("lastGeneratedCode", lastGeneratedCode);
-      localStorage.setItem("contracts", JSON.stringify(contracts));
-      localStorage.setItem("dustedContracts", JSON.stringify(dustedContracts));
-      localStorage.setItem("recentActivity", JSON.stringify(recentActivity));
-      localStorage.setItem("revenueActivity", JSON.stringify(revenueActivity));
-    }
-
-    function getEl(id) {
-      const el = document.getElementById(id);
-      if (!el) console.warn(`Element #${id} not found`);
-      return el;
-    }
-
-    function logActivity(message, type) {
-      recentActivity.unshift({
-        message: message,
-        type: type,
-        date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString(),
-      });
-      // Keep only the last 10 activities to prevent the list from getting too long
-      if (recentActivity.length > 10) {
-        recentActivity.pop();
-      }
-      saveState();
-      renderRecentActivity();
-    }
-    
-    function logRevenueActivity(message, type) {
-        revenueActivity.unshift({
-            message: message,
-            type: type,
-            date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString(),
-        });
-        if (revenueActivity.length > 10) {
-            revenueActivity.pop();
-        }
-        saveState();
-        renderRevenueActivity();
-    }
-
-
-    function renderCounts() {
-      const p = getEl("pendingCount");
-      const t = getEl("totalCount");
-      const r = getEl("revenueCount");
-      const u = getEl("usersCount");
-      if (p) p.textContent = String(pendingContractsCount);
-      if (t) t.textContent = String(totalContractsCount);
-      if (r) r.textContent = `$${revenueCount.toLocaleString()}`;
-      if (u) u.textContent = "0";
-    }
-
-    function renderContracts() {
-      const contractList = getEl("activeContractsDropdown");
-      const contractTableBody = document.querySelector("#overview table tbody");
-      if (!contractList || !contractTableBody) return;
-
-      contractList.innerHTML = `<option value="" disabled selected>-- Select a contract --</option>`;
-      contractTableBody.innerHTML = '';
-
-      const activeContracts = contracts.filter(c => c.status === 'active');
-      const pendingContracts = contracts.filter(c => c.status === 'pending');
-
-      if (activeContracts.length === 0) {
-        contractTableBody.innerHTML = `<tr class="hover:bg-[#222] transition"><td colspan="4" class="text-center text-gray-500 py-4">No contracts yet.</td></tr>`;
-      } else {
-        activeContracts.forEach(contract => {
-          // Render to dropdown
-          const option = document.createElement("option");
-          option.value = contract.code;
-          option.textContent = `${contract.userName} - ${contract.type}`;
-          contractList.appendChild(option);
-
-          // Render to table
-          const row = document.createElement("tr");
-          row.className = "hover:bg-[#222] transition";
-          row.innerHTML = `
-            <td class="px-4 py-2 border-b border-white/20">${contract.code.substring(0, 8)}...</td>
-            <td class="px-4 py-2 border-b border-white/20">${contract.userName}</td>
-            <td class="px-4 py-2 border-b border-white/20">
-              <span class="px-2 py-1 rounded-full text-xs font-semibold ${contract.status === 'active' ? 'bg-green-600/20 text-green-400' : 'bg-red-600/20 text-red-400'}">
-                ${contract.status}
-              </span>
-            </td>
-            <td class="px-4 py-2 border-b border-white/20">${contract.date}</td>
-          `;
-          contractTableBody.appendChild(row);
-        });
-      }
-    }
-
-    function renderDustedContracts() {
-      const dustedListContainer = getEl("dusted-contracts-list");
-      if (!dustedListContainer) return;
-
-      dustedListContainer.innerHTML = '';
-
-      if (dustedContracts.length === 0) {
-        dustedListContainer.innerHTML = `<div class="text-center text-gray-500 py-10">No contracts have been dusted yet.</div>`;
-      } else {
-        dustedContracts.forEach(contract => {
-          const contractCard = document.createElement("div");
-          contractCard.className = "flex items-center justify-between p-4 bg-gray-800 rounded-xl border border-gray-700 shadow";
-          contractCard.innerHTML = `
-            <div>
-              <p class="font-semibold text-white">${contract.userName}</p>
-              <p class="text-sm text-gray-400">${contract.type}</p>
-              <p class="text-xs text-gray-500">${contract.code.substring(0, 10)}... <br> Dusted on: ${contract.date}</p>
-            </div>
-            <button onclick="restoreContract('${contract.code}')" class="px-4 py-2 rounded-lg bg-green-600/20 text-green-400 border border-green-500 hover:bg-green-600/30 transition">
-              <i class="fas fa-sync-alt"></i> Restore
-            </button>
-          `;
-          dustedListContainer.appendChild(contractCard);
-        });
-      }
-    }
-
-    function renderRecentActivity() {
-      const activityList = getEl("recent-activity-log");
-      if (!activityList) return;
-
-      activityList.innerHTML = '';
-      if (recentActivity.length === 0) {
-        activityList.innerHTML = `<li class="p-3 border border-white/20 rounded-lg bg-[#0d0d0d] hover:bg-[#222] transition">No activity yet.</li>`;
-      } else {
-        recentActivity.forEach(activity => {
-          let icon = '';
-          let color = '';
-          if (activity.type === 'create') {
-            icon = 'fas fa-plus-circle';
-            color = 'text-blue-400';
-          } else if (activity.type === 'activate') {
-            icon = 'fas fa-check-circle';
-            color = 'text-green-500';
-          } else if (activity.type === 'dust') {
-            icon = 'fas fa-trash-alt';
-            color = 'text-yellow-400';
-          } else if (activity.type === 'restore') {
-            icon = 'fas fa-sync-alt';
-            color = 'text-purple-400';
-          }
-
-          const listItem = document.createElement("li");
-          listItem.className = "p-3 border border-white/20 rounded-lg bg-[#0d0d0d] hover:bg-[#222] transition flex justify-between items-center";
-          listItem.innerHTML = `
-            <div class="flex items-center gap-3">
-                <i class="${icon} ${color}"></i>
-                <span class="text-sm text-gray-300">${activity.message}</span>
-            </div>
-            <span class="text-xs text-gray-500">${activity.date}</span>
-          `;
-          activityList.appendChild(listItem);
-        });
-      }
-    }
-
-    function renderRevenueActivity() {
-        const revenueActivityList = getEl("revenue-activity-log");
-        if (!revenueActivityList) return;
-
-        revenueActivityList.innerHTML = '';
-        if (revenueActivity.length === 0) {
-            revenueActivityList.innerHTML = `<li class="p-3 border border-white/20 rounded-lg bg-[#0d0d0d] hover:bg-[#222] transition">No revenue activity recorded.</li>`;
-        } else {
-            revenueActivity.forEach(activity => {
-                let icon = '';
-                let color = '';
-                if (activity.type === 'gain') {
-                    icon = 'fas fa-arrow-up';
-                    color = 'text-green-500';
-                } else if (activity.type === 'loss') {
-                    icon = 'fas fa-arrow-down';
-                    color = 'text-red-500';
-                }
-
-                const listItem = document.createElement("li");
-                listItem.className = "p-3 border border-white/20 rounded-lg bg-[#0d0d0d] hover:bg-[#222] transition flex justify-between items-center";
-                listItem.innerHTML = `
-                    <div class="flex items-center gap-3">
-                        <i class="${icon} ${color}"></i>
-                        <span class="text-sm text-gray-300">${activity.message}</span>
-                    </div>
-                    <span class="text-xs text-gray-500">${activity.date}</span>
-                `;
-                revenueActivityList.appendChild(listItem);
-            });
-        }
-    }
-
-    function openModal(id) {
-      const m = getEl(id);
-      if (m) m.classList.remove("hidden");
-    }
-    function closeModal(id) {
-      const m = getEl(id);
-      if (m) m.classList.add("hidden");
-    }
-
-    // Slide-out menu functions
-    const mobileMenuModal = getEl('mobileMenuModal');
-    const slideOutMenu = mobileMenuModal.querySelector('.slide-out-menu');
-
-    getEl('openMenu')?.addEventListener('click', () => {
-      mobileMenuModal.classList.remove('hidden');
-      setTimeout(() => slideOutMenu.classList.add('open'), 10);
-    });
-
-    getEl('closeMenu')?.addEventListener('click', () => {
-      slideOutMenu.classList.remove('open');
-      setTimeout(() => mobileMenuModal.classList.add('hidden'), 300);
-    });
-
-    mobileMenuModal.addEventListener('click', (e) => {
-      if (e.target === mobileMenuModal) {
-        getEl('closeMenu')?.click();
-      }
-    });
-
-    function showLoading(forMs = 6000, after, message = "Preparing your contract...") {
-      let overlay = getEl("loadingScreen");
-      let loadingMessageEl = getEl("loading-message");
-      if (!overlay || !loadingMessageEl) {
-        console.error("Loading overlay elements not found.");
-        return;
-      }
-      loadingMessageEl.textContent = message;
-      overlay.classList.remove("hidden");
-      setTimeout(() => {
-        overlay.classList.add("hidden");
-        if (typeof after === "function") after();
-      }, forMs);
-    }
-
-    function validateFormEnableSave() {
-      const name = getEl("userName")?.value.trim();
-      const type = getEl("contractType")?.value;
-      const code = getEl("contractCode")?.value.trim();
-      const saveBtn = getEl("saveBtn");
-
-      const isValid = Boolean(name && type && code);
-      if (saveBtn) {
-        saveBtn.disabled = !isValid;
-        saveBtn.textContent = "Continue";
-      }
-    }
-
-    function generateContractCode() {
-      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-      let code = "";
-      for (let i = 0; i < 17; i++) code += chars.charAt(Math.floor(Math.random() * chars.length));
-      code += "100"; // Ensure the code always ends in 100
-
-      const codeInput = getEl("contractCode");
-      if (codeInput) codeInput.value = code;
-      lastGeneratedCode = code;
-      saveState();
-      validateFormEnableSave();
-    }
-
-    function continueContract() {
-      const userName = getEl("userName")?.value.trim();
-      const contractType = getEl("contractType")?.value;
-      const contractCode = getEl("contractCode")?.value.trim();
-
-      if (!userName || !contractType || !contractCode) {
-        alert("Please fill in all fields before continuing.");
-        return;
-      }
-
-      contracts.push({
-        code: contractCode,
-        userName: userName,
-        type: contractType,
-        status: 'pending',
-        date: new Date().toLocaleDateString()
-      });
-
-      pendingContractsCount += 1;
-      saveState();
-      renderCounts();
-      renderContracts();
-      logActivity(`New pending contract created for ${userName}.`, 'create');
-      renderRecentActivity();
-
-      // Update the auto-generated code field on the contract tab
-      const autoCodeField = getEl("autoGeneratedCode");
-      if (autoCodeField) {
-        autoCodeField.value = lastGeneratedCode;
-      }
-
-      closeModal("addContractModal");
-      showLoading(3000, () => openModal("continueContractModal"), "Creating contract...");
-
-      const nameEl = getEl("userName");
-      const typeEl = getEl("contractType");
-      const codeEl = getEl("contractCode");
-      const saveBtn = getEl("saveBtn");
-
-      if (nameEl) nameEl.value = "";
-      if (typeEl) typeEl.selectedIndex = 0;
-      if (codeEl) codeEl.value = "";
-      if (saveBtn) saveBtn.disabled = true;
-    }
-
-    function verifyAndActivate() {
-      const autoGeneratedCode = getEl("autoGeneratedCode")?.value.trim();
-      const newCodeOnReceipt = getEl("newCodeOnReceipt")?.value.trim();
-      const verificationStatusEl = getEl("verification-status");
-      const verifyBtn = getEl('verifyBtn');
-
-      if (!newCodeOnReceipt) {
-        verificationStatusEl.textContent = "Please enter the code from your receipt.";
-        verificationStatusEl.className = "mt-4 text-center text-sm font-semibold text-red-500";
-        verificationStatusEl.classList.remove("hidden");
-        return;
-      }
-
-      // Show spinner on the button
-      verifyBtn.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i> Verifying...`;
-      verifyBtn.disabled = true;
-
-      setTimeout(() => {
-        let isCodeMatch = false;
-
-        // Check for exact match AND that the code ends with 100
-        if (newCodeOnReceipt === autoGeneratedCode && newCodeOnReceipt.endsWith("100")) {
-          isCodeMatch = true;
-        }
-
-        if (isCodeMatch) {
-          activateContract(autoGeneratedCode);
-          verificationStatusEl.textContent = "Contract activated successfully!";
-          verificationStatusEl.className = "mt-4 text-center text-sm font-semibold text-green-500";
-          
-        } else {
-          verificationStatusEl.textContent = "The code is incorrect or does not end with '100'.";
-          verificationStatusEl.className = "mt-4 text-center text-sm font-semibold text-red-500";
-          alert("The code you entered is invalid. Please ensure it matches the auto-generated code and ends with '100'.");
-        }
-
-        // Restore button state
-        verifyBtn.innerHTML = `Verify and Activate`;
-        verifyBtn.disabled = false;
-        verificationStatusEl.classList.remove("hidden");
-
-        getEl('autoGeneratedCode').value = '';
-        getEl('newCodeOnReceipt').value = '';
-      }, 5000);
-    }
-
-    function activateContract(contractCode) {
-      const contractIndex = contracts.findIndex(c => c.code === contractCode);
-      if (contractIndex !== -1 && contracts[contractIndex].status === 'pending') {
-        contracts[contractIndex].status = 'active';
-        pendingContractsCount -= 1;
-        totalContractsCount += 1;
-        saveState();
-        renderCounts();
-        renderContracts();
-        logActivity(`Contract "${contracts[contractIndex].userName}" activated.`, 'activate');
-        renderRecentActivity();
-      } else {
-        const statusEl = getEl("verification-status");
-        statusEl.textContent = "No pending contracts to activate.";
-        statusEl.className = "mt-4 text-center text-sm font-semibold text-yellow-500";
-        statusEl.classList.remove("hidden");
-      }
-    }
-
-    function dustSelectedContract() {
-      const dropdown = getEl("activeContractsDropdown");
-      const selectedCode = dropdown.value;
-      if (!selectedCode) {
-        alert("Please select a contract to dust.");
-        return;
-      }
-
-      // Find the contract to be dusted
-      const contractIndex = contracts.findIndex(c => c.code === selectedCode);
-      if (contractIndex === -1) {
-        alert("Contract not found.");
-        return;
-      }
-
-      const [contractToDust] = contracts.splice(contractIndex, 1);
-      dustedContracts.unshift(contractToDust);
-      totalContractsCount -= 1;
-      saveState();
-      closeModal('dustContractModal');
-      renderContracts();
-      renderDustedContracts();
-      renderCounts();
-      logActivity(`Contract "${contractToDust.userName}" was dusted.`, 'dust');
-      renderRecentActivity();
-      alert("Contract has been moved to the Dust archive.");
-    }
-
-    function restoreContract(contractCode) {
-      const dustedContractIndex = dustedContracts.findIndex(c => c.code === contractCode);
-      if (dustedContractIndex === -1) {
-        alert("Dusted contract not found.");
-        return;
-      }
-
-      const [contractToRestore] = dustedContracts.splice(dustedContractIndex, 1);
-      contracts.unshift(contractToRestore);
-      totalContractsCount += 1;
-      saveState();
-      renderContracts();
-      renderDustedContracts();
-      renderCounts();
-      logActivity(`Contract "${contractToRestore.userName}" was restored from dust.`, 'restore');
-      renderRecentActivity();
-      alert("Contract has been restored to the active list.");
-    }
-
-    function simulatePayment() {
-        const paymentAmount = 500;
-        revenueCount += paymentAmount;
-        saveState();
-        renderCounts();
-        logRevenueActivity(`Gained $${paymentAmount} from a new payment.`, 'gain');
-    }
-
-    // Billing plan functions
-    function showPlans(planType) {
-        const monthlyPlans = getEl('monthly-plans');
-        const yearlyPlans = getEl('yearly-plans');
-        const monthlyBtn = getEl('monthlyBtn');
-        const yearlyBtn = getEl('yearlyBtn');
-
-        if (planType === 'monthly') {
-            monthlyPlans.classList.remove('hidden');
-            yearlyPlans.classList.add('hidden');
-            monthlyBtn.classList.add('bg-blue-500', 'text-white');
-            monthlyBtn.classList.remove('bg-transparent', 'text-gray-400');
-            yearlyBtn.classList.remove('bg-blue-500', 'text-white');
-            yearlyBtn.classList.add('bg-transparent', 'text-gray-400');
-        } else {
-            yearlyPlans.classList.remove('hidden');
-            monthlyPlans.classList.add('hidden');
-            yearlyBtn.classList.add('bg-blue-500', 'text-white');
-            yearlyBtn.classList.remove('bg-transparent', 'text-gray-400');
-            monthlyBtn.classList.remove('bg-blue-500', 'text-white');
-            monthlyBtn.classList.add('bg-transparent', 'text-gray-400');
-        }
-    }
-
-    function handlePayment(planName) {
-        alert(`You are about to pay for the "${planName}" plan. This would redirect to a secure payment gateway.`);
-    }
-
-
-    // Tab switching logic
-    function openTab(tabId) {
-      // Hide all tab content
-      document.querySelectorAll('.tab-content').forEach(tab => {
-        tab.classList.add('hidden');
-      });
-
-      // Remove active class from all nav buttons
-      document.querySelectorAll('.nav-btn, .nav-btn-mobile').forEach(btn => {
-        btn.classList.remove('bg-gray-700', 'text-white');
-        btn.classList.add('hover:bg-gray-800');
-      });
-
-      // Show the selected tab content
-      const selectedTab = getEl(tabId);
-      if (selectedTab) {
-        selectedTab.classList.remove('hidden');
-      }
-
-      // Add active class to the current button
-      document.querySelectorAll(`.nav-btn[data-tab='${tabId}'], .nav-btn-mobile[data-tab='${tabId}']`).forEach(btn => {
-        btn.classList.add('bg-gray-700', 'text-white');
-        btn.classList.remove('hover:bg-gray-800');
-      });
-
-      // Update mobile header title
-      const pageTitleMobile = getEl('page-title-mobile');
-      if (pageTitleMobile) {
-        pageTitleMobile.textContent = tabId;
-      }
-      // Update desktop header title
-      const pageTitleDesktop = getEl('page-title');
-      if (pageTitleDesktop) {
-        pageTitleDesktop.textContent = tabId;
-      }
-      
-      // Close the mobile menu if it's open
-      getEl('closeMenu')?.click();
-    }
-
-    // Event listeners for tab switching
-    document.querySelectorAll('.nav-btn, .nav-btn-mobile').forEach(button => {
-      button.addEventListener('click', (e) => {
-        const tab = e.currentTarget.dataset.tab;
-        openTab(tab);
-      });
-    });
-
-    // Initial render on page load
-    document.addEventListener("DOMContentLoaded", () => {
-        // Simulate a brief load
-        const loader = getEl("initial-loader");
-        const overviewTab = getEl("overview");
-        setTimeout(() => {
-            loader.classList.add("hidden");
-            overviewTab.classList.remove("hidden");
-            renderCounts();
-            renderContracts();
-            renderDustedContracts();
-            renderRecentActivity();
-            renderRevenueActivity();
-            openTab('overview'); // Set initial tab after loading
-        }, 1500); // 1.5-second delay
-    });
-  </script>
+    <header class="md:hidden sticky top-0 bg-black/80 backdrop-blur-sm z-40 p-4 border-b border-gray-700 flex items-center justify-between">
+    <h1 id="page-title-mobile" class="text-xl font-bold capitalize">Overview</h1>
+    <button id="openMenu" class="p-2 rounded-lg bg-gray-800 text-white">
+      <i class="fas fa-bars"></i>
+    </button>
+  </header>
+
+  <div class="flex min-h-screen">
+        <aside id="desktop-sidebar" class="hidden md:flex w-64 flex-col bg-black border-r border-gray-700">
+      <div class="p-6 border-b border-gray-700">
+        <h2 class="text-2xl font-bold text-white">TechNxxt</h2>
+        <p class="text-sm text-gray-400">Support Dashboard</p>
+      </div>
+      <nav class="flex-1 p-4 flex flex-col gap-2">
+        <button class="nav-btn flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-800" data-tab="overview">
+          <i class="fas fa-chart-line"></i> Overview
+        </button>
+        <button class="nav-btn flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-800" data-tab="contract">
+          <i class="fas fa-file-contract"></i> Contract
+        </button>
+        <button class="nav-btn flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-800" data-tab="dust">
+          <i class="fas fa-magic"></i> Dust
+        </button>
+        <button class="nav-btn flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-800" data-tab="billing">
+          <i class="fas fa-receipt"></i> Billing
+        </button>
+        <button class="nav-btn flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-800" data-tab="payment">
+          <i class="fas fa-dollar-sign"></i> Payment
+        </button>
+        <button class="nav-btn flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-800" data-tab="settings">
+          <i class="fas fa-cog"></i> Settings
+        </button>
+      </nav>
+      <div class="p-4 border-t border-gray-700 text-sm text-gray-500">
+        © 2025 TechNxxt
+      </div>
+    </aside>
+
+        <main class="flex-1 p-6 pt-20 md:pt-6">
+      <h1 id="page-title" class="hidden md:block text-3xl font-bold mb-6 capitalize">Overview</h1>
+
+            <div id="initial-loader" class="space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div class="skeleton-loader skeleton-loader-card"></div>
+          <div class="skeleton-loader skeleton-loader-card"></div>
+          <div class="skeleton-loader skeleton-loader-card"></div>
+          <div class="skeleton-loader skeleton-loader-card"></div>
+        </div>
+        <div class="skeleton-loader h-10 w-48"></div>
+        <div class="skeleton-loader h-64"></div>
+        <div class="skeleton-loader h-64"></div>
+        <div class="skeleton-loader h-64"></div>
+      </div>
+      
+            <div id="overview" class="tab-content bg-[#0d0d0d] border border-gray-700 p-6 rounded-xl shadow text-gray-200 hidden">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+          <div class="p-4 border border-white/20 rounded-xl bg-[#1a1a1a] hover:bg-[#222] transition flex items-center justify-between shadow">
+            <div>
+              <p class="text-gray-400 text-sm">Pending contracts</p>
+              <h3 id="pendingCount" class="text-2xl font-bold">0</h3>
+            </div>
+            <i class="fas fa-file-contract text-2xl text-red-500"></i>
+          </div>
+          <div class="p-4 border border-white/20 rounded-xl bg-[#1a1a1a] hover:bg-[#222] transition flex items-center justify-between shadow">
+            <div>
+              <p class="text-gray-400 text-sm">Total Contracts</p>
+              <h3 id="totalCount" class="text-2xl font-bold">0</h3>
+            </div>
+            <i class="fas fa-file-contract text-2xl text-blue-400"></i>
+          </div>
+          <div class="p-4 border border-white/20 rounded-xl bg-[#1a1a1a] hover:bg-[#222] transition flex items-center justify-between shadow">
+            <div>
+              <p class="text-gray-400 text-sm">Revenue</p>
+              <h3 id="revenueCount" class="text-2xl font-bold">$0</h3>
+            </div>
+            <i class="fas fa-chart-line text-2xl text-green-400"></i>
+          </div>
+          <div class="p-4 border border-white/20 rounded-xl bg-[#1a1a1a] hover:bg-[#222] transition flex items-center justify-between shadow">
+            <div>
+              <p class="text-gray-400 text-sm">Active Users</p>
+              <h3 id="usersCount" class="text-2xl font-bold">0</h3>
+            </div>
+            <i class="fas fa-users text-2xl text-purple-400"></i>
+          </div>
+        </div>
+
+        <div class="flex flex-col md:flex-row gap-3 mb-6">
+          <button onclick="openModal('addContractModal')" class="w-full md:w-auto px-5 py-2 rounded-xl bg-transparent border border-white/30 text-white hover:bg-white/10 hover:border-white/60 hover:scale-105 transition shadow-sm">
+            <i class="fas fa-plus"></i> Add Contract
+          </button>
+        </div>
+
+        <div class="p-6 border border-white/20 rounded-xl bg-[#1a1a1a] mb-6">
+          <h3 class="text-lg font-bold mb-3">Revenue Activity</h3>
+          <ul id="revenue-activity-log" class="space-y-2 activity-log">
+            <li class="p-3 border border-white/20 rounded-lg bg-[#0d0d0d] hover:bg-[#222] transition">No revenue activity recorded.</li>
+          </ul>
+        </div>
+
+        <div class="p-6 border border-white/20 rounded-xl bg-[#1a1a1a] mb-6">
+          <h3 class="text-lg font-bold mb-3">Recent Activity</h3>
+          <ul id="recent-activity-log" class="space-y-2 activity-log">
+            <li class="p-3 border border-white/20 rounded-lg bg-[#0d0d0d] hover:bg-[#222] transition">No activity yet.</li>
+          </ul>
+        </div>
+
+        <div class="p-6 border border-white/20 rounded-xl bg-[#1a1a1a]">
+          <h3 class="text-lg font-bold mb-3">Recent Contracts</h3>
+          <div class="activity-log overflow-x-auto">
+            <table class="w-full text-left border border-white/20 rounded-lg text-gray-300">
+              <thead class="bg-[#111] text-gray-400">
+                <tr>
+                  <th class="px-4 py-2 border-b border-white/20">ID</th>
+                  <th class="px-4 py-2 border-b border-white/20">Client</th>
+                  <th class="px-4 py-2 border-b border-white/20">Status</th>
+                  <th class="px-4 py-2 border-b border-white/20">Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="hover:bg-[#222] transition">
+                  <td colspan="4" class="text-center text-gray-500 py-4">No contracts yet.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div id="contract" class="tab-content hidden p-6 text-center">
+        <div class="text-4xl text-blue-400 mb-4">📑</div>
+        <p class="text-xl mb-4">All active and pending Contracts are listed here.</p>
+        
+        <button onclick="openModal('dustContractModal')" class="w-full md:w-auto px-5 py-2 rounded-xl bg-yellow-600/20 text-yellow-400 border border-yellow-500 hover:bg-yellow-600/30 transition shadow-sm mb-6">
+          <i class="fas fa-trash-alt"></i> Dust Contract
+        </button>
+
+        <div class="bg-gray-900 border border-gray-700 rounded-xl p-6 md:p-10 text-left">
+          <h3 class="text-2xl font-bold text-white mb-4">Activate a Pending Contract</h3>
+          <p class="text-gray-400 mb-6">To activate your contract, please enter the unique code from your payment receipt.</p>
+          
+          <div class="space-y-6">
+                        <div>
+              <label for="autoGeneratedCode" class="block text-gray-300 text-sm font-medium mb-2">Auto-Generated Code</label>
+              <input type="text" id="autoGeneratedCode" readonly placeholder="No code yet" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/20 text-white placeholder-gray-500 cursor-not-allowed">
+            </div>
+            
+            <div>
+              <label for="newCodeOnReceipt" class="block text-gray-300 text-sm font-medium mb-2">Code on Receipt (Ends with 100)</label>
+              <input type="text" id="newCodeOnReceipt" placeholder="Enter new code from receipt" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/20 text-white placeholder-gray-500 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/40 transition">
+            </div>
+
+            <button id="verifyBtn" onclick="verifyAndActivate()" class="w-full px-6 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-semibold shadow-md hover:shadow-lg transition">
+              Verify and Activate
+            </button>
+            <p id="verification-status" class="mt-4 text-center text-sm font-semibold hidden"></p>
+          </div>
+        </div>
+      </div>
+
+      <div id="dust" class="tab-content hidden bg-gray-900 border border-gray-700 p-6 rounded-xl shadow text-gray-200">
+        <div class="flex items-center gap-4 mb-4">
+          <div class="text-4xl text-yellow-400">✨</div>
+          <h2 class="text-2xl font-bold text-white">Dusted Contracts</h2>
+        </div>
+        <p class="text-gray-400 mb-6">
+          This is where you can find contracts that have been archived or retired.
+          They are no longer active, but you can restore them at any time.
+        </p>
+        
+        <div id="dusted-contracts-list" class="space-y-4">
+                    <div class="text-center text-gray-500 py-10">No contracts have been dusted yet.</div>
+        </div>
+      </div>
+
+      <div id="billing" class="tab-content hidden p-6 text-center bg-gray-900 border border-gray-700 rounded-xl shadow text-gray-200">
+        <div class="text-4xl text-pink-400 mb-4">💳</div>
+        <p class="text-xl">Manage your Billing details, invoices, and receipts here.</p>
+        
+                <div class="my-8">
+            <div class="inline-flex rounded-full bg-gray-800 p-1 mb-8">
+                <button id="monthlyBtn" onclick="showPlans('monthly')" class="px-6 py-2 rounded-full text-white font-semibold bg-blue-500 transition-colors duration-300">
+                    Monthly
+                </button>
+                <button id="yearlyBtn" onclick="showPlans('yearly')" class="px-6 py-2 rounded-full text-gray-400 hover:text-white transition-colors duration-300">
+                    Yearly
+                </button>
+            </div>
+
+                        <div id="monthly-plans" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                <div class="flex flex-col p-8 rounded-2xl bg-gray-800 border border-white/20 transition-all duration-300 transform hover:scale-105 shadow-xl">
+                    <h3 class="text-2xl font-bold text-white">Free</h3>
+                    <p class="text-gray-400 mt-2">Get started with basic tools.</p>
+                    <p class="text-4xl font-extrabold text-blue-400 my-6">
+                        $0<span class="text-lg font-normal text-gray-400">/mo</span>
+                    </p>
+                    <ul class="text-left space-y-3 flex-1 mb-8">
+                        <li class="flex items-center gap-3 text-gray-300">
+                            <i class="fas fa-check-circle text-green-500"></i> Basic Contract Creation
+                        </li>
+                        <li class="flex items-center gap-3 text-gray-300">
+                            <i class="fas fa-check-circle text-green-500"></i> Revenue Tracking
+                        </li>
+                        <li class="flex items-center gap-3 text-gray-300">
+                            <i class="fas fa-check-circle text-green-500"></i> Standard Support
+                        </li>
+                    </ul>
+                    <button onclick="handlePayment('Free Monthly', 0)" class="w-full py-3 rounded-xl bg-gray-600 text-white font-semibold hover:bg-gray-700 transition">Current Plan</button>
+                </div>
+
+                                <div class="flex flex-col p-8 rounded-2xl bg-gray-800 border-2 border-indigo-500 transition-all duration-300 transform hover:scale-105 shadow-xl relative overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-indigo-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">BETA</div>
+                    <h3 class="text-2xl font-bold text-white">Beta</h3>
+                    <p class="text-gray-400 mt-2">Access our features.</p>
+                    <p class="text-4xl font-extrabold text-indigo-400 my-6">
+                        custom<span class="text-lg font-normal text-gray-400">/</span>
+                    </p>
+                    <ul class="text-left space-y-3 flex-1 mb-8">
+                        <li class="flex items-center gap-3 text-gray-300">
+                            <i class="fas fa-check-circle text-green-500"></i> Everything 
+                        </li>
+                        <li class="flex items-center gap-3 text-gray-300">
+                            <i class="fas fa-check-circle text-green-500"></i> Early Access to New Features
+                        </li>
+                        <li class="flex items-center gap-3 text-gray-300">
+                            <i class="fas fa-check-circle text-green-500"></i> Priority Bug Fixes
+                        </li>
+                    </ul>
+                    <button onclick="handlePayment('Beta Monthly', 99)" class="w-full py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-semibold shadow-md hover:shadow-lg transition">Upgrade Now</button>
+                </div>
+                
+                                <div class="flex flex-col p-8 rounded-2xl bg-gray-800 border border-white/20 transition-all duration-300 transform hover:scale-105 shadow-xl">
+                    <h3 class="text-2xl font-bold text-white">Custom</h3>
+                    <p class="text-gray-400 mt-2">Tailor a plan to your needs.</p>
+                    <p class="text-4xl font-extrabold text-orange-400 my-6">
+                        Quote
+                    </p>
+                    <ul class="text-left space-y-3 flex-1 mb-8">
+                        <li class="flex items-center gap-3 text-gray-300">
+                            <i class="fas fa-check-circle text-green-500"></i> Advanced API Access
+                        </li>
+                        <li class="flex items-center gap-3 text-gray-300">
+                            <i class="fas fa-check-circle text-green-500"></i> Dedicated Account Manager
+                        </li>
+                        <li class="flex items-center gap-3 text-gray-300">
+                            <i class="fas fa-check-circle text-green-500"></i> Unlimited Contracts
+                        </li>
+                    </ul>
+                    <button onclick="handlePayment('Custom Monthly', 'Contact Sales')" class="w-full py-3 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 text-white font-semibold shadow-md hover:shadow-lg transition">Contact Sales</button>
+                </div>
+
+                                <div class="flex flex-col p-8 rounded-2xl bg-gray-800 border border-white/20 transition-all duration-300 transform hover:scale-105 shadow-xl">
+                    <h3 class="text-2xl font-bold text-white">Starter</h3>
+                    <p class="text-gray-400 mt-2">The essential package for rapid growth.</p>
+                    <p class="text-4xl font-extrabold text-green-400 my-6">
+                        $400<span class="text-lg font-normal text-gray-400">/3mo</span>
+                    </p>
+                    <ul class="text-left space-y-3 flex-1 mb-8">
+                        <li class="flex items-center gap-3 text-gray-300">
+                            <i class="fas fa-check-circle text-green-500"></i> 5 Contracts / Month
+                        </li>
+                        <li class="flex items-center gap-3 text-gray-300">
+                            <i class="fas fa-check-circle text-green-500"></i> Priority Queueing
+                        </li>
+                        <li class="flex items-center gap-3 text-gray-300">
+                            <i class="fas fa-check-circle text-green-500"></i> 24/7 Live Chat Support
+                        </li>
+                    </ul>
+                    <button onclick="handlePayment('Starter Monthly', 400)" class="w-full py-3 rounded-xl bg-gradient-to-r from-green-500 to-emerald-500 text-white font-semibold shadow-md hover:shadow-lg transition">Pay Now</button>
+                </div>
+
+                                <div class="flex flex-col p-8 rounded-2xl bg-gray-800 border-2 border-yellow-500 transition-all duration-300 transform hover:scale-105 shadow-xl">
+                    <h3 class="text-2xl font-bold text-white">Business</h3>
+                    <p class="text-gray-400 mt-2">Designed for scaling businesses.</p>
+                    <p class="text-4xl font-extrabold text-yellow-400 my-6">
+                        $600<span class="text-lg font-normal text-gray-400">/6mo</span>
+                    </p>
+                    <ul class="text-left space-y-3 flex-1 mb-8">
+                        <li class="flex items-center gap-3 text-gray-300">
+                            <i class="fas fa-check-circle text-green-500"></i> 15 Contracts / Month
+                        </li>
+                        <li class="flex items-center gap-3 text-gray-300">
+                            <i class="fas fa-check-circle text-green-500"></i> Unlimited Dusted Contracts
+                        </li>
+                        <li class="flex items-center gap-3 text-gray-300">
+                            <i class="fas fa-check-circle text-green-500"></i> API Access & Integrations
+                        </li>
+                    </ul>
+                    <button onclick="handlePayment('Business Monthly', 600)" class="w-full py-3 rounded-xl bg-gradient-to-r from-yellow-500 to-amber-500 text-white font-semibold shadow-md hover:shadow-lg transition">Pay Now</button>
+                </div>
+                
+                                <div class="flex flex-col p-8 rounded-2xl bg-gray-800 border border-white/20 transition-all duration-300 transform hover:scale-105 shadow-xl">
+                    <h3 class="text-2xl font-bold text-white">Enterprise</h3>
+                    <p class="text-gray-400 mt-2">The ultimate solution for large-scale operations.</p>
+                    <p class="text-4xl font-extrabold text-red-400 my-6">
+                        $1000<span class="text-lg font-normal text-gray-400">/9mo</span>
+                    </p>
+                    <ul class="text-left space-y-3 flex-1 mb-8">
+                        <li class="flex items-center gap-3 text-gray-300">
+                            <i class="fas fa-check-circle text-green-500"></i> Unlimited Contracts
+                        </li>
+                        <li class="flex items-center gap-3 text-gray-300">
+                            <i class="fas fa-check-circle text-green-500"></i> Dedicated Onboarding Specialist
+                        </li>
+                        <li class="flex items-center gap-3 text-gray-300">
+                            <i class="fas fa-check-circle text-green-500"></i> Advanced Security & Audits
+                        </li>
+                    </ul>
+                    <button onclick="handlePayment('Enterprise Monthly', 1000)" class="w-full py-3 rounded-xl bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold shadow-md hover:shadow-lg transition">Pay Now</button>
+                </div>
+            </div>
+
+                        <div id="yearly-plans" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                <div class="flex flex-col p-8 rounded-2xl bg-gray-800 border border-white/20 transition-all duration-300 transform hover:scale-105 shadow-xl">
+                    <h3 class="text-2xl font-bold text-white">Free</h3>
+                    <p class="text-gray-400 mt-2">Get started with basic tools.</p>
+                    <p class="text-4xl font-extrabold text-blue-400 my-6">
+                        $0<span class="text-lg font-normal text-gray-400">/yr</span>
+                    </p>
+                    <ul class="text-left space-y-3 flex-1 mb-8">
+                        <li class="flex items-center gap-3 text-gray-300">
+                            <i class="fas fa-check-circle text-green-500"></i> Basic Contract Creation
+                        </li>
+                        <li class="flex items-center gap-3 text-gray-300">
+                            <i class="fas fa-check-circle text-green-500"></i> Revenue Tracking
+                        </li>
+                        <li class="flex items-center gap-3 text-gray-300">
+                            <i class="fas fa-check-circle text-green-500"></i> Standard Support
+                        </li>
+                    </ul>
+                    <button onclick="handlePayment('Free Yearly', 0)" class="w-full py-3 rounded-xl bg-gray-600 text-white font-semibold hover:bg-gray-700 transition">Current Plan</button>
+                </div>
+
+                                <div class="flex flex-col p-8 rounded-2xl bg-gray-800 border-2 border-indigo-500 transition-all duration-300 transform hover:scale-105 shadow-xl relative overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-indigo-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">BETA</div>
+                    <h3 class="text-2xl font-bold text-white">Beta</h3>
+                    <p class="text-gray-400 mt-2">Access our features.</p>
+                    <p class="text-4xl font-extrabold text-indigo-400 my-6">
+                        custom<span class="text-lg font-normal text-gray-400">/</span>
+                    </p>
+                    <ul class="text-left space-y-3 flex-1 mb-8">
+                        <li class="flex items-center gap-3 text-gray-300">
+                            <i class="fas fa-check-circle text-green-500"></i> Everything 
+                        </li>
+                        <li class="flex items-center gap-3 text-gray-300">
+                            <i class="fas fa-check-circle text-green-500"></i> Early Access to New Features
+                        </li>
+                        <li class="flex items-center gap-3 text-gray-300">
+                            <i class="fas fa-check-circle text-green-500"></i> Priority Bug Fixes
+                        </li>
+                    </ul>
+                    <button onclick="handlePayment('Beta Yearly', 1100)" class="w-full py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-semibold shadow-md hover:shadow-lg transition">Upgrade Now</button>
+                </div>
+                
+                                <div class="flex flex-col p-8 rounded-2xl bg-gray-800 border border-white/20 transition-all duration-300 transform hover:scale-105 shadow-xl">
+                    <h3 class="text-2xl font-bold text-white">Custom</h3>
+                    <p class="text-gray-400 mt-2">Tailor a plan to your needs.</p>
+                    <p class="text-4xl font-extrabold text-orange-400 my-6">
+                        Quote
+                    </p>
+                    <ul class="text-left space-y-3 flex-1 mb-8">
+                        <li class="flex items-center gap-3 text-gray-300">
+                            <i class="fas fa-check-circle text-green-500"></i> Advanced API Access
+                        </li>
+                        <li class="flex items-center gap-3 text-gray-300">
+                            <i class="fas fa-check-circle text-green-500"></i> Dedicated Account Manager
+                        </li>
+                        <li class="flex items-center gap-3 text-gray-300">
+                            <i class="fas fa-check-circle text-green-500"></i> Unlimited Contracts
+                        </li>
+                    </ul>
+                    <button onclick="handlePayment('Custom Yearly', 'Contact Sales')" class="w-full py-3 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 text-white font-semibold shadow-md hover:shadow-lg transition">Contact Sales</button>
+                </div>
+
+                                <div class="flex flex-col p-8 rounded-2xl bg-gray-800 border border-white/20 transition-all duration-300 transform hover:scale-105 shadow-xl">
+                    <h3 class="text-2xl font-bold text-white">Growth</h3>
+                    <p class="text-gray-400 mt-2">Unlock continuous growth and scale.</p>
+                    <p class="text-4xl font-extrabold text-green-400 my-6">
+                        $1900<span class="text-lg font-normal text-gray-400">/2yrs</span>
+                    </p>
+                    <ul class="text-left space-y-3 flex-1 mb-8">
+                        <li class="flex items-center gap-3 text-gray-300">
+                            <i class="fas fa-check-circle text-green-500"></i> All Monthly Business Features
+                        </li>
+                        <li class="flex items-center gap-3 text-gray-300">
+                            <i class="fas fa-check-circle text-green-500"></i> 10% Discount on Add-ons
+                        </li>
+                        <li class="flex items-center gap-3 text-gray-300">
+                            <i class="fas fa-check-circle text-green-500"></i> Annual Performance Review
+                        </li>
+                    </ul>
+                    <button onclick="handlePayment('Growth Yearly', 1900)" class="w-full py-3 rounded-xl bg-gradient-to-r from-green-500 to-emerald-500 text-white font-semibold shadow-md hover:shadow-lg transition">Pay Now</button>
+                </div>
+
+                                <div class="flex flex-col p-8 rounded-2xl bg-gray-800 border-2 border-yellow-500 transition-all duration-300 transform hover:scale-105 shadow-xl">
+                    <h3 class="text-2xl font-bold text-white">Scale</h3>
+                    <p class="text-gray-400 mt-2">Supercharge your operations.</p>
+                    <p class="text-4xl font-extrabold text-yellow-400 my-6">
+                        $4000<span class="text-lg font-normal text-gray-400">/4yrs</span>
+                    </p>
+                    <ul class="text-left space-y-3 flex-1 mb-8">
+                        <li class="flex items-center gap-3 text-gray-300">
+                            <i class="fas fa-check-circle text-green-500"></i> All Monthly Enterprise Features
+                        </li>
+                        <li class="flex items-center gap-3 text-gray-300">
+                            <i class="fas fa-check-circle text-green-500"></i> Dedicated Support Channel
+                        </li>
+                        <li class="flex items-center gap-3 text-gray-300">
+                            <i class="fas fa-check-circle text-green-500"></i> Custom Reporting Dashboards
+                        </li>
+                    </ul>
+                    <button onclick="handlePayment('Scale Yearly', 4000)" class="w-full py-3 rounded-xl bg-gradient-to-r from-yellow-500 to-amber-500 text-white font-semibold shadow-md hover:shadow-lg transition">Pay Now</button>
+                </div>
+
+                                <div class="flex flex-col p-8 rounded-2xl bg-gray-800 border border-white/20 transition-all duration-300 transform hover:scale-105 shadow-xl">
+                    <h3 class="text-2xl font-bold text-white">Master</h3>
+                    <p class="text-gray-400 mt-2">Become a leader in your field.</p>
+                    <p class="text-4xl font-extrabold text-red-400 my-6">
+                        $6000<span class="text-lg font-normal text-gray-400">/7yrs</span>
+                    </p>
+                    <ul class="text-left space-y-3 flex-1 mb-8">
+                        <li class="flex items-center gap-3 text-gray-300">
+                            <i class="fas fa-check-circle text-green-500"></i> Early Product Demos
+                        </li>
+                        <li class="flex items-center gap-3 text-gray-300">
+                            <i class="fas fa-check-circle text-green-500"></i> On-site Support (2 per year)
+                        </li>
+                        <li class="flex items-center gap-3 text-gray-300">
+                            <i class="fas fa-check-circle text-green-500"></i> Bi-annual Strategy Session
+                        </li>
+                    </ul>
+                    <button onclick="handlePayment('Master Yearly', 6000)" class="w-full py-3 rounded-xl bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold shadow-md hover:shadow-lg transition">Pay Now</button>
+                </div>
+
+                                <div class="flex flex-col p-8 rounded-2xl bg-gray-800 border-2 border-purple-500 transition-all duration-300 transform hover:scale-105 shadow-xl">
+                    <h3 class="text-2xl font-bold text-white">Legend</h3>
+                    <p class="text-gray-400 mt-2">The ultimate for your brand.</p>
+                    <p class="text-4xl font-extrabold text-purple-400 my-6">
+                        $8000<span class="text-lg font-normal text-gray-400">/9yrs</span>
+                    </p>
+                    <ul class="text-left space-y-3 flex-1 mb-8">
+                        <li class="flex items-center gap-3 text-gray-300">
+                            <i class="fas fa-check-circle text-green-500"></i> Your Branding on Dashboard
+                        </li>
+                        <li class="flex items-center gap-3 text-gray-300">
+                            <i class="fas fa-check-circle text-green-500"></i> Dedicated Engineering Team
+                        </li>
+                        <li class="flex items-center gap-3 text-gray-300">
+                            <i class="fas fa-check-circle text-green-500"></i> Lifetime Access
+                        </li>
+                    </ul>
+                    <button onclick="handlePayment('Legend Yearly', 8000)" class="w-full py-3 rounded-xl bg-gradient-to-r from-purple-500 to-indigo-500 text-white font-semibold shadow-md hover:shadow-lg transition">Pay Now</button>
+                </div>
+            </div>
+        </div>
+      </div>
+
+            <div id="payment" class="tab-content hidden p-6 text-center bg-gray-900 border border-gray-700 rounded-xl shadow text-gray-200">
+        <div class="text-4xl text-green-400 mb-4">💰</div>
+        <p class="text-xl">Complete your payment here.</p>
+        
+        <div class="mt-8 text-left">
+          <h3 class="text-2xl font-bold mb-4">Payment Form</h3>
+          <form id="paymentForm" class="space-y-4">
+            <div class="flex flex-col md:flex-row gap-4">
+              <div>
+                <label for="paymentName" class="block text-sm font-medium text-gray-400">Full Name</label>
+                <input type="text" id="paymentName" required class="mt-1 block w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white">
+              </div>
+              <div>
+                <label for="paymentAddress" class="block text-sm font-medium text-gray-400">Address</label>
+                <input type="text" id="paymentAddress" required class="mt-1 block w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white">
+              </div>
+            </div>
+            <div>
+              <label for="paymentAmount" class="block text-sm font-medium text-gray-400">Amount</label>
+              <input type="text" id="paymentAmount" readonly class="mt-1 block w-full px-3 py-2 bg-gray-700 cursor-not-allowed border border-gray-600 rounded-md text-white">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-400 mb-2">Select a Payment Method</label>
+              <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                <button type="button" class="payment-method-btn px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white hover:bg-gray-700 transition" data-method="Card">
+                  <i class="fas fa-credit-card"></i> Card
+                </button>
+                <button type="button" class="payment-method-btn px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white hover:bg-gray-700 transition" data-method="PayPal">
+                  <i class="fab fa-paypal"></i> PayPal
+                </button>
+                <button type="button" class="payment-method-btn px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white hover:bg-gray-700 transition" data-method="Stripe">
+                  <i class="fab fa-stripe"></i> Stripe
+                </button>
+                <button type="button" class="payment-method-btn px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white hover:bg-gray-700 transition" data-method="Bank">
+                  <i class="fas fa-university"></i> Bank Transfer
+                </button>
+                <button type="button" class="payment-method-btn px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white hover:bg-gray-700 transition" data-method="Crypto">
+                  <i class="fab fa-bitcoin"></i> Crypto
+                </button>
+              </div>
+            </div>
+
+            <div id="cardDetails" class="space-y-4 hidden">
+              <div class="flex flex-col md:flex-row gap-4">
+                <div>
+                  <label for="cardNumber" class="block text-sm font-medium text-gray-400">Card Number</label>
+                  <input type="text" id="cardNumber" placeholder="**** **** **** ****" class="mt-1 block w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white">
+                </div>
+                <div>
+                  <label for="cardExpiry" class="block text-sm font-medium text-gray-400">Expiry (MM/YY)</label>
+                  <input type="text" id="cardExpiry" placeholder="MM/YY" class="mt-1 block w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white">
+                </div>
+                <div>
+                  <label for="cardCVC" class="block text-sm font-medium text-gray-400">CVC</label>
+                  <input type="text" id="cardCVC" placeholder="***" class="mt-1 block w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white">
+                </div>
+              </div>
+            </div>
+            
+            <div id="otherPaymentDetails" class="hidden">
+              <p id="paymentInfoText" class="text-gray-400 text-sm mt-2"></p>
+            </div>
+
+            <div>
+              <label for="paymentProof" class="block text-sm font-medium text-gray-400">Upload Payment Proof</label>
+              <input type="file" id="paymentProof" required class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-gray-700 file:text-white hover:file:bg-gray-600">
+            </div>
+
+            <button type="submit" class="w-full px-6 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-semibold shadow-md hover:shadow-lg transition">
+              Submit Payment
+            </button>
+            <p id="paymentStatus" class="mt-4 text-center text-sm font-semibold hidden"></p>
+          </form>
+        </div>
+      </div>
+
+      <div id="settings" class="tab-content hidden p-6 text-center bg-gray-900 border border-gray-700 rounded-xl shadow text-gray-200">
+        <div class="text-4xl text-gray-400 mb-4">⚙️</div>
+        <p class="text-xl">Manage your account settings and preferences here.</p>
+      </div>
+    </main>
+  </div>
+
+    <div id="mobile-menu" class="slide-out-menu fixed top-0 right-0 h-full w-64 bg-black border-l border-gray-700 p-6 z-50 transform md:hidden">
+    <div class="flex justify-between items-center border-b border-gray-700 pb-4 mb-4">
+      <h2 class="text-2xl font-bold text-white">TechNxxt</h2>
+      <button id="closeMenu" class="p-2 text-gray-400 hover:text-white">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <nav class="flex flex-col gap-2">
+      <button class="nav-btn-mobile flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-800" data-tab="overview">
+        <i class="fas fa-chart-line"></i> Overview
+      </button>
+      <button class="nav-btn-mobile flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-800" data-tab="contract">
+        <i class="fas fa-file-contract"></i> Contract
+      </button>
+      <button class="nav-btn-mobile flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-800" data-tab="dust">
+        <i class="fas fa-magic"></i> Dust
+      </button>
+      <button class="nav-btn-mobile flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-800" data-tab="billing">
+        <i class="fas fa-receipt"></i> Billing
+      </button>
+      <button class="nav-btn-mobile flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-800" data-tab="payment">
+        <i class="fas fa-dollar-sign"></i> Payment
+      </button>
+      <button class="nav-btn-mobile flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-800" data-tab="settings">
+        <i class="fas fa-cog"></i> Settings
+      </button>
+    </nav>
+  </div>
+
+    <div id="addContractModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden modal-overlay">
+    <div class="bg-gray-900 border border-gray-700 p-8 rounded-xl shadow-lg w-full max-w-lg mx-4 text-gray-200 relative">
+      <button onclick="closeModal('addContractModal')" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl">&times;</button>
+      <h3 class="text-2xl font-bold mb-4">Add New Contract</h3>
+      <form id="addContractForm" class="space-y-4">
+        <div>
+          <label for="clientName" class="block text-sm font-medium text-gray-400">Client Name</label>
+          <input type="text" id="clientName" required class="mt-1 block w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white">
+        </div>
+        <div>
+          <label for="contractStatus" class="block text-sm font-medium text-gray-400">Status</label>
+          <select id="contractStatus" required class="mt-1 block w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white">
+            <option value="Pending">Pending</option>
+            <option value="Active">Active</option>
+          </select>
+        </div>
+        <button type="submit" class="w-full px-4 py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700 transition">Add Contract</button>
+      </form>
+    </div>
+  </div>
+
+    <div id="dustContractModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden modal-overlay">
+    <div class="bg-gray-900 border border-gray-700 p-8 rounded-xl shadow-lg w-full max-w-lg mx-4 text-gray-200 relative">
+      <button onclick="closeModal('dustContractModal')" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl">&times;</button>
+      <h3 class="text-2xl font-bold mb-4">Dust a Contract</h3>
+      <form id="dustContractForm" class="space-y-4">
+        <div>
+          <label for="contractId" class="block text-sm font-medium text-gray-400">Contract ID</label>
+          <input type="text" id="contractId" placeholder="Enter contract ID to dust" required class="mt-1 block w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white">
+        </div>
+        <button type="submit" class="w-full px-4 py-2 rounded-xl bg-yellow-600 text-white hover:bg-yellow-700 transition">Dust Contract</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    let pendingContracts = 0;
+    let totalContracts = 0;
+    let revenue = 0;
+    let activeUsers = 0;
+
+    let globalPaymentPlan = '';
+    let globalPaymentAmount = 0;
+
+    const generatedCodes = {}; // Simple object to store codes
+
+    function updateDashboard() {
+      document.getElementById('pendingCount').textContent = pendingContracts;
+      document.getElementById('totalCount').textContent = totalContracts;
+      document.getElementById('revenueCount').textContent = `$${revenue}`;
+      document.getElementById('usersCount').textContent = activeUsers;
+    }
+
+    function showSection(tabName) {
+      const sections = document.querySelectorAll('.tab-content');
+      sections.forEach(section => {
+        section.classList.add('hidden');
+      });
+      document.getElementById(tabName).classList.remove('hidden');
+      document.getElementById('page-title').textContent = tabName;
+      document.getElementById('page-title-mobile').textContent = tabName;
+      updateActiveNav(tabName);
+    }
+
+    function updateActiveNav(activeTab) {
+      const navButtons = document.querySelectorAll('.nav-btn, .nav-btn-mobile');
+      navButtons.forEach(btn => {
+        btn.classList.remove('bg-gray-800', 'text-white');
+        btn.classList.add('text-gray-400');
+      });
+      const activeButton = document.querySelector(`.nav-btn[data-tab="${activeTab}"], .nav-btn-mobile[data-tab="${activeTab}"]`);
+      if (activeButton) {
+        activeButton.classList.remove('text-gray-400');
+        activeButton.classList.add('bg-gray-800', 'text-white');
+      }
+    }
+
+    // Show a modal
+    function openModal(modalId) {
+      document.getElementById(modalId).classList.remove('hidden');
+    }
+
+    // Close a modal
+    function closeModal(modalId) {
+      document.getElementById(modalId).classList.add('hidden');
+    }
+
+    // Add Contract Form Submission
+    document.getElementById('addContractForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const clientName = document.getElementById('clientName').value;
+      const status = document.getElementById('contractStatus').value;
+      const contractId = Math.random().toString(36).substring(2, 8).toUpperCase();
+      const date = new Date().toLocaleDateString();
+
+      const newRow = document.createElement('tr');
+      newRow.classList.add('hover:bg-[#222]', 'transition');
+      newRow.innerHTML = `
+        <td class="px-4 py-2 border-b border-white/20">${contractId}</td>
+        <td class="px-4 py-2 border-b border-white/20">${clientName}</td>
+        <td class="px-4 py-2 border-b border-white/20">${status}</td>
+        <td class="px-4 py-2 border-b border-white/20">${date}</td>
+      `;
+      document.querySelector('#overview table tbody tr:last-child').remove();
+      document.querySelector('#overview table tbody').appendChild(newRow);
+
+      if (status === 'Pending') {
+        pendingContracts++;
+        addActivityLog(`New pending contract for ${clientName} created.`, 'recent');
+      } else {
+        totalContracts++;
+        addActivityLog(`New active contract for ${clientName} created.`, 'recent');
+      }
+      updateDashboard();
+      closeModal('addContractModal');
+      document.getElementById('addContractForm').reset();
+    });
+
+    // Dust Contract Form Submission
+    document.getElementById('dustContractForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const contractId = document.getElementById('contractId').value.trim().toUpperCase();
+      // This is a placeholder for a real dusting logic
+      if (totalContracts > 0) {
+        totalContracts--;
+        addActivityLog(`Contract ${contractId} has been dusted. ✨`, 'recent');
+        document.getElementById('dusted-contracts-list').innerHTML = `<div class="p-4 border border-white/20 rounded-lg bg-gray-800 flex items-center justify-between">
+          <span>Contract #${contractId}</span>
+          <button class="px-3 py-1 rounded-lg bg-green-500 text-white text-sm hover:bg-green-600 transition">Restore</button>
+        </div>`;
+      } else {
+        alert("No active contracts to dust.");
+      }
+      updateDashboard();
+      closeModal('dustContractModal');
+      document.getElementById('dustContractForm').reset();
+    });
+
+    // Adds a new entry to the activity log
+    function addActivityLog(message, logId) {
+      const log = document.getElementById(`${logId}-activity-log`);
+      const newEntry = document.createElement('li');
+      newEntry.classList.add('p-3', 'border', 'border-white/20', 'rounded-lg', 'bg-[#0d0d0d]', 'hover:bg-[#222]', 'transition');
+      newEntry.textContent = message;
+
+      // Remove "no activity yet" message if present
+      if (log.querySelector('li').textContent.includes('No activity')) {
+        log.innerHTML = '';
+      }
+      log.prepend(newEntry);
+    }
+
+    // Initial loading state simulation
+    setTimeout(() => {
+      document.getElementById('initial-loader').classList.add('hidden');
+      showSection('overview');
+      updateDashboard();
+    }, 1500);
+
+    // Add event listeners for navigation buttons
+    document.querySelectorAll('.nav-btn').forEach(button => {
+      button.addEventListener('click', function() {
+        showSection(this.dataset.tab);
+      });
+    });
+    document.querySelectorAll('.nav-btn-mobile').forEach(button => {
+      button.addEventListener('click', function() {
+        showSection(this.dataset.tab);
+        document.getElementById('mobile-menu').classList.remove('open');
+        document.querySelector('.modal-overlay').classList.add('hidden');
+      });
+    });
+    
+    // Mobile menu toggle
+    document.getElementById('openMenu').addEventListener('click', () => {
+      document.getElementById('mobile-menu').classList.add('open');
+      document.querySelector('.modal-overlay').classList.remove('hidden');
+    });
+    document.getElementById('closeMenu').addEventListener('click', () => {
+      document.getElementById('mobile-menu').classList.remove('open');
+      document.querySelector('.modal-overlay').classList.add('hidden');
+    });
+
+    // Billing Plans functionality
+    function showPlans(period) {
+      const monthlyPlans = document.getElementById('monthly-plans');
+      const yearlyPlans = document.getElementById('yearly-plans');
+      const monthlyBtn = document.getElementById('monthlyBtn');
+      const yearlyBtn = document.getElementById('yearlyBtn');
+
+      if (period === 'monthly') {
+        monthlyPlans.classList.remove('hidden');
+        yearlyPlans.classList.add('hidden');
+        monthlyBtn.classList.add('bg-blue-500', 'text-white');
+        monthlyBtn.classList.remove('bg-transparent', 'text-gray-400');
+        yearlyBtn.classList.remove('bg-blue-500', 'text-white');
+        yearlyBtn.classList.add('bg-transparent', 'text-gray-400');
+      } else if (period === 'yearly') {
+        yearlyPlans.classList.remove('hidden');
+        monthlyPlans.classList.add('hidden');
+        yearlyBtn.classList.add('bg-blue-500', 'text-white');
+        yearlyBtn.classList.remove('bg-transparent', 'text-gray-400');
+        monthlyBtn.classList.remove('bg-blue-500', 'text-white');
+        monthlyBtn.classList.add('bg-transparent', 'text-gray-400');
+      }
+    }
+
+    // Payment functionality
+    function handlePayment(plan, amount) {
+      if (amount === 'Contact Sales') {
+        alert('Please contact our sales team for a custom quote.');
+        return;
+      }
+      globalPaymentPlan = plan;
+      globalPaymentAmount = amount;
+      document.getElementById('paymentAmount').value = `$${amount}`;
+      showSection('payment');
+      document.getElementById('paymentStatus').classList.add('hidden');
+    }
+
+    document.querySelectorAll('.payment-method-btn').forEach(button => {
+      button.addEventListener('click', function() {
+        document.querySelectorAll('.payment-method-btn').forEach(btn => {
+          btn.classList.remove('border-blue-500');
+        });
+        this.classList.add('border-blue-500');
+
+        const method = this.dataset.method;
+        const cardDetails = document.getElementById('cardDetails');
+        const otherPaymentDetails = document.getElementById('otherPaymentDetails');
+        const paymentInfoText = document.getElementById('paymentInfoText');
+        
+        cardDetails.classList.add('hidden');
+        otherPaymentDetails.classList.add('hidden');
+
+        if (method === 'Card') {
+          cardDetails.classList.remove('hidden');
+        } else {
+          otherPaymentDetails.classList.remove('hidden');
+          switch(method) {
+            case 'PayPal':
+              paymentInfoText.textContent = `Please send $${globalPaymentAmount} to our PayPal account: payment@technxxt.com.`;
+              break;
+            case 'Stripe':
+              paymentInfoText.textContent = `You will be redirected to our secure Stripe checkout page after submitting the form.`;
+              break;
+            case 'Bank':
+              paymentInfoText.textContent = `Please transfer $${globalPaymentAmount} to our bank account: Acct Name: TechNxxt Inc, Acct No: 1234567890, Bank: Global Bank.`;
+              break;
+            case 'Crypto':
+              paymentInfoText.textContent = `Send $${globalPaymentAmount} worth of BTC to wallet address: 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa.`;
+              break;
+          }
+        }
+      });
+    }
+
+    document.getElementById('paymentForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const name = document.getElementById('paymentName').value;
+      const address = document.getElementById('paymentAddress').value;
+      const amount = document.getElementById('paymentAmount').value.replace('$', '');
+      const paymentProof = document.getElementById('paymentProof').files[0];
+      const paymentStatus = document.getElementById('paymentStatus');
+
+      if (!paymentProof) {
+        paymentStatus.textContent = 'Please upload a payment proof image.';
+        paymentStatus.classList.remove('hidden');
+        paymentStatus.classList.add('text-red-500');
+        return;
+      }
+
+      paymentStatus.textContent = 'Processing payment...';
+      paymentStatus.classList.remove('hidden', 'text-red-500', 'text-green-500');
+      paymentStatus.classList.add('text-yellow-500');
+
+      // Simulate server-side processing
+      setTimeout(() => {
+        const generatedCode = `TECH-${Math.random().toString(36).substring(2, 6).toUpperCase()}-100`;
+        generatedCodes[generatedCode] = true; // Store the code
+        
+        paymentStatus.textContent = `Payment confirmed! Your contract activation code is: ${generatedCode}. Please copy this code and use it on the Contract page.`;
+        paymentStatus.classList.remove('text-yellow-500');
+        paymentStatus.classList.add('text-green-500');
+
+        // Update dashboard stats (assuming successful payment leads to new active user/contract)
+        totalContracts++;
+        revenue += parseInt(amount);
+        activeUsers++;
+        updateDashboard();
+        addActivityLog(`Payment of $${amount} for ${globalPaymentPlan} confirmed.`, 'revenue');
+        addActivityLog(`New contract activation code generated: ${generatedCode}`, 'recent');
+        
+        // Set the generated code in the contract section for the user to see
+        document.getElementById('autoGeneratedCode').value = generatedCode;
+        showSection('contract');
+      }, 2000);
+    });
+
+    // Contract Activation functionality
+    function verifyAndActivate() {
+      const userCode = document.getElementById('newCodeOnReceipt').value.trim().toUpperCase();
+      const autoGeneratedCode = document.getElementById('autoGeneratedCode').value.trim().toUpperCase();
+      const verificationStatus = document.getElementById('verification-status');
+      verificationStatus.classList.remove('hidden', 'text-red-500', 'text-green-500');
+      
+      if (userCode === autoGeneratedCode && generatedCodes[userCode]) {
+        verificationStatus.textContent = 'Success! Your contract has been activated.';
+        verificationStatus.classList.add('text-green-500');
+        // Update logic for active contracts
+        pendingContracts--;
+        updateDashboard();
+        addActivityLog(`Contract successfully activated with code ${userCode}.`, 'recent');
+      } else {
+        verificationStatus.textContent = 'Invalid code. Please check the code and try again.';
+        verificationStatus.classList.add('text-red-500');
+      }
+      verificationStatus.classList.remove('hidden');
+    }
+  </script>
 </body>
 </html>
-
-
