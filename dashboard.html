@@ -8,16 +8,27 @@
   <!-- Font Awesome for icons -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
   <style>
-    /* Ensure modals are on top of other content */
+    /* Custom CSS for slide-out menu */
+    .slide-out-menu {
+      transform: translateX(100%);
+      transition: transform 0.3s ease-in-out;
+    }
+    .slide-out-menu.open {
+      transform: translateX(0);
+    }
     .modal-overlay {
       z-index: 100;
+    }
+    /* Ensure no horizontal scrolling on smaller screens */
+    html, body {
+      overflow-x: hidden;
     }
   </style>
 </head>
 <body class="bg-black text-gray-200 font-sans">
   <div class="flex min-h-screen">
     <!-- Sidebar (Desktop) -->
-    <aside class="hidden md:flex w-64 flex-col bg-black border-r border-gray-700">
+    <aside id="desktop-sidebar" class="hidden md:flex w-64 flex-col bg-black border-r border-gray-700">
       <div class="p-6 border-b border-gray-700">
         <h2 class="text-2xl font-bold text-white">TechNxxt</h2>
         <p class="text-sm text-gray-400">Support Dashboard</p>
@@ -90,8 +101,8 @@
           </div>
         </div>
 
-        <div class="flex gap-3 mb-6">
-          <button onclick="openModal('addContractModal')" class="px-5 py-2 rounded-xl bg-transparent border border-white/30 text-white hover:bg-white/10 hover:border-white/60 hover:scale-105 transition shadow-sm">
+        <div class="flex flex-col md:flex-row gap-3 mb-6">
+          <button onclick="openModal('addContractModal')" class="w-full md:w-auto px-5 py-2 rounded-xl bg-transparent border border-white/30 text-white hover:bg-white/10 hover:border-white/60 hover:scale-105 transition shadow-sm">
             <i class="fas fa-plus"></i> Add Contract
           </button>
         </div>
@@ -136,7 +147,7 @@
         <div class="text-4xl text-blue-400 mb-4">📑</div>
         <p class="text-xl mb-4">All active and pending Contracts are listed here.</p>
         
-        <button onclick="openModal('dustContractModal')" class="px-5 py-2 rounded-xl bg-yellow-600/20 text-yellow-400 border border-yellow-500 hover:bg-yellow-600/30 transition shadow-sm mb-6">
+        <button onclick="openModal('dustContractModal')" class="w-full md:w-auto px-5 py-2 rounded-xl bg-yellow-600/20 text-yellow-400 border border-yellow-500 hover:bg-yellow-600/30 transition shadow-sm mb-6">
           <i class="fas fa-trash-alt"></i> Dust Contract
         </button>
 
@@ -197,9 +208,42 @@
     </main>
   </div>
 
+  <!-- Mobile Menu Modal -->
+  <div id="mobileMenuModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden md:hidden z-50">
+    <div class="absolute right-0 top-0 h-full w-64 bg-black border-l border-gray-700 slide-out-menu">
+      <div class="p-6 border-b border-gray-700 flex justify-between items-center">
+        <h2 class="text-2xl font-bold text-white">Menu</h2>
+        <button id="closeMenu" class="p-2 rounded-lg text-white">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <nav class="flex-1 p-4 flex flex-col gap-2">
+        <button class="nav-btn-mobile flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-800" data-tab="overview">
+          <i class="fas fa-chart-line"></i> Overview
+        </button>
+        <button class="nav-btn-mobile flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-800" data-tab="contract">
+          <i class="fas fa-file-contract"></i> Contract
+        </button>
+        <button class="nav-btn-mobile flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-800" data-tab="dust">
+          <i class="fas fa-magic"></i> Dust
+        </button>
+        <button class="nav-btn-mobile flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-800" data-tab="billing">
+          <i class="fas fa-receipt"></i> Billing
+        </button>
+        <button class="nav-btn-mobile flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-800" data-tab="payment">
+          <i class="fas fa-dollar-sign"></i> Payment
+        </button>
+        <button class="nav-btn-mobile flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-800" data-tab="settings">
+          <i class="fas fa-cog"></i> Settings
+        </button>
+      </nav>
+    </div>
+  </div>
+
+
   <!-- All Modals and Overlays -->
-  <div id="addContractModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center modal-overlay">
-    <div class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-8 rounded-2xl border border-white/20 w-[420px] shadow-2xl relative">
+  <div id="addContractModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center modal-overlay p-4">
+    <div class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-8 rounded-2xl border border-white/20 w-full max-w-lg shadow-2xl relative">
       <h2 class="text-2xl font-bold mb-6 text-white text-center">✨ Add Contract</h2>
       <label class="block text-gray-300 text-sm mb-2">User Name</label>
       <input id="userName" type="text" placeholder="Enter user name" class="w-full mb-5 px-4 py-3 rounded-xl bg-white/5 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/40 transition">
@@ -216,14 +260,14 @@
       </select>
       <div class="mb-8">
         <label class="block text-gray-300 text-sm mb-2">Contract Code</label>
-        <div class="flex gap-2">
+        <div class="flex flex-col sm:flex-row gap-2">
           <input id="contractCode" type="text" readonly placeholder="Generate a code" class="flex-1 px-4 py-3 rounded-xl bg-white/5 border border-white/20 text-white placeholder-gray-500 focus:outline-none">
           <button onclick="generateContractCode()" class="px-4 py-3 rounded-xl bg-gradient-to-r from-green-500 to-emerald-400 hover:from-green-600 hover:to-emerald-500 text-white font-semibold shadow-md hover:shadow-lg transition">
             Create
           </button>
         </div>
       </div>
-      <div class="flex justify-end gap-3">
+      <div class="flex flex-col sm:flex-row justify-end gap-3">
         <button onclick="closeModal('addContractModal')" class="px-5 py-3 rounded-xl bg-white/5 border border-white/20 text-white hover:bg-white/10 hover:border-white/40 transition">
           Close
         </button>
@@ -241,8 +285,8 @@
     </div>
   </div>
 
-  <div id="continueContractModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center modal-overlay">
-    <div class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-8 rounded-2xl border border-white/20 w-[420px] shadow-2xl text-center">
+  <div id="continueContractModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center modal-overlay p-4">
+    <div class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-8 rounded-2xl border border-white/20 w-full max-w-lg shadow-2xl text-center">
       <div class="flex justify-center mb-4">
         <i class="fas fa-file-contract text-4xl text-red-500"></i>
       </div>
@@ -260,8 +304,8 @@
     </div>
   </div>
   
-  <div id="verificationModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center modal-overlay">
-    <div class="bg-gray-900 p-8 rounded-2xl border border-gray-700 shadow-2xl w-[420px] text-center">
+  <div id="verificationModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center modal-overlay p-4">
+    <div class="bg-gray-900 p-8 rounded-2xl border border-gray-700 shadow-2xl w-full max-w-lg text-center">
         <div id="verificationIcon" class="mb-4">
             <i class="fas fa-spinner fa-spin text-4xl text-blue-400"></i>
         </div>
@@ -271,14 +315,14 @@
     </div>
   </div>
 
-  <div id="dustContractModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center modal-overlay">
-    <div class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-8 rounded-2xl border border-white/20 w-[420px] shadow-2xl relative">
+  <div id="dustContractModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center modal-overlay p-4">
+    <div class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-8 rounded-2xl border border-white/20 w-full max-w-lg shadow-2xl relative">
       <h2 class="text-2xl font-bold mb-6 text-white text-center">Dust a Contract</h2>
       <p class="text-gray-400 mb-4 text-sm text-center">Select an active contract to move it to the "Dust" archive.</p>
       <select id="activeContractsDropdown" class="w-full mb-6 px-4 py-3 rounded-xl bg-white/5 border border-white/20 text-white focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-500/40 transition">
         <option value="" disabled selected>-- Select a contract --</option>
       </select>
-      <div class="flex justify-end gap-3">
+      <div class="flex flex-col sm:flex-row justify-end gap-3">
         <button onclick="closeModal('dustContractModal')" class="px-5 py-3 rounded-xl bg-white/5 border border-white/20 text-white hover:bg-white/10 hover:border-white/40 transition">
           Cancel
         </button>
@@ -289,14 +333,14 @@
     </div>
   </div>
 
-  <div id="restoreContractModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center modal-overlay">
-    <div class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-8 rounded-2xl border border-white/20 w-[420px] shadow-2xl relative">
+  <div id="restoreContractModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center modal-overlay p-4">
+    <div class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-8 rounded-2xl border border-white/20 w-full max-w-lg shadow-2xl relative">
       <h2 class="text-2xl font-bold mb-6 text-white text-center">Restore a Contract</h2>
       <p class="text-gray-400 mb-4 text-sm text-center">Select a dusted contract to restore it to the active list.</p>
       <select id="dustedContractsDropdown" class="w-full mb-6 px-4 py-3 rounded-xl bg-white/5 border border-white/20 text-white focus:outline-none focus:border-green-400 focus:ring-2 focus:ring-green-500/40 transition">
         <option value="" disabled selected>-- Select a contract --</option>
       </select>
-      <div class="flex justify-end gap-3">
+      <div class="flex flex-col sm:flex-row justify-end gap-3">
         <button onclick="closeModal('restoreContractModal')" class="px-5 py-3 rounded-xl bg-white/5 border border-white/20 text-white hover:bg-white/10 hover:border-white/40 transition">
           Cancel
         </button>
@@ -408,6 +452,26 @@
       const m = getEl(id);
       if (m) m.classList.add("hidden");
     }
+    
+    // Slide-out menu functions
+    const mobileMenuModal = getEl('mobileMenuModal');
+    const slideOutMenu = mobileMenuModal.querySelector('.slide-out-menu');
+
+    getEl('openMenu')?.addEventListener('click', () => {
+      mobileMenuModal.classList.remove('hidden');
+      setTimeout(() => slideOutMenu.classList.add('open'), 10);
+    });
+
+    getEl('closeMenu')?.addEventListener('click', () => {
+      slideOutMenu.classList.remove('open');
+      setTimeout(() => mobileMenuModal.classList.add('hidden'), 300);
+    });
+
+    mobileMenuModal.addEventListener('click', (e) => {
+      if (e.target === mobileMenuModal) {
+        getEl('closeMenu')?.click();
+      }
+    });
 
     function showLoading(forMs = 6000, after) {
       let overlay = getEl("loadingScreen");
@@ -610,21 +674,31 @@
       }
     }
 
-    const navButtons = document.querySelectorAll(".nav-btn");
+    const desktopNavButtons = document.querySelectorAll(".nav-btn");
+    const mobileNavButtons = document.querySelectorAll(".nav-btn-mobile");
     const tabContents = document.querySelectorAll(".tab-content");
     const pageTitle = getEl("page-title");
     const pageTitleMobile = getEl("page-title-mobile");
 
     function openTab(tabName) {
-      navButtons.forEach(btn => btn.classList.remove("bg-gray-800", "text-white"));
-      const activeBtn = document.querySelector(`[data-tab="${tabName}"]`);
-      if (activeBtn) activeBtn.classList.add("bg-gray-800", "text-white");
+      desktopNavButtons.forEach(btn => btn.classList.remove("bg-gray-800", "text-white"));
+      mobileNavButtons.forEach(btn => btn.classList.remove("bg-gray-800", "text-white"));
+
+      const activeDesktopBtn = document.querySelector(`[data-tab="${tabName}"]`);
+      if (activeDesktopBtn) activeDesktopBtn.classList.add("bg-gray-800", "text-white");
+      
+      const activeMobileBtn = document.querySelector(`.nav-btn-mobile[data-tab="${tabName}"]`);
+      if (activeMobileBtn) activeMobileBtn.classList.add("bg-gray-800", "text-white");
+
       tabContents.forEach(tab => tab.classList.add("hidden"));
       const activeTab = getEl(tabName);
       if (activeTab) activeTab.classList.remove("hidden");
       if (pageTitle) pageTitle.textContent = tabName;
       if (pageTitleMobile) pageTitleMobile.textContent = tabName;
       closeModal('continueContractModal');
+      
+      // Close mobile menu after selection
+      getEl('closeMenu')?.click();
 
       if (tabName === 'dust') {
         renderDustedContracts();
@@ -634,16 +708,23 @@
       }
     }
 
-    navButtons.forEach(btn => {
+    desktopNavButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        openTab(btn.dataset.tab);
+      });
+    });
+
+    mobileNavButtons.forEach(btn => {
       btn.addEventListener("click", () => {
         openTab(btn.dataset.tab);
       });
     });
 
     document.addEventListener("DOMContentLoaded", () => {
-      if (navButtons.length) {
-        navButtons[0].classList.add("bg-gray-800", "text-white");
-      }
+      // Set initial state for desktop nav
+      const initialTab = 'overview';
+      openTab(initialTab);
+
       ["userName", "contractType", "contractCode"].forEach(id => {
         const el = getEl(id);
         if (!el) return;
