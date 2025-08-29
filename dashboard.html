@@ -3,14 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TechNxxtSupport Dashboard</title>
+  <title>TechNxxt Support Dashboard</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Font Awesome -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <style>
+    /* Ensure modals are on top of other content */
+    .modal-overlay {
+      z-index: 100;
+    }
+  </style>
 </head>
 <body class="bg-black text-gray-200 font-sans">
   <div class="flex min-h-screen">
-    <!-- Sidebar (Desktop) -->
     <aside class="hidden md:flex w-64 flex-col bg-black border-r border-gray-700">
       <div class="p-6 border-b border-gray-700">
         <h2 class="text-2xl font-bold text-white">TechNxxt</h2>
@@ -41,7 +45,6 @@
       </div>
     </aside>
 
-    <!-- Main Content -->
     <main class="flex-1 p-6">
       <div class="flex items-center justify-between mb-6 md:hidden">
         <h1 id="page-title-mobile" class="text-2xl font-bold capitalize">Overview</h1>
@@ -51,447 +54,360 @@
       </div>
       <h1 id="page-title" class="hidden md:block text-3xl font-bold mb-6 capitalize">Overview</h1>
 
-      <!-- Content -->
-    <div id="content" class="bg-[#0d0d0d] border border-gray-700 p-6 rounded-xl shadow text-gray-200">
-  
-  <!-- Stat Cards -->
-  <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
- <!-- Pending Contracts -->
-<!-- Pending Contracts -->
-<!-- Pending Contracts -->
-<div class="p-4 border border-white/20 rounded-xl bg-[#1a1a1a] hover:bg-[#222] transition flex items-center justify-between shadow">
-  <div>
-    <p class="text-gray-400 text-sm">Pending contracts</p>
-    <h3 id="pendingCount" class="text-2xl font-bold">0</h3>
-  </div>
-  <i class="fas fa-file-contract"></i>
-</div>
+      <div id="overview" class="tab-content bg-[#0d0d0d] border border-gray-700 p-6 rounded-xl shadow text-gray-200">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+          <div class="p-4 border border-white/20 rounded-xl bg-[#1a1a1a] hover:bg-[#222] transition flex items-center justify-between shadow">
+            <div>
+              <p class="text-gray-400 text-sm">Pending contracts</p>
+              <h3 id="pendingCount" class="text-2xl font-bold">0</h3>
+            </div>
+            <i class="fas fa-file-contract"></i>
+          </div>
+          <div class="p-4 border border-white/20 rounded-xl bg-[#1a1a1a] hover:bg-[#222] transition flex items-center justify-between shadow">
+            <div>
+              <p class="text-gray-400 text-sm">Total Contracts</p>
+              <h3 id="totalCount" class="text-2xl font-bold">0</h3>
+            </div>
+            <i class="fas fa-file-contract text-2xl text-blue-400 group-hover:scale-110 transition"></i>
+          </div>
+          <div class="p-4 border border-white/20 rounded-xl bg-[#1a1a1a] hover:bg-[#222] transition flex items-center justify-between shadow">
+            <div>
+              <p class="text-gray-400 text-sm">Revenue</p>
+              <h3 class="text-2xl font-bold">$0</h3>
+            </div>
+            <i class="fas fa-chart-line text-2xl text-yellow-400"></i>
+          </div>
+          <div class="p-4 border border-white/20 rounded-xl bg-[#1a1a1a] hover:bg-[#222] transition flex items-center justify-between shadow">
+            <div>
+              <p class="text-gray-400 text-sm">Active Users</p>
+              <h3 class="text-2xl font-bold">0</h3>
+            </div>
+            <i class="fas fa-users text-2xl text-purple-400"></i>
+          </div>
+        </div>
+        
+        <div class="flex gap-3 mb-6">
+          <button onclick="openModal('addContractModal')" class="px-5 py-2 rounded-xl bg-transparent border border-white/30 text-white hover:bg-white/10 hover:border-white/60 hover:scale-105 transition shadow-sm">
+            <i class="fas fa-plus"></i> Add Contract
+          </button>
+        </div>
 
-<!-- Total Contracts -->
-<div class="p-4 border border-white/20 rounded-xl bg-[#1a1a1a] hover:bg-[#222] transition flex items-center justify-between shadow">
-  <div>
-    <p class="text-gray-400 text-sm">Total Contracts</p>
-    <h3 id="totalCount" class="text-2xl font-bold">0</h3>
-  </div>
-  <i class="fas fa-file-contract text-2xl text-blue-400 group-hover:scale-110 transition"></i>
-</div>
+        <div class="p-6 border border-white/20 rounded-xl bg-[#1a1a1a] mb-6">
+          <h3 class="text-lg font-bold mb-3">Revenue Overview</h3>
+          <div class="w-full h-64 flex items-center justify-center text-gray-500 border-2 border-dashed border-white/30 rounded-lg">
+            Chart Placeholder
+          </div>
+        </div>
 
+        <div class="p-6 border border-white/20 rounded-xl bg-[#1a1a1a] mb-6">
+          <h3 class="text-lg font-bold mb-3">Recent Activity</h3>
+          <ul class="space-y-2">
+            <li class="p-3 border border-white/20 rounded-lg bg-[#0d0d0d] hover:bg-[#222] transition">No activity yet.</li>
+          </ul>
+        </div>
 
-
-    <div class="p-4 border border-white/20 rounded-xl bg-[#1a1a1a] hover:bg-[#222] transition flex items-center justify-between shadow">
-      <div>
-        <p class="text-gray-400 text-sm">Revenue</p>
-        <h3 class="text-2xl font-bold">$0</h3>
+        <div class="p-6 border border-white/20 rounded-xl bg-[#1a1a1a]">
+          <h3 class="text-lg font-bold mb-3">Recent Contracts</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border border-white/20 rounded-lg text-gray-300">
+              <thead class="bg-[#111] text-gray-400">
+                <tr>
+                  <th class="px-4 py-2 border-b border-white/20">ID</th>
+                  <th class="px-4 py-2 border-b border-white/20">Client</th>
+                  <th class="px-4 py-2 border-b border-white/20">Status</th>
+                  <th class="px-4 py-2 border-b border-white/20">Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="hover:bg-[#222] transition">
+                  <td colspan="4" class="text-center text-gray-500 py-4">No contracts yet.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
-      <i class="fas fa-chart-line text-2xl text-yellow-400"></i>
-    </div>
-    <div class="p-4 border border-white/20 rounded-xl bg-[#1a1a1a] hover:bg-[#222] transition flex items-center justify-between shadow">
-      <div>
-        <p class="text-gray-400 text-sm">Active Users</p>
-        <h3 class="text-2xl font-bold">0</h3>
+
+      <div id="contract" class="tab-content hidden p-6 text-center">
+        <div class="text-4xl text-blue-400 mb-4">📑</div>
+        <p class="text-xl">All active and past Contracts are listed here.</p>
+        <button onclick="activateContract()" class="mt-4 px-6 py-3 rounded-xl bg-gradient-to-r from-green-500 to-emerald-400 text-white font-semibold">
+          Activate Pending Contract
+        </button>
       </div>
-      <i class="fas fa-users text-2xl text-purple-400"></i>
-    </div>
-  </div>
-<script>
-  // ======= COUNTS (persistent with localStorage) =======
-  let pendingContracts = parseInt(localStorage.getItem("pendingContracts")) || 0;
-  let totalContracts = parseInt(localStorage.getItem("totalContracts")) || 0;
 
-  function saveCounts() {
-    localStorage.setItem("pendingContracts", pendingContracts);
-    localStorage.setItem("totalContracts", totalContracts);
-  }
+      <div id="dust" class="tab-content hidden p-6 text-center">
+        <div class="text-4xl text-yellow-400 mb-4">✨</div>
+        <p class="text-xl">Dust Section – space for experimental or archived data.</p>
+      </div>
 
-  // ======= HELPERS =======
-  function getEl(id) {
-    const el = document.getElementById(id);
-    if (!el) console.warn(`Element #${id} not found`);
-    return el;
-  }
+      <div id="billing" class="tab-content hidden p-6 text-center">
+        <div class="text-4xl text-pink-400 mb-4">💳</div>
+        <p class="text-xl">Manage your Billing details, invoices, and receipts here.</p>
+      </div>
 
-  function renderCounts() {
-    const p = getEl("pendingCount");
-    const t = getEl("totalCount");
-    if (p) p.textContent = String(pendingContracts);
-    if (t) t.textContent = String(totalContracts);
-  }
+      <div id="payment" class="tab-content hidden p-6 text-center">
+        <div class="text-4xl text-purple-400 mb-4">💰</div>
+        <p class="text-xl">View and process Payments securely from this section.</p>
+      </div>
 
-  // ======= MODALS =======
-  function openModal(id) {
-    const m = getEl(id);
-    if (m) m.classList.remove("hidden");
-  }
-  function closeModal(id) {
-    const m = getEl(id);
-    if (m) m.classList.add("hidden");
-  }
-
-  // ======= LOADING OVERLAY =======
-  function showLoading(forMs = 6000, after) {
-    let overlay = document.getElementById("loaderOverlay");
-    if (!overlay) {
-      overlay = document.createElement("div");
-      overlay.id = "loaderOverlay";
-      overlay.className = "fixed inset-0 flex items-center justify-center bg-black/80 z-[100]";
-      overlay.innerHTML = `
-        <div class="flex flex-col items-center">
-          <div class="animate-spin rounded-full h-20 w-20 border-t-4 border-b-4 border-blue-400 mb-4"></div>
-          <p class="text-white text-lg font-medium animate-pulse">Preparing your contract...</p>
-        </div>`;
-      document.body.appendChild(overlay);
-    } else {
-      overlay.classList.remove("hidden");
-    }
-
-    setTimeout(() => {
-      overlay.classList.add("hidden");
-      if (typeof after === "function") after();
-    }, forMs);
-  }
-
-  // ======= FORM: ENABLE SAVE ONLY WHEN VALID =======
-  function validateFormEnableSave() {
-    const name = getEl("userName")?.value.trim();
-    const type = getEl("contractType")?.value;
-    const code = getEl("contractCode")?.value.trim();
-    const saveBtn = getEl("saveBtn");
-
-    const isValid = Boolean(name && type && code);
-    if (saveBtn) {
-      saveBtn.disabled = !isValid;
-      saveBtn.textContent = "Save";
-    }
-  }
-
-  // ======= GENERATE CODE =======
-  function generateContractCode() {
-    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    let code = "";
-    for (let i = 0; i < 20; i++) code += chars.charAt(Math.floor(Math.random() * chars.length));
-    const codeInput = getEl("contractCode");
-    if (codeInput) codeInput.value = code;
-    validateFormEnableSave();
-  }
-
-  // ======= SAVE / CONTINUE =======
-  function continueContract() {
-    const userName = getEl("userName")?.value.trim();
-    const contractType = getEl("contractType")?.value;
-    const contractCode = getEl("contractCode")?.value.trim();
-
-    if (!userName) { alert("Please enter a user name."); return; }
-    if (!contractType) { alert("Please select a contract type."); return; }
-    if (!contractCode) { alert("Please generate a contract code."); return; }
-
-    // Increment pending
-    pendingContracts += 1;
-    saveCounts();
-    renderCounts();
-
-    closeModal("addContractModal");
-    showLoading(6000, () => openModal("continueContractModal"));
-
-    // Reset form
-    const nameEl = getEl("userName");
-    const typeEl = getEl("contractType");
-    const codeEl = getEl("contractCode");
-    const saveBtn = getEl("saveBtn");
-
-    if (nameEl) nameEl.value = "";
-    if (typeEl) typeEl.selectedIndex = 0;
-    if (codeEl) codeEl.value = "";
-    if (saveBtn) saveBtn.disabled = true;
-  }
-
-  // ======= ACTIVATE CONTRACT (Pending → Total) =======
-  function activateContract() {
-    if (pendingContracts > 0) {
-      pendingContracts -= 1;
-      totalContracts += 1;
-      saveCounts();
-      renderCounts();
-    }
-  }
-
-  // ======= INIT =======
-  document.addEventListener("DOMContentLoaded", () => {
-    ["userName", "contractType", "contractCode"].forEach(id => {
-      const el = getEl(id);
-      if (!el) return;
-      el.addEventListener("input", validateFormEnableSave);
-      el.addEventListener("change", validateFormEnableSave);
-    });
-    renderCounts();
-  });
-
-  window.generateContractCode = generateContractCode;
-  window.continueContract = continueContract;
-  window.openModal = openModal;
-  window.closeModal = closeModal;
-  window.activateContract = activateContract;
-</script>
-
-  <!-- Action Buttons -->
-  <div class="flex gap-3 mb-6">
-  <button onclick="openModal('addContractModal')" 
-    class="px-5 py-2 rounded-xl bg-transparent border border-white/30 text-white 
-           hover:bg-white/10 hover:border-white/60 hover:scale-105 transition shadow-sm">
-    <i class="fas fa-plus"></i> Add Contract
-  </button>
-  
-
-</div>
-
-
-  <!-- Chart Placeholder -->
-  <div class="p-6 border border-white/20 rounded-xl bg-[#1a1a1a] mb-6">
-    <h3 class="text-lg font-bold mb-3">Revenue Overview</h3>
-    <div class="w-full h-64 flex items-center justify-center text-gray-500 border-2 border-dashed border-white/30 rounded-lg">
-      Chart Placeholder
-    </div>
-  </div>
-
-  <!-- Recent Activity -->
-  <div class="p-6 border border-white/20 rounded-xl bg-[#1a1a1a] mb-6">
-    <h3 class="text-lg font-bold mb-3">Recent Activity</h3>
-    <ul class="space-y-2">
-      <li class="p-3 border border-white/20 rounded-lg bg-[#0d0d0d] hover:bg-[#222] transition">No activity yet.</li>
-    </ul>
-  </div>
-
-  <!-- Table Placeholder -->
-  <div class="p-6 border border-white/20 rounded-xl bg-[#1a1a1a]">
-    <h3 class="text-lg font-bold mb-3">Recent Contracts</h3>
-    <div class="overflow-x-auto">
-      <table class="w-full text-left border border-white/20 rounded-lg text-gray-300">
-        <thead class="bg-[#111] text-gray-400">
-          <tr>
-            <th class="px-4 py-2 border-b border-white/20">ID</th>
-            <th class="px-4 py-2 border-b border-white/20">Client</th>
-            <th class="px-4 py-2 border-b border-white/20">Status</th>
-            <th class="px-4 py-2 border-b border-white/20">Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="hover:bg-[#222] transition">
-            <td colspan="4" class="text-center text-gray-500 py-4">No contracts yet.</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-</div>
-
+      <div id="settings" class="tab-content hidden p-6 text-center">
+        <div class="text-4xl text-gray-400 mb-4">⚙️</div>
+        <p class="text-xl">Customize your account, preferences, and security options here.</p>
+      </div>
     </main>
   </div>
 
- <!-- Add Contract Modal -->
-<!-- Add Contract Modal -->
-<div id="addContractModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
-  <div class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-8 rounded-2xl border border-white/20 w-[420px] shadow-2xl relative">
-    <h2 class="text-2xl font-bold mb-6 text-white text-center">✨ Add Contract</h2>
+  <div id="addContractModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center modal-overlay">
+    <div class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-8 rounded-2xl border border-white/20 w-[420px] shadow-2xl relative">
+      <h2 class="text-2xl font-bold mb-6 text-white text-center">✨ Add Contract</h2>
 
-    <!-- User Name -->
-    <label class="block text-gray-300 text-sm mb-2">User Name</label>
-    <input id="userName" type="text" placeholder="Enter user name" 
-           class="w-full mb-5 px-4 py-3 rounded-xl bg-white/5 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/40 transition">
+      <label class="block text-gray-300 text-sm mb-2">User Name</label>
+      <input id="userName" type="text" placeholder="Enter user name" class="w-full mb-5 px-4 py-3 rounded-xl bg-white/5 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/40 transition">
 
-    <!-- Contract Type -->
-    <label class="block text-gray-300 text-sm mb-2">Contract Type</label>
-    <select id="contractType" 
-            class="w-full mb-6 px-4 py-3 rounded-xl bg-white/5 border border-white/20 text-white focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/40 transition">
-      <option class="bg-gray-900 text-white">Real Estate</option>
-      <option class="bg-gray-900 text-white">2 Terms</option>
-      <option class="bg-gray-900 text-white">Quick Productive</option>
-      <option class="bg-gray-900 text-white">Binary</option>
-      <option class="bg-gray-900 text-white">Development</option>
-      <option class="bg-gray-900 text-white">Oil Reign</option>
-      <option class="bg-gray-900 text-white">Infrastructure</option>
-      <option class="bg-gray-900 text-white">Premium Quick Contract</option>
-    </select>
+      <label class="block text-gray-300 text-sm mb-2">Contract Type</label>
+      <select id="contractType" class="w-full mb-6 px-4 py-3 rounded-xl bg-white/5 border border-white/20 text-white focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/40 transition">
+        <option class="bg-gray-900 text-white">Real Estate</option>
+        <option class="bg-gray-900 text-white">2 Terms</option>
+        <option class="bg-gray-900 text-white">Quick Productive</option>
+        <option class="bg-gray-900 text-white">Binary</option>
+        <option class="bg-gray-900 text-white">Development</option>
+        <option class="bg-gray-900 text-white">Oil Reign</option>
+        <option class="bg-gray-900 text-white">Infrastructure</option>
+        <option class="bg-gray-900 text-white">Premium Quick Contract</option>
+      </select>
 
-    <!-- Contract Code -->
-    <div class="mb-8">
-      <label class="block text-gray-300 text-sm mb-2">Contract Code</label>
-      <div class="flex gap-2">
-        <input id="contractCode" type="text" readonly placeholder="Generate a code" 
-               class="flex-1 px-4 py-3 rounded-xl bg-white/5 border border-white/20 text-white placeholder-gray-500 focus:outline-none">
-        <button onclick="generateContractCode()" 
-                class="px-4 py-3 rounded-xl bg-gradient-to-r from-green-500 to-emerald-400 hover:from-green-600 hover:to-emerald-500 text-white font-semibold shadow-md hover:shadow-lg transition">
-          Create
+      <div class="mb-8">
+        <label class="block text-gray-300 text-sm mb-2">Contract Code</label>
+        <div class="flex gap-2">
+          <input id="contractCode" type="text" readonly placeholder="Generate a code" class="flex-1 px-4 py-3 rounded-xl bg-white/5 border border-white/20 text-white placeholder-gray-500 focus:outline-none">
+          <button onclick="generateContractCode()" class="px-4 py-3 rounded-xl bg-gradient-to-r from-green-500 to-emerald-400 hover:from-green-600 hover:to-emerald-500 text-white font-semibold shadow-md hover:shadow-lg transition">
+            Create
+          </button>
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-3">
+        <button onclick="closeModal('addContractModal')" class="px-5 py-3 rounded-xl bg-white/5 border border-white/20 text-white hover:bg-white/10 hover:border-white/40 transition">
+          Close
+        </button>
+        <button id="saveBtn" onclick="continueContract()" class="px-5 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-semibold shadow-md hover:shadow-lg transition disabled:opacity-40" disabled>
+          Continue
         </button>
       </div>
     </div>
+  </div>
 
-    <!-- Actions -->
-    <div class="flex justify-end gap-3">
-      <button onclick="closeModal('addContractModal')" 
-              class="px-5 py-3 rounded-xl bg-white/5 border border-white/20 text-white hover:bg-white/10 hover:border-white/40 transition">
+  <div id="loadingScreen" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center modal-overlay">
+    <div class="flex flex-col items-center">
+      <div class="animate-spin rounded-full h-20 w-20 border-t-4 border-b-4 border-blue-400 mb-4"></div>
+      <p class="text-white text-lg font-medium animate-pulse">Preparing your contract...</p>
+    </div>
+  </div>
+
+  <div id="continueContractModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center modal-overlay">
+    <div class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-8 rounded-2xl border border-white/20 w-[420px] shadow-2xl text-center">
+      <div class="flex justify-center mb-4">
+        <i class="fas fa-file-contract text-4xl text-red-500"></i>
+      </div>
+
+      <div class="bg-red-600/20 border border-red-500 text-red-400 p-4 rounded-xl mb-6">
+        <h2 class="text-xl font-bold mb-2">⚠️ Pending Contract</h2>
+        <p class="text-sm">Your contract has been generated but is not yet active.<br>Please make a payment to activate your contract.</p>
+      </div>
+
+      <p class="text-gray-300 mb-3">Proceed to payment to activate:</p>
+      <button onclick="openTab('payment')" class="block w-full text-center px-6 py-3 rounded-xl bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white font-semibold shadow-md hover:shadow-lg transition">
+        💳 Go to Payment Page
+      </button>
+
+      <button onclick="closeModal('continueContractModal')" class="mt-5 px-6 py-2 rounded-xl bg-white/10 border border-white/20 text-gray-300 hover:bg-white/20 hover:text-white transition">
         Close
       </button>
-   <button id="saveBtn" onclick="continueContract()" 
-        class="px-5 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-500 
-               hover:from-blue-600 hover:to-indigo-600 text-white font-semibold 
-               shadow-md hover:shadow-lg transition disabled:opacity-40" 
-        disabled>
-  Save
-</button>
-
     </div>
   </div>
-</div>
-
-<!-- Loading Spinner -->
-<div id="loadingScreen" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50">
-  <div class="flex flex-col items-center">
-    <div class="animate-spin rounded-full h-20 w-20 border-t-4 border-b-4 border-blue-400 mb-4"></div>
-    <p class="text-white text-lg font-medium animate-pulse">Preparing your contract...</p>
-  </div>
-</div>
-
-<!-- Continue Contract Modal -->
-<!-- Continue Contract Modal -->
-<div id="continueContractModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
-  <div class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-8 rounded-2xl border border-white/20 w-[420px] shadow-2xl text-center">
-    
-    <!-- Pending Contract Icon -->
-    <div class="flex justify-center mb-4">
-      <i class="fas fa-file-contract text-4xl text-red-500"></i>
-    </div>
-
-    <!-- Alert Box -->
-    <div class="bg-red-600/20 border border-red-500 text-red-400 p-4 rounded-xl mb-6">
-      <h2 class="text-xl font-bold mb-2">⚠️ Pending Contract</h2>
-      <p class="text-sm">Your contract has been generated but is not yet active.<br> 
-      Please make a payment to activate your contract.</p>
-    </div>
-
-    <!-- Payment Field -->
-    <p class="text-gray-300 mb-3">Proceed to payment to activate:</p>
- <button onclick="openTab('payment')" 
-        class="block w-full text-center px-6 py-3 rounded-xl bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white font-semibold shadow-md hover:shadow-lg transition">
-  💳 Go to Payment Page
-</button>
-<script>
-  function openTab(tabName) {
-  document.querySelectorAll('.tab-content').forEach(tab => {
-    tab.classList.add('hidden');
-  });
-  document.getElementById(tabName).classList.remove('hidden');
-
-  // Close modal if still open
-  closeModal('continueContractModal');
-}
-</script>
-
-    <!-- Close Button -->
-    <button onclick="closeModal('continueContractModal')" 
-            class="mt-5 px-6 py-2 rounded-xl bg-white/10 border border-white/20 text-gray-300 hover:bg-white/20 hover:text-white transition">
-      Close
-    </button>
-  </div>
-</div>
-
-
-<script>
-  function generateContractCode() {
-    let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    let code = "";
-    for (let i = 0; i < 20; i++) {
-      code += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    document.getElementById("contractCode").value = code;
-
-    // Enable Continue button
-    let saveBtn = document.getElementById("saveBtn");
-    saveBtn.disabled = false;
-    saveBtn.innerText = "Continue";
-  }
-
-  function continueContract() {
-    closeModal('addContractModal');
-    document.getElementById("loadingScreen").classList.remove("hidden");
-
-    setTimeout(() => {
-      document.getElementById("loadingScreen").classList.add("hidden");
-      openModal("continueContractModal");
-    }, 6000);
-  }
-
-  function openModal(id) {
-    document.getElementById(id).classList.remove("hidden");
-  }
-
-  function closeModal(id) {
-    document.getElementById(id).classList.add("hidden");
-  }
-</script>
-
-  
-
-
-
 
   <script>
-    // Modal Logic
+    // ======= COUNTS (persistent with localStorage) =======
+    let pendingContracts = parseInt(localStorage.getItem("pendingContracts")) || 0;
+    let totalContracts = parseInt(localStorage.getItem("totalContracts")) || 0;
+
+    function saveCounts() {
+      localStorage.setItem("pendingContracts", pendingContracts);
+      localStorage.setItem("totalContracts", totalContracts);
+    }
+
+    // ======= HELPERS =======
+    function getEl(id) {
+      const el = document.getElementById(id);
+      if (!el) console.warn(`Element #${id} not found`);
+      return el;
+    }
+
+    function renderCounts() {
+      const p = getEl("pendingCount");
+      const t = getEl("totalCount");
+      if (p) p.textContent = String(pendingContracts);
+      if (t) t.textContent = String(totalContracts);
+    }
+
+    // ======= MODALS =======
     function openModal(id) {
-      document.getElementById(id).classList.remove("hidden");
+      const m = getEl(id);
+      if (m) m.classList.remove("hidden");
     }
     function closeModal(id) {
-      document.getElementById(id).classList.add("hidden");
+      const m = getEl(id);
+      if (m) m.classList.add("hidden");
     }
 
-    // Nav Switcher
-    const navButtons = document.querySelectorAll(".nav-btn");
-    const content = document.getElementById("content");
-    const pageTitle = document.getElementById("page-title");
-    const pageTitleMobile = document.getElementById("page-title-mobile");
+    // ======= LOADING OVERLAY =======
+    function showLoading(forMs = 6000, after) {
+      let overlay = getEl("loadingScreen");
+      if (!overlay) {
+        console.error("Loading overlay element not found.");
+        return;
+      }
+      overlay.classList.remove("hidden");
+      setTimeout(() => {
+        overlay.classList.add("hidden");
+        if (typeof after === "function") after();
+      }, forMs);
+    }
 
-    const sections = {
-      overview: document.getElementById("content").innerHTML,
-      contract: "📑 All active and past Contracts are listed here.",
-      dust: "✨ Dust Section – space for experimental or archived data.",
-      billing: "💳 Manage your Billing details, invoices, and receipts here.",
-      payment: "💰 View and process Payments securely from this section.",
-      settings: "⚙️ Customize your account, preferences, and security options here."
+    // ======= FORM: ENABLE SAVE ONLY WHEN VALID =======
+    function validateFormEnableSave() {
+      const name = getEl("userName")?.value.trim();
+      const type = getEl("contractType")?.value;
+      const code = getEl("contractCode")?.value.trim();
+      const saveBtn = getEl("saveBtn");
+
+      const isValid = Boolean(name && type && code);
+      if (saveBtn) {
+        saveBtn.disabled = !isValid;
+        saveBtn.textContent = "Continue"; // Ensure button text is "Continue"
+      }
+    }
+
+    // ======= GENERATE CODE =======
+    function generateContractCode() {
+      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+      let code = "";
+      for (let i = 0; i < 20; i++) code += chars.charAt(Math.floor(Math.random() * chars.length));
+      const codeInput = getEl("contractCode");
+      if (codeInput) codeInput.value = code;
+      validateFormEnableSave();
+    }
+
+    // ======= SAVE / CONTINUE =======
+    function continueContract() {
+      const userName = getEl("userName")?.value.trim();
+      const contractType = getEl("contractType")?.value;
+      const contractCode = getEl("contractCode")?.value.trim();
+
+      if (!userName || !contractType || !contractCode) {
+        alert("Please fill in all fields before continuing.");
+        return;
+      }
+
+      // Increment pending
+      pendingContracts += 1;
+      totalContracts += 1; // It's better to increment total immediately, as a pending contract is still a contract.
+      saveCounts();
+      renderCounts();
+
+      closeModal("addContractModal");
+      showLoading(6000, () => openModal("continueContractModal"));
+
+      // Reset form
+      const nameEl = getEl("userName");
+      const typeEl = getEl("contractType");
+      const codeEl = getEl("contractCode");
+      const saveBtn = getEl("saveBtn");
+
+      if (nameEl) nameEl.value = "";
+      if (typeEl) typeEl.selectedIndex = 0;
+      if (codeEl) codeEl.value = "";
+      if (saveBtn) saveBtn.disabled = true;
+    }
+
+    // ======= ACTIVATE CONTRACT (Pending → Total) =======
+    // This function can now be used for a future "payment success" event
+    function activateContract() {
+      // This logic now ensures you only activate a pending contract
+      // It's a placeholder for when a payment is actually made.
+      if (pendingContracts > 0) {
+        pendingContracts -= 1;
+        saveCounts();
+        renderCounts();
+        alert("Contract activated!");
+      } else {
+        alert("No pending contracts to activate.");
+      }
+    }
+
+    // ======= TAB NAVIGATION =======
+    const navButtons = document.querySelectorAll(".nav-btn");
+    const tabContents = document.querySelectorAll(".tab-content");
+    const pageTitle = getEl("page-title");
+    const pageTitleMobile = getEl("page-title-mobile");
+
+    // Static content for other tabs (to avoid re-rendering issues)
+    const sectionsHTML = {
+      overview: document.getElementById("overview").innerHTML,
+      contract: `<div class="p-6 text-center"><div class="text-4xl text-blue-400 mb-4">📑</div><p class="text-xl">All active and past Contracts are listed here.</p><button onclick="activateContract()" class="mt-4 px-6 py-3 rounded-xl bg-gradient-to-r from-green-500 to-emerald-400 text-white font-semibold">Activate Pending Contract</button></div>`,
+      dust: `<div class="p-6 text-center"><div class="text-4xl text-yellow-400 mb-4">✨</div><p class="text-xl">Dust Section – space for experimental or archived data.</p></div>`,
+      billing: `<div class="p-6 text-center"><div class="text-4xl text-pink-400 mb-4">💳</div><p class="text-xl">Manage your Billing details, invoices, and receipts here.</p></div>`,
+      payment: `<div class="p-6 text-center"><div class="text-4xl text-purple-400 mb-4">💰</div><p class="text-xl">View and process Payments securely from this section.</p></div>`,
+      settings: `<div class="p-6 text-center"><div class="text-4xl text-gray-400 mb-4">⚙️</div><p class="text-xl">Customize your account, preferences, and security options here.</p></div>`,
     };
 
-    navButtons.forEach((btn) => {
+    function openTab(tabName) {
+      navButtons.forEach(btn => btn.classList.remove("bg-gray-800", "text-white"));
+      const activeBtn = document.querySelector(`[data-tab="${tabName}"]`);
+      if (activeBtn) activeBtn.classList.add("bg-gray-800", "text-white");
+      
+      tabContents.forEach(tab => tab.classList.add("hidden"));
+      const activeTab = getEl(tabName);
+      if (activeTab) activeTab.classList.remove("hidden");
+
+      if (pageTitle) pageTitle.textContent = tabName;
+      if (pageTitleMobile) pageTitleMobile.textContent = tabName;
+
+      // Close modal if still open
+      closeModal('continueContractModal');
+    }
+
+    navButtons.forEach(btn => {
       btn.addEventListener("click", () => {
-        navButtons.forEach(b => b.classList.remove("bg-gray-800", "text-white"));
-        btn.classList.add("bg-gray-800", "text-white");
-
-        const tab = btn.dataset.tab;
-        if (pageTitle) pageTitle.textContent = tab;
-        if (pageTitleMobile) pageTitleMobile.textContent = tab;
-
-        content.innerHTML = sections[tab];
+        openTab(btn.dataset.tab);
       });
     });
 
-    if (navButtons.length) navButtons[0].classList.add("bg-gray-800", "text-white");
+    // ======= INIT =======
+    document.addEventListener("DOMContentLoaded", () => {
+      // Set initial tab to active
+      if (navButtons.length) {
+        navButtons[0].classList.add("bg-gray-800", "text-white");
+      }
+      
+      // Attach event listeners for form validation
+      ["userName", "contractType", "contractCode"].forEach(id => {
+        const el = getEl(id);
+        if (!el) return;
+        el.addEventListener("input", validateFormEnableSave);
+        el.addEventListener("change", validateFormEnableSave);
+      });
+      renderCounts();
+    });
+
+    // Make functions globally available
+    window.generateContractCode = generateContractCode;
+    window.continueContract = continueContract;
+    window.openModal = openModal;
+    window.closeModal = closeModal;
+    window.activateContract = activateContract;
+    window.openTab = openTab;
   </script>
-
-
-
-  <script src="tailwind.js"></script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
