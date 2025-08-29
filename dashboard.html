@@ -519,6 +519,73 @@
                     </div>
                 </div>
             </div>
+     <script>
+    // Get references to the monthly and yearly elements and buttons
+    const monthlyBtn = document.getElementById('monthlyBtn');
+    const yearlyBtn = document.getElementById('yearlyBtn');
+    const monthlyPlans = document.getElementById('monthly-plans');
+    const yearlyPlans = document.getElementById('yearly-plans');
+
+    // Function to show the selected plan type
+    function showPlans(planType) {
+        // Check the plan type passed to the function
+        if (planType === 'monthly') {
+            // Show monthly plans and hide yearly plans
+            monthlyPlans.classList.remove('hidden');
+            yearlyPlans.classList.add('hidden');
+
+            // Update button styles to show which one is active
+            monthlyBtn.classList.add('bg-blue-500', 'text-white');
+            monthlyBtn.classList.remove('text-gray-400');
+            yearlyBtn.classList.add('text-gray-400');
+            yearlyBtn.classList.remove('bg-blue-500', 'text-white');
+        } else if (planType === 'yearly') {
+            // Show yearly plans and hide monthly plans
+            yearlyPlans.classList.remove('hidden');
+            monthlyPlans.classList.add('hidden');
+
+            // Update button styles to show which one is active
+            yearlyBtn.classList.add('bg-blue-500', 'text-white');
+            yearlyBtn.classList.remove('text-gray-400');
+            monthlyBtn.classList.add('text-gray-400');
+            monthlyBtn.classList.remove('bg-blue-500', 'text-white');
+        }
+    }
+
+    // Placeholder function for handling payment
+  
+    // Modal functions to show and hide the message box
+    function openModal(title, message) {
+        const modal = document.getElementById('messageModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalMessage = document.getElementById('modalMessage');
+
+        // Set the content of the modal
+        modalTitle.textContent = title;
+        modalMessage.textContent = message;
+
+        // Show the modal by removing the 'hidden' class and animating it in
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+            modal.querySelector('div').classList.remove('scale-95');
+        }, 10);
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('messageModal');
+        // Animate the modal out before hiding it
+        modal.querySelector('div').classList.add('scale-95');
+        setTimeout(() => {
+            modal.classList.add('hidden');
+        }, 300);
+    }
+
+    // Initial call to set the monthly plans as active on page load
+    window.onload = () => {
+        showPlans('monthly');
+    };
+</script>
+
       <div id="payment" class="tab-content hidden p-6 text-center bg-gray-900 border border-gray-700 rounded-xl shadow text-gray-200">
         <div class="text-4xl text-purple-400 mb-4">💰</div>
         <h2 class="text-2xl font-bold mb-4">Payments</h2>
@@ -1205,4 +1272,5 @@
   </script>
 </body>
 </html>
+
 
