@@ -56,12 +56,33 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
-      // ⬇️ Replace with your Supabase project details (from Dashboard → Settings → API)
+      // 🔑 Replace with your Supabase project details (Dashboard → Settings → API)
       const SUPABASE_URL = "https://obfgfbolpsdzczydubbj.supabase.co";
       const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9iZmdmYm9scHNkemN6eWR1YmJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0NDc0NzgsImV4cCI6MjA3MjAyMzQ3OH0.xZAtHrXTeyMTwZIUZp0TvypzLOBWZ7QVYsSdb7bYstM";
 
       const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
       const message = document.getElementById("message");
+
+      // 🛡 Debug helper to log unauthorized requests
+      (function () {
+        const origFetch = window.fetch;
+        window.fetch = async (...args) => {
+          const response = await origFetch(...args);
+          if (response.url.includes("supabase.co/rest/v1/") && response.status === 401) {
+            console.warn("⚠️ Unauthorized Supabase request:", {
+              requestUrl: response.url,
+              requestMethod: args[1]?.method || "GET",
+              requestHeaders: args[1]?.headers || {},
+              responseStatus: response.status
+            });
+            try {
+              const errBody = await response.clone().json();
+              console.warn("🔍 Error details:", errBody);
+            } catch (_) {}
+          }
+          return response;
+        };
+      })();
 
       document.getElementById("registerForm").addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -79,7 +100,7 @@
         }
 
         try {
-          // Sign up user
+          // Sign up user (email confirmation required)
           const { data: signupData, error: signupError } = await supabaseClient.auth.signUp({
             email,
             password,
@@ -91,7 +112,7 @@
           if (signupData.user) {
             // Insert into custom users table
             const { error: insertError } = await supabaseClient
-              .from('users')
+              .from("users")
               .insert([{ id: signupData.user.id, email: signupData.user.email, full_name: name, country }]);
 
             if (insertError) throw insertError;
