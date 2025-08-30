@@ -197,7 +197,35 @@
           </div>
         </div>
 
-   
+    <div class="bg-gray-700 rounded-xl p-6">
+    <h2 class="text-xl font-bold text-purple-300">Your Contracts</h2>
+    <p class="text-gray-400 mt-2">This is your personal dashboard space. Only you can see your data (based on password).</p>
+  </div>
+
+  <button onclick="logout()" class="mt-6 px-6 py-2 bg-red-500 hover:bg-red-600 rounded-xl font-semibold">
+    Logout
+  </button>
+</main>
+
+<script>
+function loadDashboard() {
+  const userNum = sessionStorage.getItem("userNumber");
+  if (!userNum) {
+    window.location.href = "register.html";
+    return;
+  }
+
+  document.getElementById("userInfo").textContent = 
+    `Logged in as: newme2@gmail.com | Dashboard ID: ${userNum}`;
+}
+
+function logout() {
+  sessionStorage.clear();
+  window.location.href = "register.html";
+}
+
+loadDashboard();
+</script>
       </div>
 
       <div id="contract" class="tab-content hidden p-6 text-center">
@@ -1571,6 +1599,7 @@
   </script>
 </body>
 </html>
+
 
 
 
