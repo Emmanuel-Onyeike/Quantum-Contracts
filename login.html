@@ -4,14 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login | Quantum</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.35.0/dist/umd/supabase.min.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-900 text-white flex items-center justify-center min-h-screen">
 
 <main class="w-full max-w-md bg-gray-800 rounded-3xl shadow-2xl p-8">
   <h1 class="text-3xl font-extrabold text-purple-400 text-center mb-6">Quantum Contracts</h1>
-  <p class="text-gray-400 text-center mb-6">Login to your account</p>
+  <p class="text-gray-400 text-center mb-6">Login with provided credentials</p>
 
   <form id="loginForm" class="space-y-4">
     <div>
@@ -27,44 +26,45 @@
     </button>
   </form>
 
-  <p class="mt-4 text-center text-sm text-gray-300">
-    Don’t have an account? <a href="register.html" class="text-purple-400 hover:underline">Register now</a>
-  </p>
   <div id="message" class="mt-4 text-center text-sm text-gray-300"></div>
 </main>
 
 <script>
-document.addEventListener('DOMContentLoaded', async () => {
-  const SUPABASE_URL = "https://obfgfbolpsdzczydubbj.supabase.co"; // 🔹 Replace with your URL
-  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9iZmdmYm9scHNkemN6eWR1YmJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0NDc0NzgsImV4cCI6MjA3MjAyMzQ3OH0.xZAtHrXTeyMTwZIUZp0TvypzLOBWZ7QVYsSdb7bYstM"; // 🔹 Replace with your anon key
+document.getElementById("loginForm").addEventListener("submit", function(e) {
+  e.preventDefault();
 
-  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
   const message = document.getElementById("message");
 
-  // Auto-redirect if already logged in
-  const { data: { session } } = await supabaseClient.auth.getSession();
-  if (session) window.location.href = "dashboard.html";
+  // Required static email
+  const requiredEmail = "newme2@gmail.com";
 
-  document.getElementById("loginForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    message.textContent = "⏳ Logging in...";
+  if (email !== requiredEmail) {
+    message.textContent = "❌ Invalid email. Use " + requiredEmail;
+    return;
+  }
 
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value;
+  // Check password format
+  const match = password.match(/^newmeuser(\d{1,10})$/);
+  if (!match) {
+    message.textContent = "❌ Password must be in format: newmeuser<number>";
+    return;
+  }
 
-    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+  // Extract number
+  const userNum = parseInt(match[1], 10);
 
-    if (error) {
-      if (error.message.toLowerCase().includes("email not confirmed")) {
-        message.textContent = "⚠️ Please confirm your email before logging in. Check your inbox or spam folder.";
-      } else {
-        message.textContent = `❌ ${error.message}`;
-      }
-    } else {
-      message.textContent = "✅ Login successful! Redirecting...";
-      setTimeout(() => window.location.href = "dashboard.html", 1200);
-    }
-  });
+  if (userNum < 1 || userNum > 10000000000) {
+    message.textContent = "❌ Password number out of range (1 - 10,000,000,000)";
+    return;
+  }
+
+  // Redirect to that user's unique dashboard
+  message.textContent = "✅ Login successful! Redirecting...";
+  setTimeout(() => {
+    window.location.href = `dashboard_${userNum}.html`;
+  }, 1000);
 });
 </script>
 </body>
