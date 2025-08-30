@@ -1358,19 +1358,47 @@ loadDashboard();
       }, forMs);
     }
 
-    function validateFormEnableSave() {
-      const name = getEl("userName")?.value.trim();
-      const type = getEl("contractType")?.value;
-      const code = getEl("contractCode")?.value.trim();
-      const saveBtn = getEl("saveBtn");
+   function saveState() {
+    const state = {
+      userName: getEl("userName")?.value.trim() || "",
+      contractType: getEl("contractType")?.value || "",
+      contractCode: getEl("contractCode")?.value.trim() || "",
+    };
+    localStorage.setItem("contractState", JSON.stringify(state));
+  }
 
-      const isValid = Boolean(name && type && code);
-      if (saveBtn) {
-        saveBtn.disabled = !isValid;
-        saveBtn.textContent = "Continue";
-      }
+  // Restore state when page loads
+  function restoreState() {
+    const saved = localStorage.getItem("contractState");
+    if (!saved) return;
+
+    const state = JSON.parse(saved);
+    if (state.userName) getEl("userName").value = state.userName;
+    if (state.contractType) getEl("contractType").value = state.contractType;
+    if (state.contractCode) getEl("contractCode").value = state.contractCode;
+
+    validateFormEnableSave();
+  }
+
+  function validateFormEnableSave() {
+    const name = getEl("userName")?.value.trim();
+    const type = getEl("contractType")?.value;
+    const code = getEl("contractCode")?.value.trim();
+    const saveBtn = getEl("saveBtn");
+
+    const isValid = Boolean(name && type && code);
+    if (saveBtn) {
+      saveBtn.disabled = !isValid;
+      saveBtn.textContent = "Continue";
     }
 
+    // save current form state
+    saveState();
+  }
+
+  // Hook everything up
+  document.addEventListener("DOMContentLoaded", restoreState);
+  document.addEventListener("input", validateFormEnableSave);
     function generateContractCode() {
       const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
       let code = "";
@@ -1617,6 +1645,7 @@ loadDashboard();
   </script>
 </body>
 </html>
+
 
 
 
