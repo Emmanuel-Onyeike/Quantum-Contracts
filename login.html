@@ -36,7 +36,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', async () => {
   const SUPABASE_URL = "https://obfgfbolpsdzczydubbj.supabase.co"; // 🔹 Replace with your URL
-  const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY"; // 🔹 Replace with your anon key
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9iZmdmYm9scHNkemN6eWR1YmJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0NDc0NzgsImV4cCI6MjA3MjAyMzQ3OH0.xZAtHrXTeyMTwZIUZp0TvypzLOBWZ7QVYsSdb7bYstM"; // 🔹 Replace with your anon key
 
   const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   const message = document.getElementById("message");
