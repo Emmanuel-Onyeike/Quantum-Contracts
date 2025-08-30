@@ -13,7 +13,6 @@
     <h1 class="text-3xl font-extrabold text-purple-400 text-center mb-6">Quantum Contracts</h1>
     <p class="text-gray-400 text-center mb-6">Create your account to join our network</p>
 
-    <!-- Registration Form -->
     <form id="registerForm" class="space-y-4">
       <div>
         <label for="name" class="block text-sm font-medium text-gray-300">Full Name</label>
@@ -57,7 +56,6 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
-      // 🔑 Replace with your Supabase project details
       const SUPABASE_URL = "https://obfgfbolpsdzczydubbj.supabase.co";
       const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9iZmdmYm9scHNkemN6eWR1YmJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0NDc0NzgsImV4cCI6MjA3MjAyMzQ3OH0.xZAtHrXTeyMTwZIUZp0TvypzLOBWZ7QVYsSdb7bYstM";
 
@@ -80,7 +78,7 @@
         }
 
         try {
-          // 1️⃣ Sign up user (creates auth.user)
+          // 🔑 Sign up user
           const { data: signupData, error: signupError } = await supabaseClient.auth.signUp({
             email,
             password,
@@ -90,20 +88,34 @@
           if (signupError) throw signupError;
 
           if (signupData.user) {
-            // 2️⃣ Insert into "users" table
-            const { error: insertError } = await supabaseClient
+            // ⚡ Get authenticated session (needed for RLS)
+            const session = signupData.session;
+            if (!session) {
+              message.textContent = "⚠️ Please check your email to confirm before continuing.";
+              return;
+            }
+
+            // 👤 Create client with the session token
+            const authedClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+              global: { headers: { Authorization: `Bearer ${session.access_token}` } }
+            });
+
+            // ✅ Insert user row (id must match auth.uid())
+            const { error: insertError } = await authedClient
               .from("users")
-              .insert([{
-                id: signupData.user.id, // user.id from auth
-                email: signupData.user.email,
-                full_name: name,
-                country
-              }]);
+              .insert([
+                {
+                  id: signupData.user.id,
+                  email: signupData.user.email,
+                  full_name: name,
+                  country
+                }
+              ]);
 
             if (insertError) throw insertError;
           }
 
-          message.textContent = "✅ Registration successful! Please check your email to confirm your account.";
+          message.textContent = "✅ Registration successful! Please check your email to confirm your account before logging in.";
         } catch (err) {
           message.textContent = `❌ ${err.message}`;
         }
