@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login | Quantum</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.35.0/dist/umd/supabase.min.js"></script>
-<script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | Quantum</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.35.0/dist/umd/supabase.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-900 text-white flex items-center justify-center min-h-screen">
 
@@ -22,46 +22,47 @@
       <label for="password" class="block text-sm font-medium text-gray-300">Password</label>
       <input type="password" id="password" required class="w-full mt-1 px-4 py-2 bg-gray-700 rounded-xl focus:ring-2 focus:ring-purple-400 focus:outline-none">
     </div>
-    <button type="submit" class="w-full py-3 bg-purple-500 hover:bg-purple-600 rounded-xl font-semibold text-white transition">Login</button>
+    <button type="submit" class="w-full py-3 bg-purple-500 hover:bg-purple-600 rounded-xl font-semibold text-white transition">
+      Login
+    </button>
   </form>
 
   <p class="mt-4 text-center text-sm text-gray-300">
-    Don't have an account? <a href="register.html" class="text-purple-400 hover:underline">Register now</a>
+    Don’t have an account? <a href="register.html" class="text-purple-400 hover:underline">Register now</a>
   </p>
   <div id="message" class="mt-4 text-center text-sm text-gray-300"></div>
 </main>
 
 <script>
 document.addEventListener('DOMContentLoaded', async () => {
-  const SUPABASE_URL = "https://obfgfbolpsdzczydubbj.supabase.co";
-  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9iZmdmYm9scHNkemN6eWR1YmJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0NDc0NzgsImV4cCI6MjA3MjAyMzQ3OH0.xZAtHrXTeyMTwZIUZp0TvypzLOBWZ7QVYsSdb7bYstM";
+  const SUPABASE_URL = "https://obfgfbolpsdzczydubbj.supabase.co"; // 🔹 Replace with your URL
+  const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY"; // 🔹 Replace with your anon key
 
   const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   const message = document.getElementById("message");
 
+  // Auto-redirect if already logged in
   const { data: { session } } = await supabaseClient.auth.getSession();
   if (session) window.location.href = "dashboard.html";
 
   document.getElementById("loginForm").addEventListener("submit", async (e) => {
     e.preventDefault();
-    message.textContent = "";
+    message.textContent = "⏳ Logging in...";
 
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value;
 
-    try {
-      const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-      if (error) throw error;
+    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
 
+    if (error) {
+      if (error.message.toLowerCase().includes("email not confirmed")) {
+        message.textContent = "⚠️ Please confirm your email before logging in. Check your inbox or spam folder.";
+      } else {
+        message.textContent = `❌ ${error.message}`;
+      }
+    } else {
       message.textContent = "✅ Login successful! Redirecting...";
       setTimeout(() => window.location.href = "dashboard.html", 1200);
-
-    } catch (err) {
-      if (err.status === 400 && err.message.includes("Email not confirmed")) {
-        message.textContent = "❌ Please confirm your email before logging in.";
-      } else {
-        message.textContent = `❌ ${err.message}`;
-      }
     }
   });
 });
