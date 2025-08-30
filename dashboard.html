@@ -967,40 +967,58 @@ loadDashboard();
 
 
   <div id="addContractModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center modal-overlay p-4">
-    <div class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-8 rounded-2xl border border-white/20 w-full max-w-lg shadow-2xl relative">
-      <h2 class="text-2xl font-bold mb-6 text-white text-center">✨ Add Contract</h2>
-      <label class="block text-gray-300 text-sm mb-2">User Name</label>
-      <input id="userName" type="text" placeholder="Enter user name" class="w-full mb-5 px-4 py-3 rounded-xl bg-white/5 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/40 transition">
-      <label class="block text-gray-300 text-sm mb-2">Contract Type</label>
-      <select id="contractType" class="w-full mb-6 px-4 py-3 rounded-xl bg-white/5 border border-white/20 text-white focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/40 transition">
-        <option class="bg-gray-900 text-white">Real Estate</option>
-        <option class="bg-gray-900 text-white">2 Terms</option>
-        <option class="bg-gray-900 text-white">Quick Productive</option>
-        <option class="bg-gray-900 text-white">Binary</option>
-        <option class="bg-gray-900 text-white">Development</option>
-        <option class="bg-gray-900 text-white">Oil Reign</option>
-        <option class="bg-gray-900 text-white">Infrastructure</option>
-        <option class="bg-gray-900 text-white">Premium Quick Contract</option>
-      </select>
-      <div class="mb-8">
-        <label class="block text-gray-300 text-sm mb-2">Contract Code</label>
-        <div class="flex flex-col sm:flex-row gap-2">
-          <input id="contractCode" type="text" readonly placeholder="Generate a code" class="flex-1 px-4 py-3 rounded-xl bg-white/5 border border-white/20 text-white placeholder-gray-500 focus:outline-none">
-          <button onclick="generateContractCode()" class="px-4 py-3 rounded-xl bg-gradient-to-r from-green-500 to-emerald-400 hover:from-green-600 hover:to-emerald-500 text-white font-semibold shadow-md hover:shadow-lg transition">
-            Create
-          </button>
-        </div>
-      </div>
-      <div class="flex flex-col sm:flex-row justify-end gap-3">
-        <button onclick="closeModal('addContractModal')" class="px-5 py-3 rounded-xl bg-white/5 border border-white/20 text-white hover:bg-white/10 hover:border-white/40 transition">
-          Close
-        </button>
-        <button id="saveBtn" onclick="continueContract()" class="px-5 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-semibold shadow-md hover:shadow-lg transition disabled:opacity-40" disabled>
-          Continue
+  <div class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-6 sm:p-8 rounded-2xl border border-white/20 w-full max-w-lg shadow-2xl relative">
+    
+    <h2 class="text-xl sm:text-2xl font-bold mb-6 text-white text-center">✨ Add Contract</h2>
+    
+    <!-- User Name -->
+    <label class="block text-gray-300 text-sm mb-2">User Name</label>
+    <input id="userName" type="text" placeholder="Enter user name" 
+      class="w-full mb-5 px-4 py-3 rounded-xl bg-white/5 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/40 transition">
+    
+    <!-- Contract Type -->
+    <label class="block text-gray-300 text-sm mb-2">Contract Type</label>
+    <select id="contractType" 
+      class="w-full mb-6 px-4 py-3 rounded-xl bg-white/5 border border-white/20 text-white focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/40 transition">
+      <option class="bg-gray-900 text-white">Real Estate</option>
+      <option class="bg-gray-900 text-white">2 Terms</option>
+      <option class="bg-gray-900 text-white">Quick Productive</option>
+      <option class="bg-gray-900 text-white">Binary</option>
+      <option class="bg-gray-900 text-white">Development</option>
+      <option class="bg-gray-900 text-white">Oil Reign</option>
+      <option class="bg-gray-900 text-white">Infrastructure</option>
+      <option class="bg-gray-900 text-white">Premium Quick Contract</option>
+    </select>
+
+    <!-- Contract Code -->
+    <div class="mb-8">
+      <label class="block text-gray-300 text-sm mb-2">Contract Code</label>
+      <div class="flex flex-col sm:flex-row gap-2">
+        <input id="contractCode" type="text" readonly placeholder="Generate a code" 
+          class="flex-1 px-4 py-3 rounded-xl bg-white/5 border border-white/20 text-white placeholder-gray-500 focus:outline-none">
+        
+        <!-- Ensure button is always clickable on mobile -->
+        <button onclick="generateContractCode()" 
+          class="w-full sm:w-auto px-4 py-3 rounded-xl bg-gradient-to-r from-green-500 to-emerald-400 hover:from-green-600 hover:to-emerald-500 text-white font-semibold shadow-md hover:shadow-lg transition">
+          Create
         </button>
       </div>
     </div>
+
+    <!-- Action Buttons -->
+    <div class="flex flex-col sm:flex-row justify-end gap-3">
+      <button onclick="closeModal('addContractModal')" 
+        class="w-full sm:w-auto px-5 py-3 rounded-xl bg-white/5 border border-white/20 text-white hover:bg-white/10 hover:border-white/40 transition">
+        Close
+      </button>
+      <button id="saveBtn" onclick="continueContract()" 
+        class="w-full sm:w-auto px-5 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-semibold shadow-md hover:shadow-lg transition disabled:opacity-40" disabled>
+        Continue
+      </button>
+    </div>
+
   </div>
+</div>
 
   <div id="loadingScreen" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center modal-overlay">
     <div class="flex flex-col items-center">
@@ -1599,6 +1617,7 @@ loadDashboard();
   </script>
 </body>
 </html>
+
 
 
 
